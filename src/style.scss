@@ -1,0 +1,120 @@
+@use 'scss-reset/reset';
+
+@font-face {
+    font-family: "Lato";
+    src: url("assets/Lato-Regular.woff2");
+}
+
+$hue-background: 240;
+$hue-section: 15;
+$hue-button: 330;
+$size-widget-outline: 1px;
+$size-button-height: 4px;
+$size-section-outline: 2px;
+$size-section-padding: 10px;
+$font-stack: Lato, sans-serif;
+$color-background: hsl($hue-background, 20%, 65%);
+$color-text: hsl($hue-section, 10%, 5%);
+$color-section-background: hsl($hue-section, 15%, 90%);
+$color-section-inset: rgba(255, 255, 255, 90%);
+$color-section-border: hsl($hue-background, 20%, 40%);
+$color-text-button: #fff;
+$color-button: hsl($hue-button, 75%, 45%);
+$color-button-hover: hsl($hue-button, 75%, 60%);
+$color-button-inset: rgba(255, 255, 255, 35%);
+$color-button-focus: rgba(255, 255, 255, 100%);
+$color-button-border: hsl($hue-button, 75%, 15%);
+$color-button-border-hover: hsl($hue-button, 75%, 25%);
+
+@mixin raised-box-shadow ($color-inset, $color-border, $size-outline, $height) {
+    box-shadow: 0px $height 0px $color-border,
+        inset 0px 0px 0px $size-outline $color-inset;
+}
+
+@mixin raised-widget ($color, $color-inset, $color-border, $radius, $height, $pressed) {
+    @include raised-box-shadow($color-inset, $color-border, $size-widget-outline, ($height * (1 - $pressed)));
+
+    background-color: $color;
+    border: $size-widget-outline solid $color-border;
+    border-radius: $radius;
+    transform: translateY($height * $pressed);
+    position: relative;
+
+    &:after {
+        content: "";
+        position: absolute;
+        top: (-$height - $size-widget-outline) * $pressed;
+        bottom: (-$height - $size-widget-outline) * (1 - $pressed);
+        left: 0px;
+        right: 0px;
+    }
+}
+
+body {
+    font: 16px $font-stack;
+    color: $color-text;
+    background-color: $color-background;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-weight: bold;
+    text-transform: uppercase;
+}
+
+h1 {
+    font-size: 2em;
+}
+
+h2 {
+    font-size: 1.6em;
+}
+
+h3 {
+    font-size: 1.4em;
+}
+
+h4 {
+    font-size: 1.3em;
+}
+
+h5 {
+    font-size: 1.2em;
+}
+
+h6 {
+    font-size: 1.1em;
+}
+
+button {
+    @include raised-widget($color-button, $color-button-inset, $color-button-border, 4px, 4px, 0);
+
+    color: $color-text-button;
+    margin: $size-widget-outline $size-widget-outline ($size-button-height + $size-widget-outline) $size-widget-outline;
+    padding: 8px;
+
+    &:hover:not(:active) {
+        @include raised-widget($color-button-hover, $color-button-inset, $color-button-border-hover, 4px, 4px, 0);
+    }
+
+    &:active {
+        @include raised-widget($color-button, $color-button-inset, $color-button-border, 4px, 4px, 1);
+    }
+}
+
+.section {
+    @include raised-box-shadow($color-section-inset, $color-section-border, $size-section-outline, $size-button-height);
+
+    background-color: $color-section-background;
+    border: solid $size-section-outline $color-section-border;
+    border-radius: 10px;
+    margin: 10px 10px (10px + $size-button-height) 10px;
+    padding: $size-section-padding;
+}
+
+#logo {
+    background-image: url("assets/logo.png");
+    background-repeat: no-repeat;
+    width: 428px;
+    height: 64px;
+    margin: $size-section-padding;
+}
