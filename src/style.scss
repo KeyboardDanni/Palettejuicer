@@ -1,4 +1,4 @@
-@use 'scss-reset/reset';
+@use "modern-normalize/modern-normalize.css";
 
 @font-face {
     font-family: "Lato";
@@ -50,10 +50,23 @@ $color-button-border-hover: hsl($hue-button, 75%, 25%);
     }
 }
 
+html {
+    line-height: 1;
+}
+
 body {
     font: 16px $font-stack;
     color: $color-text;
     background-color: $color-background;
+}
+
+h1, h2, h3, h4, h5, h6, p, ol, ul, textarea {
+    line-height: 1.5;
+    margin: 0px;
+}
+
+button, input, optgroup, select {
+    line-height: 1;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -62,27 +75,27 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 h1 {
-    font-size: 2em;
+    font-size: 32px;
 }
 
 h2 {
-    font-size: 1.6em;
+    font-size: 26px;
 }
 
 h3 {
-    font-size: 1.4em;
+    font-size: 24px;
 }
 
 h4 {
-    font-size: 1.3em;
+    font-size: 22px;
 }
 
 h5 {
-    font-size: 1.2em;
+    font-size: 20px;
 }
 
 h6 {
-    font-size: 1.1em;
+    font-size: 18px;
 }
 
 button {
