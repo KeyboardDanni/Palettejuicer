@@ -1,0 +1,44 @@
+@use "./_constants.scss" as *;
+
+.color-preview {
+    display: inline-block;
+    vertical-align: middle;
+
+    background-color: #000;
+    border: 1px solid rgba(0, 0, 0, 40%);
+    border-radius: $size-button-radius;
+}
+
+.color-selector {
+    display: flex;
+    flex-direction: row;
+
+    .color-sliders {
+        display: inline-block;
+        vertical-align: middle;
+        margin-right: $size-label-spacing;
+
+        * {
+            vertical-align: middle;
+        }
+
+        .label-left {
+            width: 16px;
+        }
+
+        input[type=range] {
+            margin-right: $size-label-spacing;
+            width: (20px + 256px);
+        }
+
+        input[type=text] {
+            width: 50px;
+            text-align: right;
+        }
+    }
+
+    .color-preview {
+        width: 96px;
+        margin: 1px;
+    }
+}

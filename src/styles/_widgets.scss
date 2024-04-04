@@ -13,7 +13,10 @@
     border-radius: $radius;
     transform: translateY($height * $pressed);
     position: relative;
+    transition: 0.05s box-shadow ease-out, 0.05s transform ease-out;
+}
 
+@mixin raised-widget-bounds ($height, $pressed) {
     &:after {
         content: "";
         position: absolute;
@@ -24,19 +27,203 @@
     }
 }
 
+@mixin raised-widget-focus ($color) {
+    outline: 2px solid $color;
+    outline-offset: (-$size-widget-outline - 2px);
+}
+
+@mixin raised-button ($color, $color-border, $pressed) {
+    @include raised-widget($color, $color-button-inset, $color-border, $size-button-radius, $size-button-height, $pressed);
+    @include raised-widget-bounds($size-button-height, $pressed);
+}
+
 button {
-    @include raised-widget($color-button, $color-button-inset, $color-button-border, 4px, 4px, 0);
+    @include raised-button($color-button, $color-button-border, 0);
 
     color: $color-text-button;
     margin: $size-widget-outline $size-widget-outline ($size-button-height + $size-widget-outline) $size-widget-outline;
     padding: 8px;
 
-    &:hover, &:focus {
-        @include raised-widget($color-button-hover, $color-button-inset, $color-button-border-hover, 4px, 4px, 0);
+    &:hover, &:focus-visible {
+        @include raised-button($color-button-hover, $color-button-border-hover, 0);
     }
 
     &:active {
-        @include raised-widget($color-button, $color-button-inset, $color-button-border, 4px, 4px, 1);
+        @include raised-button($color-button, $color-button-border, 1);
+    }
+
+    &:focus-visible {
+        @include raised-widget-focus($color-text-button);
+    }
+}
+
+@mixin header-tab-button ($color, $checked) {
+    display: inline-block;
+    background-color: $color;
+    border: 1px solid $color-tab-border;
+    border-bottom: none;
+    color: $color-text-radio-button;
+    text-align: center;
+    min-width: 60px;
+    height: 28px;
+    margin: 0px -1px 0px 0px;
+    padding: (6px + $checked) 12px (6px - $checked) 12px;
+    position: relative;
+
+    @if $checked > 0 {
+        &::after {
+            position: absolute;
+            content: "";
+            top: 26px;
+            left: 0px;
+            width: 100%;
+            height: 2px;
+            background-color: $color-button;
+        }
+    }
+}
+
+.tabbar {
+    margin: 8px 1px 8px 1px;
+    border-bottom: 1px solid $color-tab-border;
+}
+
+label.tabbar-tab {
+    input[type=radio], input[type=checkbox] {
+        position: absolute;
+        overflow: hidden;
+        clip: rect(0 0 0 0);
+        width: 1px;
+        height: 1px;
+        margin: -1px;
+        padding: 0;
+        border: 0;
+
+        &:not(:checked) + span {
+            @include header-tab-button($color-tab, 0);
+        }
+
+        &:hover:not(:checked) + span {
+            @include header-tab-button($color-tab-hover, 0);
+        }
+
+        &:checked + span {
+            @include header-tab-button($color-tab-active, 1);
+        }
+
+        &:focus-visible + span {
+            box-shadow: inset 0px 0px 0px 2px $color-button;
+        }
+    }
+
+    &:first-child input + span {
+        border-top-left-radius: $size-button-radius;
+    }
+
+    &:last-child input + span {
+        border-top-right-radius: $size-button-radius;
+    }
+}
+
+input[type=text] {
+    height: 22px;
+    margin: 1px 1px 1px 1px;
+    padding: 7px 4px 4px 4px;
+
+    background-color: $color-field-background;
+    border: $size-widget-outline solid $color-section-border;
+    box-shadow: inset 0px 2px $color-section-border;
+    border-radius: $size-button-radius;
+}
+
+@mixin range-thumb {
+    width: 16px;
+    height: 20px;
+    margin-top: -8px;
+    cursor: default;
+}
+
+@mixin range-thumb-normal {
+    @include raised-widget($color-slider, $color-button-inset, $color-slider-border, $size-button-radius, $size-button-height, 0);
+    @include range-thumb;
+}
+
+@mixin range-thumb-hover {
+    @include raised-widget($color-slider-hover, $color-button-inset, $color-slider-border-hover, $size-button-radius, $size-button-height, 0);
+    @include range-thumb;
+}
+
+@mixin range-track {
+    width: 100%;
+    height: 10px;
+    cursor: default;
+    margin: 6px 1px 6px 1px;
+
+    background-color: $color-slider-recess;
+    border: $size-widget-outline solid $color-section-border;
+    box-shadow: inset 0px 2px $color-section-border;
+    border-radius: $size-button-radius;
+}
+
+input[type=range] {
+    -webkit-appearance: none;
+    width: 100%;
+    background: transparent;
+
+    &::-webkit-slider-thumb {
+        @include range-thumb-normal;
+
+        -webkit-appearance: none;
+    }
+
+    &::-moz-range-thumb {
+        @include range-thumb-normal;
+    }
+
+    &::-ms-thumb {
+        @include range-thumb-normal;
+
+        margin: 0px;
+    }
+
+    &::-webkit-slider-runnable-track {
+        @include range-track;
+    }
+
+    &::-moz-range-track {
+        @include range-track;
+    }
+
+    &::-ms-track {
+        @include range-track;
+    }
+
+    &:hover {
+        &::-webkit-slider-thumb {
+            @include range-thumb-hover;
+        }
+    
+        &::-moz-range-thumb {
+            @include range-thumb-hover;
+        }
+    
+        &::-ms-thumb {
+            @include range-thumb-hover;
+        }
+    }
+
+    &:focus-visible {
+        &::-webkit-slider-thumb {
+            @include raised-widget-focus($color-text-button);
+        }
+    
+        &::-moz-range-thumb {
+            @include raised-widget-focus($color-text-button);
+        }
+    
+        &::-ms-thumb {
+            @include raised-widget-focus($color-text-button);
+        }
     }
 }
 
@@ -48,6 +235,12 @@ button {
     border-radius: 10px;
     margin: 10px 10px (10px + $size-button-height) 10px;
     padding: $size-section-padding;
+}
+
+.label-left {
+    display: inline-block;
+    text-align: right;
+    margin-right: $size-label-spacing;
 }
 
 #logo {

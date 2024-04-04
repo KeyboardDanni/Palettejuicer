@@ -8,6 +8,7 @@
 html {
     font: 16px $font-stack;
     line-height: 1;
+    user-select: none;
 }
 
 body {
@@ -19,11 +20,16 @@ h1, h2, h3, h4, h5, h6, p, ol, ul, textarea {
     line-height: 1.5;
     margin: 0px;
     outline: none;
+    user-select: text;
 }
 
 button, input, optgroup, select {
     line-height: 1;
     outline: none;
+}
+
+input {
+    user-select: text;
 }
 
 h1, h2, h3, h4, h5, h6 {
@@ -58,4 +64,9 @@ h6 {
 ol, ul {
     list-style: none;
     padding-inline: 0px;
+}
+
+::selection {
+    color: $color-text-selected;
+    background: $color-selected;
 }
