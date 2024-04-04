@@ -139,17 +139,17 @@ class Color {
     return color;
   }
 
-  adjustRgb(red: number | null, green: number | null, blue: number | null) {
+  adjustRgb(red: number | null, green: number | null, blue: number | null): Color {
     return this.rgb(red ?? this.red, green ?? this.green, blue ?? this.blue);
   }
-  adjustHsl(hue: number | null, saturation: number | null, lightness: number | null) {
+  adjustHsl(hue: number | null, saturation: number | null, lightness: number | null): Color {
     return this.hsl(hue ?? this.hue, saturation ?? this.saturationL, lightness ?? this.lightness);
   }
-  adjustHsv(hue: number | null, saturation: number | null, value: number | null) {
+  adjustHsv(hue: number | null, saturation: number | null, value: number | null): Color {
     return this.hsv(hue ?? this.hue, saturation ?? this.saturationV, value ?? this.value);
   }
 
-  adjust(channel: Channel, value: number) {
+  adjust(channel: Channel, value: number): Color {
     switch (channel) {
       case Channel.Red:
         return this.adjustRgb(value, null, null);
@@ -169,6 +169,31 @@ class Color {
         return this.adjustHsv(null, value, null);
       case Channel.Value:
         return this.adjustHsv(null, null, value);
+      default:
+        throw new Error("Bad enum");
+    }
+  }
+
+  channel(channel: Channel): number {
+    switch (channel) {
+      case Channel.Red:
+        return this.red;
+      case Channel.Green:
+        return this.green;
+      case Channel.Blue:
+        return this.blue;
+      case Channel.HueL:
+        return this.hue;
+      case Channel.SaturationL:
+        return this.saturationL;
+      case Channel.Lightness:
+        return this.lightness;
+      case Channel.HueV:
+        return this.hue;
+      case Channel.SaturationV:
+        return this.saturationV;
+      case Channel.Value:
+        return this.value;
       default:
         throw new Error("Bad enum");
     }

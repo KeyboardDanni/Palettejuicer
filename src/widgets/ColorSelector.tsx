@@ -22,16 +22,33 @@ type ChannelSliderProps = {
 };
 
 function ChannelSlider({ value, onChange, label, min, max, step }: ChannelSliderProps) {
+  const [temp, setTemp] = useState<string>(value.toString());
+  const [tempActive, setTempActive] = useState(false);
+
   function handleFocus(event: React.FocusEvent<HTMLInputElement>) {
+    setTemp(value.toString());
+    setTempActive(true);
     event.target.select();
   }
+
+  function handleBlur() {
+    setTempActive(false);
+  }
+
+  function handleTextChange(event: ChangeEvent<HTMLInputElement>) {
+    onChange(event);
+    setTemp(event.target.value);
+  }
+
+  const editValue = tempActive ? temp : value;
 
   return (
   <>
     <div className="color-slider">
       <span className="label-left">{label}</span>
       <input type="range" value={value} onChange={onChange} min={min} max={max} step={step} />
-      <input type="text" value={value} onFocus={handleFocus} onChange={onChange} />
+      <input type="text" inputMode="decimal" value={editValue} onFocus={handleFocus}
+        onBlur={handleBlur} onChange={handleTextChange} />
     </div>
   </>
   )
@@ -59,7 +76,11 @@ function ColorSelector({color, colorChanged}: ColorSelectorProps) {
   }
 
   function channelChanged(channel: Channel, event: ChangeEvent<HTMLInputElement>) {
-    colorChanged(color.adjust(channel, parseFloat(event.target.value) || 0));
+    const newValue = parseFloat(event.target.value) || 0;
+
+    if (newValue !== color.channel(channel)) {
+      colorChanged(color.adjust(channel, newValue));
+    }
   }
 
   function pageSliders() {
