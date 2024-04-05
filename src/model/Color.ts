@@ -22,6 +22,18 @@ export enum Channel {
   Value
 }
 
+const clonedProperties = [
+  "_colorspace",
+  "_red",
+  "_green",
+  "_blue",
+  "_hue",
+  "_saturationL",
+  "_lightness",
+  "_saturationV",
+  "_value",
+];
+
 class Color {
   private _colorspace: Colorspace = Colorspace.RGB;
   private _red: number = 0;
@@ -81,17 +93,33 @@ class Color {
   clone(): Color {
     const color = new Color();
 
-    color._colorspace = this._colorspace;
-    color._red = this._red;
-    color._green = this._green;
-    color._blue = this._blue;
-    color._hue = this._hue;
-    color._saturationL = this._saturationL;
-    color._lightness = this._lightness;
-    color._saturationV = this._saturationV;
-    color._value = this._value;
+    for (const name of clonedProperties) {
+      // @ts-ignore
+      color[name] = this[name];
+    }
 
     return color;
+  }
+
+  private _computeRgb(input: chroma.Color) {
+    [this._red, this._green, this._blue] = input.rgb(false);
+  }
+
+  private _computeHsl(input: chroma.Color, setHue: boolean) {
+    const [hue, saturationL, lightness] = input.hsl();
+    if (setHue && !Number.isNaN(hue)) {
+      this._hue = hue;
+    }
+    this._saturationL = saturationL;
+    this._lightness = lightness;
+  }
+
+  private _computeHsv(input: chroma.Color) {
+    const [, saturationV, value] = input.hsv();
+    // Hue is either already set by HSL, or we are convering from HSV anyway,
+    //  so don't bother with it here.
+    this._saturationV = saturationV;
+    this._value = value;
   }
 
   withRgb(red: number, green: number, blue: number): Color {
@@ -104,18 +132,8 @@ class Color {
 
     const input = chroma.rgb(red, green, blue);
 
-    const [hue, saturationL, lightness] = input.hsl();
-    const [, saturationV, value] = input.hsv();
-    
-    if (!Number.isNaN(hue)) {
-      color._hue = hue;
-      color._saturationL = saturationL;
-    }
-    color._lightness = lightness;
-    color._saturationV = saturationV;
-    color._value = value;
-
-    color.normalize();
+    color._computeHsl(input, true);
+    color._computeHsv(input);
     
     return color;
   }
@@ -130,10 +148,8 @@ class Color {
 
     const input = chroma.hsl(hue, saturation, lightness);
 
-    [color._red, color._green, color._blue] = input.rgb(false);
-    [, color._saturationV, color._value] = input.hsv();
-
-    color.normalize();
+    color._computeRgb(input);
+    color._computeHsv(input);
     
     return color;
   }
@@ -148,10 +164,8 @@ class Color {
 
     const input = chroma.hsv(hue, saturation, value);
 
-    [color._red, color._green, color._blue] = input.rgb(false);
-    [, color._saturationL, color._lightness] = input.hsl();
-
-    color.normalize();
+    color._computeRgb(input);
+    color._computeHsl(input, false);
     
     return color;
   }
@@ -239,17 +253,6 @@ class Color {
       default:
         throw new Error("Bad enum");
     }
-  }
-
-  private normalize() {
-    this._red = clamp(this._red, 0, 255);
-    this._green = clamp(this._green, 0, 255);
-    this._blue = clamp(this._blue, 0, 255);
-    this._hue = clamp(this._hue, 0, 360);
-    this._saturationL = clamp(this._saturationL, 0, 1.0);
-    this._lightness = clamp(this._lightness, 0, 1.0);
-    this._saturationV = clamp(this._saturationV, 0, 1.0);
-    this._value = clamp(this._value, 0, 1.0);
   }
 }
 
