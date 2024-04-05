@@ -12,21 +12,19 @@ function backgroundColorStyle(color: Color) {
   }
 }
 
-type ChannelSliderProps = {
-  value: number;
-  onChange: ChangeEventHandler<HTMLInputElement>;
-  label: string;
-  min: number;
-  max: number;
-  step: number;
+type IntermediateTextInputProps = {
+  value: string,
+  onChange: ChangeEventHandler<HTMLInputElement>,
+  [key: string]: any
 };
 
-function ChannelSlider({ value, onChange, label, min, max, step }: ChannelSliderProps) {
-  const [temp, setTemp] = useState<string>(value.toString());
+function IntermediateTextInput({ value, onChange, ...other }: IntermediateTextInputProps) {
+
+  const [temp, setTemp] = useState<string>(value);
   const [tempActive, setTempActive] = useState(false);
 
   function handleFocus(event: React.FocusEvent<HTMLInputElement>) {
-    setTemp(value.toString());
+    setTemp(value);
     setTempActive(true);
     event.target.select();
   }
@@ -43,23 +41,61 @@ function ChannelSlider({ value, onChange, label, min, max, step }: ChannelSlider
   const editValue = tempActive ? temp : value;
 
   return (
+    <>
+      <input type="text" {...other} value={editValue} onFocus={handleFocus}
+          onBlur={handleBlur} onChange={handleTextChange} />
+    </>
+  )
+}
+
+type ChannelSliderProps = {
+  value: number;
+  onChange: ChangeEventHandler<HTMLInputElement>;
+  label: string;
+  min: number;
+  max: number;
+  step: number;
+};
+
+function ChannelSlider({ value, onChange, label, min, max, step }: ChannelSliderProps) {
+  return (
   <>
     <div className="color-slider">
       <span className="label-left">{label}</span>
       <input type="range" value={value} onChange={onChange} min={min} max={max} step={step} />
-      <input type="text" inputMode="decimal" value={editValue} onFocus={handleFocus}
-        onBlur={handleBlur} onChange={handleTextChange} />
+      <IntermediateTextInput value={value.toString()} onChange={onChange} inputMode="decimal"/>
     </div>
   </>
   )
 }
 
-type ColorSelectorProps = {
+type HexInputProps = {
   color: Color;
-  colorChanged: (color: Color) => void;
+  onColorChange: (color: Color) => void;
 };
 
-function ColorSelector({color, colorChanged}: ColorSelectorProps) {
+function HexInput({color, onColorChange}: HexInputProps) {
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    const newColor = Color.fromHex(event.target.value);
+
+    if (newColor !== null) {
+      onColorChange(newColor);
+    }
+  }
+
+  return (
+    <>
+      <IntermediateTextInput value={color.hex} onChange={handleChange} />
+    </>
+  )
+}
+
+type ColorSelectorProps = {
+  color: Color;
+  onColorChange: (color: Color) => void;
+};
+
+function ColorSelector({color, onColorChange}: ColorSelectorProps) {
   const [page, setPage] = useState<string>(ColorSelectorPage.HSL);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -79,7 +115,7 @@ function ColorSelector({color, colorChanged}: ColorSelectorProps) {
     const newValue = parseFloat(event.target.value) || 0;
 
     if (newValue !== color.channel(channel)) {
-      colorChanged(color.adjust(channel, newValue));
+      onColorChange(color.adjust(channel, newValue));
     }
   }
 
@@ -134,7 +170,12 @@ function ColorSelector({color, colorChanged}: ColorSelectorProps) {
             {pageSliders()}
           </div>
         </div>
-        <div className="color-preview " style={backgroundColorStyle(color)} />
+        <div className="color-preview-column">
+          <div className="color-preview" style={backgroundColorStyle(color)} />
+          <div className="color-hex">
+            <HexInput color={color} onColorChange={onColorChange} />
+          </div>
+        </div>
       </div>
     </>
   )

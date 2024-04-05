@@ -20,7 +20,7 @@ function App() {
         <h6>Heading 6</h6>
       </div>
       <div className="section">
-        <ColorSelector color={color} colorChanged={(color) => setColor(color)} />
+        <ColorSelector color={color} onColorChange={(color) => setColor(color)} />
       </div>
       <div className="section">
         <button onClick={() => setCount((count) => count + 1)}>

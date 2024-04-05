@@ -10,6 +10,7 @@ interface TestColor {
   lightness: number;
   saturationV: number;
   value: number;
+  hex: string;
 }
 
 enum TestColorNames {
@@ -68,180 +69,263 @@ enum TestColorNames {
     PastelHotPink
 }
 
-const testColors = [
+const testColors: TestColor[] = [
   // grayscale
 
-  {red: 0, green: 0, blue: 0,
+  {red: 0, green: 0, blue: 0, // black
     hue: 0, saturationL: 0, lightness: 0,
-    saturationV: 0, value: 0}, // black
-  {red: 255, green: 255, blue: 255,
+    saturationV: 0, value: 0,
+    hex: "#000000"},
+  {red: 255, green: 255, blue: 255, // white
     hue: 0, saturationL: 0, lightness: 1.0,
-    saturationV: 0, value: 1.0}, // white
-  {red: 127, green: 127, blue: 127,
+    saturationV: 0, value: 1.0,
+    hex: "#ffffff"},
+  {red: 127, green: 127, blue: 127, // gray
     hue: 0, saturationL: 0, lightness: 0.498,
-    saturationV: 0, value: 0.498}, // gray
-  {red: 64, green: 64, blue: 64,
+    saturationV: 0, value: 0.498,
+    hex: "#7f7f7f"},
+  {red: 64, green: 64, blue: 64, // dark gray
     hue: 0, saturationL: 0, lightness: 0.251,
-    saturationV: 0, value: 0.251}, // dark gray
-  {red: 191, green: 191, blue: 191,
+    saturationV: 0, value: 0.251,
+    hex: "#404040"},
+  {red: 191, green: 191, blue: 191, // light gray
     hue: 0, saturationL: 0, lightness: 0.749,
-    saturationV: 0, value: 0.749}, // light gray
+    saturationV: 0, value: 0.749,
+    hex: "#bfbfbf"},
 
   // saturated colors
 
-  {red: 255, green: 0, blue: 0,
+  {red: 255, green: 0, blue: 0, // red
     hue: 0, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // red
-  {red: 255, green: 127, blue: 0,
+    saturationV: 1, value: 1,
+    hex: "#ff0000"},
+  {red: 255, green: 127, blue: 0, // orange
     hue: 29.88, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // orange
-  {red: 255, green: 255, blue: 0,
+    saturationV: 1, value: 1,
+    hex: "#ff7f00"},
+  {red: 255, green: 255, blue: 0, // yellow
     hue: 60, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // yellow
-  {red: 191, green: 255, blue: 0,
+    saturationV: 1, value: 1,
+    hex: "#ffff00"},
+  {red: 191, green: 255, blue: 0, // lime
     hue: 75.06, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // lime
-  {red: 0, green: 255, blue: 0,
+    saturationV: 1, value: 1,
+    hex: "#bfff00"},
+  {red: 0, green: 255, blue: 0, // green
     hue: 120, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // green
-  {red: 0, green: 255, blue: 160,
+    saturationV: 1, value: 1,
+    hex: "#00ff00"},
+  {red: 0, green: 255, blue: 160, // sea green
     hue: 157.65, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // sea green
-  {red: 0, green: 255, blue: 255,
+    saturationV: 1, value: 1,
+    hex: "#00ffa0"},
+  {red: 0, green: 255, blue: 255, // cyan
     hue: 180, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // cyan
-  {red: 0, green: 180, blue: 255,
+    saturationV: 1, value: 1,
+    hex: "#00ffff"},
+  {red: 0, green: 180, blue: 255, // cool blue
     hue: 197.65, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // cool blue
-  {red: 0, green: 0, blue: 255,
+    saturationV: 1, value: 1,
+    hex: "#00b4ff"},
+  {red: 0, green: 0, blue: 255, // blue
     hue: 240, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // blue
-  {red: 127, green: 0, blue: 255,
+    saturationV: 1, value: 1,
+    hex: "#0000ff"},
+  {red: 127, green: 0, blue: 255, // purple
     hue: 269.88, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // purple
-  {red: 255, green: 0, blue: 255,
+    saturationV: 1, value: 1,
+    hex: "#7f00ff"},
+  {red: 255, green: 0, blue: 255, // magenta
     hue: 300, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // magenta
-  {red: 255, green: 0, blue: 160,
+    saturationV: 1, value: 1,
+    hex: "#ff00ff"},
+  {red: 255, green: 0, blue: 160, // hot pink
     hue: 322.35, saturationL: 1, lightness: 0.5,
-    saturationV: 1, value: 1}, // hot pink
+    saturationV: 1, value: 1,
+    hex: "#ff00a0"},
 
   // dark colors
 
-  {red: 127, green: 0, blue: 0,
+  {red: 127, green: 0, blue: 0, // red
     hue: 0, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // red
-  {red: 127, green: 64, blue: 0,
+    saturationV: 1, value: 0.498,
+    hex: "#7f0000"},
+  {red: 127, green: 64, blue: 0, // orange
     hue: 30.24, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // orange
-  {red: 127, green: 127, blue: 0,
+    saturationV: 1, value: 0.498,
+    hex: "#7f4000"},
+  {red: 127, green: 127, blue: 0, // yellow
     hue: 60, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // yellow
-  {red: 96, green: 127, blue: 0,
+    saturationV: 1, value: 0.498,
+    hex: "#7f7f00"},
+  {red: 96, green: 127, blue: 0, // lime
     hue: 74.65, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // lime
-  {red: 0, green: 127, blue: 0,
+    saturationV: 1, value: 0.498,
+    hex: "#607f00"},
+  {red: 0, green: 127, blue: 0, // green
     hue: 120, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // green
-  {red: 0, green: 127, blue: 80,
+    saturationV: 1, value: 0.498,
+    hex: "#007f00"},
+  {red: 0, green: 127, blue: 80, // sea green
     hue: 157.8, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // sea green
-  {red: 0, green: 127, blue: 127,
+    saturationV: 1, value: 0.498,
+    hex: "#007f50"},
+  {red: 0, green: 127, blue: 127, // cyan
     hue: 180, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // cyan
-  {red: 0, green: 90, blue: 127,
+    saturationV: 1, value: 0.498,
+    hex: "#007f7f"},
+  {red: 0, green: 90, blue: 127, // cool blue
     hue: 197.48, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // cool blue
-  {red: 0, green: 0, blue: 127,
+    saturationV: 1, value: 0.498,
+    hex: "#005a7f"},
+  {red: 0, green: 0, blue: 127, // blue
     hue: 240, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // blue
-  {red: 64, green: 0, blue: 127,
+    saturationV: 1, value: 0.498,
+    hex: "#00007f"},
+  {red: 64, green: 0, blue: 127, // purple
     hue: 270.24, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // purple
-  {red: 127, green: 0, blue: 127,
+    saturationV: 1, value: 0.498,
+    hex: "#40007f"},
+  {red: 127, green: 0, blue: 127, // magenta
     hue: 300, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // magenta
-  {red: 127, green: 0, blue: 80,
+    saturationV: 1, value: 0.498,
+    hex: "#7f007f"},
+  {red: 127, green: 0, blue: 80, // hot pink
     hue: 322.2, saturationL: 1, lightness: 0.249,
-    saturationV: 1, value: 0.498}, // hot pink
+    saturationV: 1, value: 0.498,
+    hex: "#7f0050"},
 
   // desaturated colors
 
-  {red: 191, green: 64, blue: 64,
+  {red: 191, green: 64, blue: 64, // red
     hue: 0, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // red
-  {red: 191, green: 127, blue: 64,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#bf4040"},
+  {red: 191, green: 127, blue: 64, // orange
     hue: 29.76, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // orange
-  {red: 191, green: 191, blue: 64,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#bf7f40"},
+  {red: 191, green: 191, blue: 64, // yellow
     hue: 60, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // yellow
-  {red: 160, green: 191, blue: 64,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#bfbf40"},
+  {red: 160, green: 191, blue: 64, // lime
     hue: 74.65, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // lime
-  {red: 64, green: 191, blue: 64,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#a0bf40"},
+  {red: 64, green: 191, blue: 64, // green
     hue: 120, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // green
-  {red: 64, green: 191, blue: 144,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#40bf40"},
+  {red: 64, green: 191, blue: 144, // sea green
     hue: 157.8, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // sea green
-  {red: 64, green: 191, blue: 191,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#40bf90"},
+  {red: 64, green: 191, blue: 191, // cyan
     hue: 180, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // cyan
-  {red: 64, green: 154, blue: 191,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#40bfbf"},
+  {red: 64, green: 154, blue: 191, // cool blue
     hue: 197.48, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // cool blue
-  {red: 64, green: 64, blue: 191,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#409abf"},
+  {red: 64, green: 64, blue: 191, // blue
     hue: 240, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // blue
-  {red: 127, green: 64, blue: 191,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#4040bf"},
+  {red: 127, green: 64, blue: 191, // purple
     hue: 269.76, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // purple
-  {red: 191, green: 64, blue: 191,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#7f40bf"},
+  {red: 191, green: 64, blue: 191, // magenta
     hue: 300, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // magenta
-  {red: 191, green: 64, blue: 144,
+    saturationV: 0.6649, value: 0.749,
+    hex: "#bf40bf"},
+  {red: 191, green: 64, blue: 144, // hot pink
     hue: 322.2, saturationL: 0.498, lightness: 0.5,
-    saturationV: 0.6649, value: 0.749}, // hot pink
+    saturationV: 0.6649, value: 0.749,
+    hex: "#bf4090"},
 
   // pastel colors
   
-  {red: 245, green: 163, blue: 163,
+  {red: 245, green: 163, blue: 163, // red
     hue: 0, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // red
-  {red: 245, green: 204, blue: 163,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#f5a3a3"},
+  {red: 245, green: 204, blue: 163, // orange
     hue: 30, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // orange
-  {red: 245, green: 245, blue: 163,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#f5cca3"},
+  {red: 245, green: 245, blue: 163, // yellow
     hue: 60, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // yellow
-  {red: 224, green: 245, blue: 163,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#f5f5a3"},
+  {red: 224, green: 245, blue: 163, // lime
     hue: 75.37, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // lime
-  {red: 163, green: 245, blue: 163,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#e0f5a3"},
+  {red: 163, green: 245, blue: 163, // green
     hue: 120, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // green
-  {red: 163, green: 245, blue: 214,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#a3f5a3"},
+  {red: 163, green: 245, blue: 214, // sea green
     hue: 157.32, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // sea green
-  {red: 163, green: 245, blue: 245,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#a3f5d6"},
+  {red: 163, green: 245, blue: 245, // cyan
     hue: 180, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // cyan
-  {red: 163, green: 221, blue: 245,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#a3f5f5"},
+  {red: 163, green: 221, blue: 245, // cool blue
     hue: 197.56, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // cool blue
-  {red: 163, green: 163, blue: 245,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#a3ddf5"},
+  {red: 163, green: 163, blue: 245, // blue
     hue: 240, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // blue
-  {red: 204, green: 163, blue: 245,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#a3a3f5"},
+  {red: 204, green: 163, blue: 245, // purple
     hue: 270, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // purple
-  {red: 245, green: 163, blue: 245,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#cca3f5"},
+  {red: 245, green: 163, blue: 245, // magenta
     hue: 300, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // magenta
-  {red: 245, green: 163, blue: 214,
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#f5a3f5"},
+  {red: 245, green: 163, blue: 214, // hot pink
     hue: 322.68, saturationL: 0.8039, lightness: 0.8,
-    saturationV: 0.3347, value: 0.9608}, // hot pink
+    saturationV: 0.3347, value: 0.9608,
+    hex: "#f5a3d6"},
+];
+
+interface TestHex {
+  hex: string;
+  red: number;
+  green: number;
+  blue: number;
+}
+
+const testHexNames: TestHex[] = [
+  { hex: "#aabbcc", red: 170, green: 187, blue: 204 },
+  { hex: "#abc", red: 170, green: 187, blue: 204 },
+  { hex: "aabbcc", red: 170, green: 187, blue: 204 },
+  { hex: "abc", red: 170, green: 187, blue: 204 },
+  { hex: "#AABBCC", red: 170, green: 187, blue: 204 },
+  { hex: "#ABC", red: 170, green: 187, blue: 204 },
+  { hex: "AABBCC", red: 170, green: 187, blue: 204 },
+  { hex: "ABC", red: 170, green: 187, blue: 204 },
+  { hex: "#AaBbCc", red: 170, green: 187, blue: 204 },
+  { hex: "#AbC", red: 170, green: 187, blue: 204 },
+  { hex: "AaBbCc", red: 170, green: 187, blue: 204 },
+  { hex: "AbC", red: 170, green: 187, blue: 204 },
+  { hex: "#aabbccff", red: 170, green: 187, blue: 204 },
+  { hex: "aabbccff", red: 170, green: 187, blue: 204 },
+  { hex: "#abcf", red: 170, green: 187, blue: 204 },
+  { hex: "abcf", red: 170, green: 187, blue: 204 },
+];
+
+const testBadHexNames = [
+  "", "#aa", "#aaaaa", "#aaaaaaa"
 ];
 
 function expectColorPropertiesEqual(actual: Color, expected: Color) {
@@ -301,7 +385,7 @@ test("constructs an empty Color", () => {
   expect(color.blue).toBeCloseTo(0);
 });
 
-test.each(testColors)("constructs an RGB Color ($testColors)", (testColor) => {
+test.each(testColors)("constructs an RGB Color (%#)", (testColor) => {
   const color = Color.fromRgb(testColor.red, testColor.green, testColor.blue);
 
   expectTestColorRgbEqual(color, testColor);
@@ -317,6 +401,14 @@ test.each(testColors)("constructs an HSV Color (%#)", (testColor) => {
   const color = Color.fromHsv(testColor.hue, testColor.saturationV, testColor.value);
 
   expectTestColorHsvEqual(color, testColor);
+});
+
+test.each(testColors)("constructs a hex Color (%#)", (testColor) => {
+  const color = Color.fromHex(testColor.hex);
+
+  expect(color).not.toBeNull();
+
+  expectTestColorRgbEqual(color as Color, testColor);
 });
 
 test.each(testColors)("clones a Color (%#)", (testColor) => {
@@ -457,4 +549,18 @@ test("maintains hue when adjusting HSL/HSV", () => {
 
   color = color.adjust(Channel.Value, 0.5);
   expect(color.hue).toBeCloseTo(260);
+});
+
+test("handles hex strings correctly", () => {
+  for (const name of testHexNames) {
+    const color = Color.fromHex(name.hex);
+    expect(color, name.hex).not.toBeNull();
+    expect(color?.red, name.hex).toBeCloseTo(name.red);
+    expect(color?.green, name.hex).toBeCloseTo(name.green);
+    expect(color?.blue, name.hex).toBeCloseTo(name.blue);
+  }
+  for (const name of testBadHexNames) {
+    const color = Color.fromHex(name);
+    expect(color, name).toBeNull();
+  }
 });

@@ -42,23 +42,40 @@ class Color {
   get lightness() { return this._lightness; }
   get saturationV() { return this._saturationV; }
   get value() { return this._value; }
+  get hex() {
+    const rgb = chroma.rgb(this._red, this._green, this._blue);
+
+    return rgb.hex();
+  }
 
   static fromRgb(red: number, green: number, blue: number): Color {
     const color = new Color();
 
-    return color.rgb(red, green, blue);
+    return color.withRgb(red, green, blue);
   }
 
   static fromHsl(hue: number, saturation: number, lightness: number): Color {
     const color = new Color();
 
-    return color.hsl(hue, saturation, lightness);
+    return color.withHsl(hue, saturation, lightness);
   }
 
   static fromHsv(hue: number, saturation: number, value: number): Color {
     const color = new Color();
 
-    return color.hsv(hue, saturation, value);
+    return color.withHsv(hue, saturation, value);
+  }
+
+  static fromHex(hex: string): Color | null {
+    let red, green, blue;
+
+    try {
+      [red, green, blue] = chroma.hex(hex).rgb();
+    } catch (error) {
+      return null;
+    }
+
+    return Color.fromRgb(red, green, blue);
   }
 
   clone(): Color {
@@ -77,7 +94,7 @@ class Color {
     return color;
   }
 
-  rgb(red: number, green: number, blue: number): Color {
+  withRgb(red: number, green: number, blue: number): Color {
     const color = this.clone();
 
     color._colorspace = Colorspace.RGB;
@@ -103,7 +120,7 @@ class Color {
     return color;
   }
 
-  hsl(hue: number, saturation: number, lightness: number): Color {
+  withHsl(hue: number, saturation: number, lightness: number): Color {
     const color = this.clone();
 
     color._colorspace = Colorspace.HSL;
@@ -121,7 +138,7 @@ class Color {
     return color;
   }
 
-  hsv(hue: number, saturation: number, value: number): Color {
+  withHsv(hue: number, saturation: number, value: number): Color {
     const color = this.clone();
 
     color._colorspace = Colorspace.HSV;
@@ -140,13 +157,13 @@ class Color {
   }
 
   adjustRgb(red: number | null, green: number | null, blue: number | null): Color {
-    return this.rgb(red ?? this.red, green ?? this.green, blue ?? this.blue);
+    return this.withRgb(red ?? this.red, green ?? this.green, blue ?? this.blue);
   }
   adjustHsl(hue: number | null, saturation: number | null, lightness: number | null): Color {
-    return this.hsl(hue ?? this.hue, saturation ?? this.saturationL, lightness ?? this.lightness);
+    return this.withHsl(hue ?? this.hue, saturation ?? this.saturationL, lightness ?? this.lightness);
   }
   adjustHsv(hue: number | null, saturation: number | null, value: number | null): Color {
-    return this.hsv(hue ?? this.hue, saturation ?? this.saturationV, value ?? this.value);
+    return this.withHsv(hue ?? this.hue, saturation ?? this.saturationV, value ?? this.value);
   }
 
   adjust(channel: Channel, value: number): Color {
