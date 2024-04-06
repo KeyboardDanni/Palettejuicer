@@ -14,18 +14,22 @@ function backgroundColorStyle(color: Color) {
 
 type IntermediateTextInputProps = {
   value: string,
+  displayValue?: string,
   onChange: ChangeEventHandler<HTMLInputElement>,
   [key: string]: any
 };
 
-function IntermediateTextInput({ value, onChange, ...other }: IntermediateTextInputProps) {
+function IntermediateTextInput({ value, displayValue, onChange, ...other }: IntermediateTextInputProps) {
 
   const [temp, setTemp] = useState<string>(value);
   const [tempActive, setTempActive] = useState(false);
 
+  const editValue = tempActive ? temp : (displayValue ?? value);
+
   function handleFocus(event: React.FocusEvent<HTMLInputElement>) {
     setTemp(value);
     setTempActive(true);
+    event.target.value = value;
     event.target.select();
   }
 
@@ -37,8 +41,6 @@ function IntermediateTextInput({ value, onChange, ...other }: IntermediateTextIn
     onChange(event);
     setTemp(event.target.value);
   }
-
-  const editValue = tempActive ? temp : value;
 
   return (
     <>
@@ -58,12 +60,15 @@ type ChannelSliderProps = {
 };
 
 function ChannelSlider({ value, onChange, label, min, max, step }: ChannelSliderProps) {
+  const displayValue = (step >= 1 ? (Math.round(value * 10) / 10).toString() : value.toString());
+
   return (
   <>
     <div className="color-slider">
       <span className="label-left">{label}</span>
       <input type="range" value={value} onChange={onChange} min={min} max={max} step={step} />
-      <IntermediateTextInput value={value.toString()} onChange={onChange} inputMode="decimal"/>
+      <IntermediateTextInput value={value.toString()} displayValue={displayValue} onChange={onChange}
+          inputMode="decimal"/>
     </div>
   </>
   )
