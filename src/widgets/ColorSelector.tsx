@@ -127,9 +127,9 @@ function ColorSelector({color, onColorChange}: ColorSelectorProps) {
             <ChannelSlider value={color.hue} onChange={(e) => channelChanged(Channel.HueL, e)}
               label={"H"} min={0} max={360} step={5} />
             <ChannelSlider value={color.saturationL} onChange={(e) => channelChanged(Channel.SaturationL, e)}
-              label={"S"} min={0} max={1} step={0.02} />
+              label={"S"} min={0} max={100} step={2} />
             <ChannelSlider value={color.lightness} onChange={(e) => channelChanged(Channel.Lightness, e)}
-              label={"L"} min={0} max={1} step={0.02} />
+              label={"L"} min={0} max={100} step={2} />
           </>
         );
       case ColorSelectorPage.HSV:
@@ -138,9 +138,9 @@ function ColorSelector({color, onColorChange}: ColorSelectorProps) {
             <ChannelSlider value={color.hue} onChange={(e) => channelChanged(Channel.HueV, e)}
               label={"H"} min={0} max={360} step={5} />
             <ChannelSlider value={color.saturationV} onChange={(e) => channelChanged(Channel.SaturationV, e)}
-              label={"S"} min={0} max={1} step={0.02} />
+              label={"S"} min={0} max={100} step={2} />
             <ChannelSlider value={color.value} onChange={(e) => channelChanged(Channel.Value, e)}
-              label={"V"} min={0} max={1} step={0.02} />
+              label={"V"} min={0} max={100} step={2} />
           </>
         );
       default:
