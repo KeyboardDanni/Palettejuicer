@@ -1,6 +1,7 @@
 $hue-background: 240;
 $hue-section: 15;
 $hue-button: 330;
+$hue-warning: 5;
 $size-section-outline: 2px;
 $size-section-padding: 10px;
 $size-widget-outline: 1px;
@@ -18,6 +19,9 @@ $color-text-radio-button: #111;
 $color-section-background: hsl($hue-section, 15%, 90%);
 $color-section-inset: rgba(255, 255, 255, 90%);
 $color-section-border: hsl($hue-background, 20%, 40%);
+$color-section-warning: hsl($hue-warning, 50%, 70%);
+$color-section-warning-alt: hsl($hue-warning, 50%, 60%);
+$color-section-warning-outline: hsl($hue-warning, 80%, 50%);
 $color-tab: hsl($hue-background, 10%, 80%);
 $color-tab-hover: hsl($hue-section, 10%, 93%);
 $color-tab-active: hsl($hue-section, 10%, 98%);

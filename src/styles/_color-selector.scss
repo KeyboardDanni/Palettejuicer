@@ -1,5 +1,22 @@
 @use "./_constants.scss" as *;
 
+@keyframes out-of-gamut-pulse {
+    from {
+        outline-width: 0px;
+        outline-offset: 0px;
+    }
+
+    50% {
+        outline-width: 4px;
+        outline-offset: 4px;
+    }
+
+    to {
+        outline-width: 0px;
+        outline-offset: 0px;
+    }
+}
+
 .color-preview {
     display: inline-block;
     vertical-align: middle;
@@ -29,6 +46,22 @@
         input[type=range] {
             margin-right: $size-label-spacing;
             width: (20px + 256px);
+            background: none;
+            border-radius: $size-button-radius;
+            outline: $color-section-warning-outline solid 0px;
+            transition: outline-width 0.2s linear;
+
+            &.out-of-gamut {
+                background: repeating-linear-gradient(
+                    -45deg,
+                    $color-section-warning,
+                    $color-section-warning 10px,
+                    $color-section-warning-alt 10px,
+                    $color-section-warning-alt 20px
+                );
+
+                animation: out-of-gamut-pulse 0.25s;
+            }
         }
 
         input[type=text] {

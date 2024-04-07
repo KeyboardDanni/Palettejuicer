@@ -1,8 +1,8 @@
-import { useState } from 'react'
+import { useState } from "react";
 
-import AppHeader from './widgets/AppHeader.tsx'
-import ColorSelector from './widgets/ColorSelector.tsx'
-import Color from './model/Color.ts';
+import AppHeader from "./widgets/AppHeader";
+import ColorSelector from "./widgets/ColorSelector";
+import Color from "./model/color/Color";
 
 function App() {
   const [count, setCount] = useState(0);

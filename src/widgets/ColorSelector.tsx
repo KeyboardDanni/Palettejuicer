@@ -1,53 +1,19 @@
 import { ChangeEvent, ChangeEventHandler, useState } from "react";
-import Color, { Channel } from "../model/Color";
+
+import Color from "../model/color/Color";
+import { ControlledTextInput } from "./ControlledTextInput";
 
 enum ColorSelectorPage {
-  HSL = "HSL",
-  HSV = "HSV"
+  Hsl = "HSL",
+  Hsv = "HSV",
 }
 
 function backgroundColorStyle(color: Color) {
+  const [red, green, blue] = color.rgb.intNormalized();
+
   return {
-    backgroundColor: `rgb(${color.red} ${color.green} ${color.blue})`
+    backgroundColor: `rgb(${red} ${green} ${blue})`
   }
-}
-
-type IntermediateTextInputProps = {
-  value: string,
-  displayValue?: string,
-  onChange: ChangeEventHandler<HTMLInputElement>,
-  [key: string]: any
-};
-
-function IntermediateTextInput({ value, displayValue, onChange, ...other }: IntermediateTextInputProps) {
-
-  const [temp, setTemp] = useState<string>(value);
-  const [tempActive, setTempActive] = useState(false);
-
-  const editValue = tempActive ? temp : (displayValue ?? value);
-
-  function handleFocus(event: React.FocusEvent<HTMLInputElement>) {
-    setTemp(value);
-    setTempActive(true);
-    event.target.value = value;
-    event.target.select();
-  }
-
-  function handleBlur() {
-    setTempActive(false);
-  }
-
-  function handleTextChange(event: ChangeEvent<HTMLInputElement>) {
-    onChange(event);
-    setTemp(event.target.value);
-  }
-
-  return (
-    <>
-      <input type="text" {...other} value={editValue} onFocus={handleFocus}
-          onBlur={handleBlur} onChange={handleTextChange} />
-    </>
-  )
 }
 
 type ChannelSliderProps = {
@@ -61,13 +27,14 @@ type ChannelSliderProps = {
 
 function ChannelSlider({ value, onChange, label, min, max, step }: ChannelSliderProps) {
   const displayValue = (step >= 1 ? (Math.round(value * 10) / 10).toString() : value.toString());
+  const className = (value < min || value > max ? "out-of-gamut" : "");
 
   return (
   <>
     <div className="color-slider">
       <span className="label-left">{label}</span>
-      <input type="range" value={value} onChange={onChange} min={min} max={max} step={step} />
-      <IntermediateTextInput value={value.toString()} displayValue={displayValue} onChange={onChange}
+      <input type="range" className={className} value={value} onChange={onChange} min={min} max={max} step={step} />
+      <ControlledTextInput value={value.toString()} displayValue={displayValue} onChange={onChange}
           inputMode="decimal"/>
     </div>
   </>
@@ -90,7 +57,7 @@ function HexInput({color, onColorChange}: HexInputProps) {
 
   return (
     <>
-      <IntermediateTextInput value={color.hex} onChange={handleChange} />
+      <ControlledTextInput value={color.hex} onChange={handleChange} />
     </>
   )
 }
@@ -101,7 +68,7 @@ type ColorSelectorProps = {
 };
 
 function ColorSelector({color, onColorChange}: ColorSelectorProps) {
-  const [page, setPage] = useState<string>(ColorSelectorPage.HSL);
+  const [page, setPage] = useState<string>(ColorSelectorPage.Hsl);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     setPage(event.target.value);
@@ -116,35 +83,35 @@ function ColorSelector({color, onColorChange}: ColorSelectorProps) {
     );
   }
 
-  function channelChanged(channel: Channel, event: ChangeEvent<HTMLInputElement>) {
+  function channelChanged(colorspace: string, channel: string, event: ChangeEvent<HTMLInputElement>) {
     const newValue = parseFloat(event.target.value) || 0;
 
-    if (newValue !== color.channel(channel)) {
-      onColorChange(color.adjust(channel, newValue));
+    if (newValue !== color.channel(colorspace, channel)) {
+      onColorChange(color.adjustChannel(colorspace, channel, newValue));
     }
   }
 
   function pageSliders() {
     switch (page) {
-      case ColorSelectorPage.HSL:
+      case ColorSelectorPage.Hsl:
         return (
           <>
-            <ChannelSlider value={color.hue} onChange={(e) => channelChanged(Channel.HueL, e)}
+            <ChannelSlider value={color.hslv.hue} onChange={(e) => channelChanged("hslv", "hueL", e)}
               label={"H"} min={0} max={360} step={5} />
-            <ChannelSlider value={color.saturationL} onChange={(e) => channelChanged(Channel.SaturationL, e)}
+            <ChannelSlider value={color.hslv.saturationL} onChange={(e) => channelChanged("hslv", "saturationL", e)}
               label={"S"} min={0} max={100} step={2} />
-            <ChannelSlider value={color.lightness} onChange={(e) => channelChanged(Channel.Lightness, e)}
+            <ChannelSlider value={color.hslv.lightness} onChange={(e) => channelChanged("hslv", "lightness", e)}
               label={"L"} min={0} max={100} step={2} />
           </>
         );
-      case ColorSelectorPage.HSV:
+      case ColorSelectorPage.Hsv:
         return (
           <>
-            <ChannelSlider value={color.hue} onChange={(e) => channelChanged(Channel.HueV, e)}
+            <ChannelSlider value={color.hslv.hue} onChange={(e) => channelChanged("hslv", "hueV", e)}
               label={"H"} min={0} max={360} step={5} />
-            <ChannelSlider value={color.saturationV} onChange={(e) => channelChanged(Channel.SaturationV, e)}
+            <ChannelSlider value={color.hslv.saturationV} onChange={(e) => channelChanged("hslv", "saturationV", e)}
               label={"S"} min={0} max={100} step={2} />
-            <ChannelSlider value={color.value} onChange={(e) => channelChanged(Channel.Value, e)}
+            <ChannelSlider value={color.hslv.value} onChange={(e) => channelChanged("hslv", "value", e)}
               label={"V"} min={0} max={100} step={2} />
           </>
         );
@@ -158,18 +125,18 @@ function ColorSelector({color, onColorChange}: ColorSelectorProps) {
       <div className="color-selector">
         <div className="color-sliders">
           <div className="subsection">
-            <ChannelSlider value={color.red} onChange={(e) => channelChanged(Channel.Red, e)}
+            <ChannelSlider value={color.rgb.red} onChange={(e) => channelChanged("rgb", "red", e)}
               label={"R"} min={0} max={255} step={5} />
-            <ChannelSlider value={color.green} onChange={(e) => channelChanged(Channel.Green, e)}
+            <ChannelSlider value={color.rgb.green} onChange={(e) => channelChanged("rgb", "green", e)}
               label={"G"} min={0} max={255} step={5} />
-            <ChannelSlider value={color.blue} onChange={(e) => channelChanged(Channel.Blue, e)}
+            <ChannelSlider value={color.rgb.blue} onChange={(e) => channelChanged("rgb", "blue", e)}
               label={"B"} min={0} max={255} step={5} />
           </div>
           <div className="subsection">
             <div className="subsection-header">
               <div className="tabbar">
-                {pageRadioButton(ColorSelectorPage.HSL)}
-                {pageRadioButton(ColorSelectorPage.HSV)}
+                {pageRadioButton(ColorSelectorPage.Hsl)}
+                {pageRadioButton(ColorSelectorPage.Hsv)}
               </div>
             </div>
             {pageSliders()}

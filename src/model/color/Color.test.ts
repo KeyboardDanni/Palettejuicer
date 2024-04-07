@@ -1,5 +1,7 @@
 import { expect, test } from "vitest";
-import Color, { Channel, Colorspace } from "./Color";
+import Color from "./Color";
+import { ColorRgb } from "./ColorRgb";
+import { ColorHslv } from "./ColorHslv";
 
 interface TestColor {
   red: number;
@@ -328,77 +330,81 @@ const testBadHexNames = [
   "", "#aa", "#aaaaa", "#aaaaaaa"
 ];
 
-function expectColorPropertiesEqual(actual: Color, expected: Color) {
-  for (const property of ["red", "green", "blue", "hue", "saturationL", "lightness", "saturationV", "value"]) {
-    const valueActual = actual[property as keyof Color];
-    const valueExpected = expected[property as keyof Color];
+function expectColorRgbEqual(actual: ColorRgb, expected: ColorRgb) {
+  for (const property of ["red", "green", "blue"]) {
+    const valueActual = actual[property as keyof ColorRgb];
+    const valueExpected = expected[property as keyof ColorRgb];
+    expect(valueActual, property).toBeCloseTo(valueExpected as number);
+  }
+}
+
+function expectColorHslvEqual(actual: ColorHslv, expected: ColorHslv) {
+  for (const property of ["hue", "saturationL", "lightness", "saturationV", "value"]) {
+    const valueActual = actual[property as keyof ColorHslv];
+    const valueExpected = expected[property as keyof ColorHslv];
     expect(valueActual, property).toBeCloseTo(valueExpected as number);
   }
 }
 
 function expectColorsEqual(actual: Color, expected: Color) {
-  expect(actual.colorspace).toBeCloseTo(expected.colorspace);
-
-  expectColorPropertiesEqual(actual, expected);
-}
-
-function expectTestColorEqual(actual: Color, expected: TestColor, properties: string[], digits: number) {
-  for (const property of properties) {
-    const valueActual = actual[property as keyof Color];
-    const valueExpected = expected[property as keyof TestColor];
-    expect(valueActual, property).toBeCloseTo(valueExpected as number, digits);
-  }
+  expectColorRgbEqual(actual.rgb, expected.rgb);
+  expectColorHslvEqual(actual.hslv, expected.hslv);
+  expect(actual.hex).toBe(expected.hex);
 }
 
 function expectTestColorRgbEqual(actual: Color, expected: TestColor) {
-  expectTestColorEqual(actual, expected, ["red", "green", "blue"], 0);
+  expect(actual.rgb.red).toBeCloseTo(expected.red, 0);
+  expect(actual.rgb.green).toBeCloseTo(expected.green, 0);
+  expect(actual.rgb.blue).toBeCloseTo(expected.blue, 0);
 }
 
 function expectTestColorHslEqual(actual: Color, expected: TestColor) {
-  if (actual.lightness > 0 && actual.lightness < 1) {
-    if (actual.saturationL > 0) {
-      expectTestColorEqual(actual, expected, ["hue"], 0);
+  if (actual.hslv.lightness > 0 && actual.hslv.lightness < 1) {
+    if (actual.hslv.saturationL > 0) {
+      expect(actual.hslv.hue).toBeCloseTo(expected.hue, 0);
     }
-    expectTestColorEqual(actual, expected, ["saturationL"], 2);
+    expect(actual.hslv.saturationL).toBeCloseTo(expected.saturationL, 2);
   }
-  expectTestColorEqual(actual, expected, ["lightness"], 2);
+  expect(actual.hslv.lightness).toBeCloseTo(expected.lightness, 2);
 }
 
 function expectTestColorHsvEqual(actual: Color, expected: TestColor) {
-  if (actual.saturationV > 0) {
-    expectTestColorEqual(actual, expected, ["hue"], 0);
+  if (actual.hslv.saturationV > 0) {
+    expect(actual.hslv.hue).toBeCloseTo(expected.hue, 0);
   }
-  expectTestColorEqual(actual, expected, ["saturationV", "value"], 2);
+  expect(actual.hslv.saturationV).toBeCloseTo(expected.saturationV, 2);
+  expect(actual.hslv.value).toBeCloseTo(expected.value, 2);
 }
 
 function expectTestColorAllEqual(actual: Color, expected: TestColor) {
   expectTestColorRgbEqual(actual, expected);
   expectTestColorHslEqual(actual, expected);
   expectTestColorHsvEqual(actual, expected);
+  expect(actual.hex).toBe(expected.hex);
 }
 
 test("constructs an empty Color", () => {
   const color = new Color();
 
-  expect(color.red).toBeCloseTo(0);
-  expect(color.green).toBeCloseTo(0);
-  expect(color.blue).toBeCloseTo(0);
+  expect(color.rgb.red).toBeCloseTo(0);
+  expect(color.rgb.green).toBeCloseTo(0);
+  expect(color.rgb.blue).toBeCloseTo(0);
 });
 
 test.each(testColors)("constructs an RGB Color (%#)", (testColor) => {
-  const color = Color.fromRgb(testColor.red, testColor.green, testColor.blue);
+  const color = Color.fromRgb(ColorRgb.from(testColor.red, testColor.green, testColor.blue));
 
   expectTestColorRgbEqual(color, testColor);
 });
 
 test.each(testColors)("constructs an HSL Color (%#)", (testColor) => {
-  const color = Color.fromHsl(testColor.hue, testColor.saturationL, testColor.lightness);
+  const color = Color.fromHslv(ColorHslv.fromHsl(testColor.hue, testColor.saturationL, testColor.lightness));
 
   expectTestColorHslEqual(color, testColor);
 });
 
 test.each(testColors)("constructs an HSV Color (%#)", (testColor) => {
-  const color = Color.fromHsv(testColor.hue, testColor.saturationV, testColor.value);
+  const color = Color.fromHslv(ColorHslv.fromHsv(testColor.hue, testColor.saturationV, testColor.value));
 
   expectTestColorHsvEqual(color, testColor);
 });
@@ -412,152 +418,114 @@ test.each(testColors)("constructs a hex Color (%#)", (testColor) => {
 });
 
 test.each(testColors)("clones a Color (%#)", (testColor) => {
-  const color = Color.fromRgb(testColor.red, testColor.green, testColor.blue);
+  const color = Color.fromRgb(ColorRgb.from(testColor.red, testColor.green, testColor.blue));
   const newColor = color.clone();
 
   expectColorsEqual(newColor, color);
 });
 
 test.each(testColors)("converts colorspaces (%#)", (testColor) => {
-  const color = Color.fromRgb(testColor.red, testColor.green, testColor.blue);
-
-  expect(color.colorspace).toBe(Colorspace.RGB);
-
-  const newColorHsl = color.adjustHsl(null, null, null);
+  const colorRgb = Color.fromRgb(ColorRgb.from(
+      testColor.red, testColor.green, testColor.blue));
+  const colorHsl = Color.fromHslv(ColorHslv.fromHsl(
+      testColor.hue, testColor.saturationL, testColor.lightness));
+  const colorHsv = Color.fromHslv(ColorHslv.fromHsv(
+      testColor.hue, testColor.saturationV, testColor.value));
   
-  expect(newColorHsl.colorspace).toBe(Colorspace.HSL);
-  expectColorPropertiesEqual(newColorHsl, color);
-  expectTestColorHslEqual(newColorHsl, testColor);
-
-  const newColorHsv = newColorHsl.adjustHsv(null, null, null);
-
-  expect(newColorHsv.colorspace).toBe(Colorspace.HSV);
-  expectColorPropertiesEqual(newColorHsv, newColorHsl);
-  expectTestColorHsvEqual(newColorHsv, testColor);
-
-  const newColorRgb = newColorHsl.adjustRgb(null, null, null);
-
-  expect(newColorRgb.colorspace).toBe(Colorspace.RGB);
-  expectColorPropertiesEqual(newColorRgb, newColorHsv);
-  expectTestColorRgbEqual(newColorRgb, testColor);
+  expectTestColorAllEqual(colorRgb, testColor);
+  expectTestColorAllEqual(colorHsl, testColor);
+  expectTestColorAllEqual(colorHsv, testColor);
 });
 
 test("adjusts color by RGB", () => {
-  let colorA = new Color();
-  let colorB = new Color();
+  let color = new Color();
 
-  colorA = colorA.adjust(Channel.Red, 255);
-  colorB = colorB.adjustRgb(255, null, null);
+  color = color.adjustChannel("rgb", "red", 255);
+  expectTestColorAllEqual(color, testColors[TestColorNames.Red]);
 
-  expectTestColorAllEqual(colorA, testColors[TestColorNames.Red]);
-  expectTestColorAllEqual(colorB, testColors[TestColorNames.Red]);
-  expect(colorA.colorspace).toBe(Colorspace.RGB);
-  expect(colorB.colorspace).toBe(Colorspace.RGB);
+  color = color.adjustChannel("rgb", "green", 255);
+  expectTestColorAllEqual(color, testColors[TestColorNames.Yellow]);
 
-  colorA = colorA.adjust(Channel.Green, 255);
-  colorB = colorB.adjustRgb(null, 255, null);
+  color = color.adjustChannel("rgb", "blue", 255);
+  expectTestColorAllEqual(color, testColors[TestColorNames.White]);
 
-  expectTestColorAllEqual(colorA, testColors[TestColorNames.Yellow]);
-  expectTestColorAllEqual(colorB, testColors[TestColorNames.Yellow]);
+  color = color.adjustChannel("rgb", "red", 0);
+  expectTestColorAllEqual(color, testColors[TestColorNames.Cyan]);
 
-  colorA = colorA.adjust(Channel.Blue, 255);
-  colorB = colorB.adjustRgb(null, null, 255);
+  color = color.adjustChannel("rgb", "green", 0);
+  expectTestColorAllEqual(color, testColors[TestColorNames.Blue]);
 
-  expectTestColorAllEqual(colorA, testColors[TestColorNames.White]);
-  expectTestColorAllEqual(colorB, testColors[TestColorNames.White]);
+  color = color.adjustChannel("rgb", "blue", 0);
+  expectTestColorAllEqual(color, testColors[TestColorNames.Black]);
 });
 
 test("adjusts color by HSL", () => {
-  let colorA = Color.fromHsl(0, 100, 50);
-  let colorB = colorA.clone();
+  let color = Color.fromHslv(ColorHslv.fromHsl(0, 100, 50));
 
-  colorA = colorA.adjust(Channel.HueL, 240);
-  colorB = colorB.adjustHsl(240, null, null);
-  expect(colorA.colorspace).toBe(Colorspace.HSL);
-  expect(colorB.colorspace).toBe(Colorspace.HSL);
+  color = color.adjustChannel("hslv", "hueL", 240);
+  expectTestColorAllEqual(color, testColors[TestColorNames.Blue]);
 
-  expectTestColorAllEqual(colorA, testColors[TestColorNames.Blue]);
-  expectTestColorAllEqual(colorB, testColors[TestColorNames.Blue]);
+  color = color.adjustChannel("hslv", "saturationL", 49.8);
+  expectTestColorAllEqual(color, testColors[TestColorNames.DesaturatedBlue]);
 
-  colorA = colorA.adjust(Channel.SaturationL, 49.8);
-  colorB = colorB.adjustHsl(null, 49.8, null);
-
-  expectTestColorAllEqual(colorA, testColors[TestColorNames.DesaturatedBlue]);
-  expectTestColorAllEqual(colorB, testColors[TestColorNames.DesaturatedBlue]);
-
-  colorA = colorA.adjust(Channel.Lightness, 100);
-  colorB = colorB.adjustHsl(null, null, 100);
-
-  expectTestColorAllEqual(colorA, testColors[TestColorNames.White]);
-  expectTestColorAllEqual(colorB, testColors[TestColorNames.White]);
+  color = color.adjustChannel("hslv", "lightness", 100);
+  expectTestColorAllEqual(color, testColors[TestColorNames.White]);
 });
 
 test("adjusts color by HSV", () => {
-  let colorA = Color.fromHsv(0, 100, 100);
-  let colorB = colorA.clone();
+  let color = Color.fromHslv(ColorHslv.fromHsv(0, 100, 100));
 
-  colorA = colorA.adjust(Channel.HueV, 240);
-  colorB = colorB.adjustHsv(240, null, null);
-  expect(colorA.colorspace).toBe(Colorspace.HSV);
-  expect(colorB.colorspace).toBe(Colorspace.HSV);
+  color = color.adjustChannel("hslv", "hueV", 240);
+  expectTestColorAllEqual(color, testColors[TestColorNames.Blue]);
 
-  expectTestColorAllEqual(colorA, testColors[TestColorNames.Blue]);
-  expectTestColorAllEqual(colorB, testColors[TestColorNames.Blue]);
+  color = color.adjustChannel("hslv", "value", 49.8);
+  expectTestColorAllEqual(color, testColors[TestColorNames.DarkBlue]);
 
-  colorA = colorA.adjust(Channel.Value, 49.8);
-  colorB = colorB.adjustHsv(null, null, 49.8);
-
-  expectTestColorAllEqual(colorA, testColors[TestColorNames.DarkBlue]);
-  expectTestColorAllEqual(colorB, testColors[TestColorNames.DarkBlue]);
-
-  colorA = colorA.adjust(Channel.SaturationV, 0);
-  colorB = colorB.adjustHsv(null, 0, null);
-
-  expectTestColorAllEqual(colorA, testColors[TestColorNames.Gray]);
-  expectTestColorAllEqual(colorB, testColors[TestColorNames.Gray]);
+  color = color.adjustChannel("hslv", "saturationV", 0);
+  expectTestColorAllEqual(color, testColors[TestColorNames.Gray]);
 });
 
 test("maintains hue when adjusting HSL/HSV", () => {
-  const initialColor = Color.fromHsl(260, 50, 50);
+  const initialColor = Color.fromHslv(ColorHslv.fromHsl(260, 50, 50));
   let color = initialColor.clone();
 
-  expect(color.hue).toBeCloseTo(260);
+  expect(color.hslv.hue).toBeCloseTo(260);
 
-  color = initialColor.adjust(Channel.SaturationL, 0);
-  expect(color.hue).toBeCloseTo(260);
+  color = initialColor.adjustChannel("hslv", "saturationL", 0);
+  expect(color.hslv.hue).toBeCloseTo(260);
 
-  color = color.adjust(Channel.SaturationL, 100);
-  expect(color.hue).toBeCloseTo(260);
+  color = color.adjustChannel("hslv", "saturationL", 100);
+  expect(color.hslv.hue).toBeCloseTo(260);
 
-  color = initialColor.adjust(Channel.Lightness, 0);
-  expect(color.hue).toBeCloseTo(260);
+  color = initialColor.adjustChannel("hslv", "lightness", 0);
+  expect(color.hslv.hue).toBeCloseTo(260);
 
-  color = color.adjust(Channel.Lightness, 100);
-  expect(color.hue).toBeCloseTo(260);
+  color = color.adjustChannel("hslv", "lightness", 100);
+  expect(color.hslv.hue).toBeCloseTo(260);
 
-  color = color.adjust(Channel.Lightness, 50);
-  expect(color.hue).toBeCloseTo(260);
+  color = color.adjustChannel("hslv", "lightness", 50);
+  expect(color.hslv.hue).toBeCloseTo(260);
 
-  color = initialColor.adjust(Channel.SaturationV, 0);
-  expect(color.hue).toBeCloseTo(260);
+  color = initialColor.adjustChannel("hslv", "saturationV", 0);
+  expect(color.hslv.hue).toBeCloseTo(260);
 
-  color = color.adjust(Channel.SaturationV, 50);
-  expect(color.hue).toBeCloseTo(260);
+  color = color.adjustChannel("hslv", "saturationV", 50);
+  expect(color.hslv.hue).toBeCloseTo(260);
 
-  color = initialColor.adjust(Channel.Value, 0);
-  expect(color.hue).toBeCloseTo(260);
+  color = initialColor.adjustChannel("hslv", "value", 0);
+  expect(color.hslv.hue).toBeCloseTo(260);
 
-  color = color.adjust(Channel.Value, 50);
-  expect(color.hue).toBeCloseTo(260);
+  color = color.adjustChannel("hslv", "value", 50);
+  expect(color.hslv.hue).toBeCloseTo(260);
 });
 
 test("handles hex strings correctly", () => {
   for (const name of testHexNames) {
     const color = Color.fromHex(name.hex);
     expect(color, name.hex).not.toBeNull();
-    expect(color?.red, name.hex).toBeCloseTo(name.red);
-    expect(color?.green, name.hex).toBeCloseTo(name.green);
-    expect(color?.blue, name.hex).toBeCloseTo(name.blue);
+    expect(color?.rgb.red, name.hex).toBeCloseTo(name.red);
+    expect(color?.rgb.green, name.hex).toBeCloseTo(name.green);
+    expect(color?.rgb.blue, name.hex).toBeCloseTo(name.blue);
   }
   for (const name of testBadHexNames) {
     const color = Color.fromHex(name);
