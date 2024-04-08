@@ -90,14 +90,10 @@ export class ColorHslv implements Colorspace {
   }
 
   compute(converter: Colorjs): ColorHslv {
-    let [hue, saturationL, lightness] = converter.hsl;
+    const [hue, saturationL, lightness] = converter.hsl;
     const [, saturationV, value] = converter.hsv;
 
-    if (Number.isNaN(hue)) {
-      hue = this._hue;
-    }
-
-    return new ColorHslv(hue, saturationL, lightness, saturationV, value);
+    return new ColorHslv(!Number.isNaN(hue) ? hue : this._hue, saturationL, lightness, saturationV, value);
   }
 
   computeFromHsl(): ColorHslv {
@@ -115,6 +111,6 @@ export class ColorHslv implements Colorspace {
   }
 
   converter(): Colorjs {
-    return new Colorjs("hsl", [this._hue, this._saturationL, this._lightness]);
+    return new Colorjs("hsv", [this._hue, this._saturationV, this._value]);
   }
 }

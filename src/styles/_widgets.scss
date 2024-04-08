@@ -64,10 +64,10 @@ button {
     border-bottom: none;
     color: $color-text-radio-button;
     text-align: center;
-    min-width: 60px;
+    min-width: 50px;
     height: 28px;
     margin: 0px -1px 0px 0px;
-    padding: (6px + $checked) 12px (6px - $checked) 12px;
+    padding: (6px + $checked) 6px (6px - $checked) 6px;
     position: relative;
 
     @if $checked > 0 {

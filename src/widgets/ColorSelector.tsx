@@ -6,6 +6,10 @@ import { ControlledTextInput } from "./ControlledTextInput";
 enum ColorSelectorPage {
   Hsl = "HSL",
   Hsv = "HSV",
+  Lch = "LCH",
+  Lab = "LAB",
+  Oklch = "OKLCH",
+  Oklab = "OKLAB",
 }
 
 function backgroundColorStyle(color: Color) {
@@ -115,6 +119,50 @@ function ColorSelector({color, onColorChange}: ColorSelectorProps) {
               label={"V"} min={0} max={100} step={2} />
           </>
         );
+      case ColorSelectorPage.Lch:
+        return (
+          <>
+            <ChannelSlider value={color.labch.lightness} onChange={(e) => channelChanged("labch", "lightnessLch", e)}
+              label={"L"} min={0} max={100} step={2} />
+            <ChannelSlider value={color.labch.chroma} onChange={(e) => channelChanged("labch", "chroma", e)}
+              label={"C"} min={0} max={150} step={3} />
+            <ChannelSlider value={color.labch.hue} onChange={(e) => channelChanged("labch", "hue", e)}
+              label={"H"} min={0} max={360} step={5} />
+          </>
+        );
+      case ColorSelectorPage.Lab:
+        return (
+          <>
+            <ChannelSlider value={color.labch.lightness} onChange={(e) => channelChanged("labch", "lightnessLab", e)}
+              label={"L"} min={0} max={100} step={2} />
+            <ChannelSlider value={color.labch.a} onChange={(e) => channelChanged("labch", "a", e)}
+              label={"A"} min={-125} max={125} step={5} />
+            <ChannelSlider value={color.labch.b} onChange={(e) => channelChanged("labch", "b", e)}
+              label={"B"} min={-125} max={125} step={5} />
+          </>
+        );
+      case ColorSelectorPage.Oklch:
+        return (
+          <>
+            <ChannelSlider value={color.oklabch.lightness} onChange={(e) => channelChanged("oklabch", "lightnessLch", e)}
+              label={"L"} min={0} max={100} step={2} />
+            <ChannelSlider value={color.oklabch.chroma} onChange={(e) => channelChanged("oklabch", "chroma", e)}
+              label={"C"} min={0} max={40} step={1} />
+            <ChannelSlider value={color.oklabch.hue} onChange={(e) => channelChanged("oklabch", "hue", e)}
+              label={"H"} min={0} max={360} step={5} />
+          </>
+        );
+      case ColorSelectorPage.Oklab:
+        return (
+          <>
+            <ChannelSlider value={color.oklabch.lightness} onChange={(e) => channelChanged("oklabch", "lightnessLab", e)}
+              label={"L"} min={0} max={100} step={2} />
+            <ChannelSlider value={color.oklabch.a} onChange={(e) => channelChanged("oklabch", "a", e)}
+              label={"A"} min={-40} max={40} step={2} />
+            <ChannelSlider value={color.oklabch.b} onChange={(e) => channelChanged("oklabch", "b", e)}
+              label={"B"} min={-40} max={40} step={2} />
+          </>
+        );
       default:
         throw new Error("Bad enum");
     }
@@ -137,6 +185,10 @@ function ColorSelector({color, onColorChange}: ColorSelectorProps) {
               <div className="tabbar">
                 {pageRadioButton(ColorSelectorPage.Hsl)}
                 {pageRadioButton(ColorSelectorPage.Hsv)}
+                {pageRadioButton(ColorSelectorPage.Lch)}
+                {pageRadioButton(ColorSelectorPage.Lab)}
+                {pageRadioButton(ColorSelectorPage.Oklch)}
+                {pageRadioButton(ColorSelectorPage.Oklab)}
               </div>
             </div>
             {pageSliders()}
