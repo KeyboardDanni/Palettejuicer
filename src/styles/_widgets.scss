@@ -1,8 +1,8 @@
 @use "./_constants.scss" as *;
 
 @mixin raised-box-shadow ($color-inset, $color-border, $size-outline, $height) {
-    box-shadow: 0px $height 0px $color-border,
-        inset 0px 0px 0px $size-outline $color-inset;
+    box-shadow: 0 $height 0 $color-border,
+        inset 0 0 0 $size-outline $color-inset;
 }
 
 @mixin raised-widget ($color, $color-inset, $color-border, $radius, $height, $pressed) {
@@ -22,14 +22,14 @@
         position: absolute;
         top: (-$height - $size-widget-outline) * $pressed;
         bottom: (-$height - $size-widget-outline) * (1 - $pressed);
-        left: 0px;
-        right: 0px;
+        left: 0;
+        right: 0;
     }
 }
 
 @mixin raised-widget-focus ($color) {
-    outline: 2px solid $color;
-    outline-offset: (-$size-widget-outline - 2px);
+    outline: 0.2rem solid $color;
+    outline-offset: (-$size-widget-outline - 0.2rem);
 }
 
 @mixin raised-button ($color, $color-border, $pressed) {
@@ -42,7 +42,7 @@ button {
 
     color: $color-text-button;
     margin: $size-widget-outline $size-widget-outline ($size-button-height + $size-widget-outline) $size-widget-outline;
-    padding: 8px;
+    padding: 0.8rem;
 
     &:hover, &:focus-visible {
         @include raised-button($color-button-hover, $color-button-border-hover, 0);
@@ -57,35 +57,49 @@ button {
     }
 }
 
+.button-bar {
+    display: flex;
+    flex-direction: row;
+    align-items: baseline;
+    gap: 0.2rem;
+    column-gap: 0.2rem;
+
+    .button-bar-spacer {
+        min-width: 2rem;
+        flex: 1;
+    }
+}
+
 @mixin header-tab-button ($color, $checked) {
     display: inline-block;
     background-color: $color;
-    border: 1px solid $color-tab-border;
+    border: 0.1rem solid $color-tab-border;
     border-bottom: none;
     color: $color-text-radio-button;
     text-align: center;
-    min-width: 50px;
-    height: 28px;
-    margin: 0px -1px 0px 0px;
-    padding: (6px + $checked) 6px (6px - $checked) 6px;
+    min-width: 4.8rem;
+    height: 2.8rem;
+    margin: 0 -0.1rem 0 0;
+    padding: (0.6rem + $checked * 0.1) 0.6rem (0.6rem - $checked * 0.1) 0.6rem;
+    transform: translateY(0.1rem * $checked);
     position: relative;
 
     @if $checked > 0 {
         &::after {
             position: absolute;
             content: "";
-            top: 26px;
-            left: 0px;
+            top: 2.6rem;
+            left: 0;
             width: 100%;
-            height: 2px;
+            height: 0.2rem;
             background-color: $color-button;
         }
     }
 }
 
 .tabbar {
-    margin: 8px 1px 8px 1px;
-    border-bottom: 1px solid $color-tab-border;
+    margin: 0.8rem 0.1rem 0.8rem 0.1rem;
+    border-bottom: 0.1rem solid $color-tab-border;
 }
 
 label.tabbar-tab {
@@ -93,9 +107,9 @@ label.tabbar-tab {
         position: absolute;
         overflow: hidden;
         clip: rect(0 0 0 0);
-        width: 1px;
-        height: 1px;
-        margin: -1px;
+        width: 0.1rem;
+        height: 0.1rem;
+        margin: -0.1rem;
         padding: 0;
         border: 0;
 
@@ -112,7 +126,7 @@ label.tabbar-tab {
         }
 
         &:focus-visible + span {
-            box-shadow: inset 0px 0px 0px 2px $color-button;
+            box-shadow: inset 0 0 0 0.2rem $color-button;
         }
     }
 
@@ -125,21 +139,71 @@ label.tabbar-tab {
     }
 }
 
+label {
+    &:has(input[type=checkbox]) {
+        text-wrap: nowrap;
+        margin-right: 0.4rem;
+    }
+    
+    input[type=checkbox] {
+        appearance: none;
+        width: 2.4rem;
+        height: 2.4rem;
+        margin-bottom: 0.6rem;
+        margin-right: 0.4rem;
+        vertical-align: middle;
+
+        &:not(:checked) {
+            @include raised-button($color-checkbox, $color-checkbox-border, 0);
+
+            &:hover, &:focus-visible {
+                @include raised-button($color-checkbox-hover, $color-checkbox-border-hover, 0);
+            }
+
+            &:active {
+                @include raised-button($color-checkbox-hover, $color-checkbox-border-hover, 1);
+            }
+
+            &:focus-visible {
+                @include raised-widget-focus($color-button);
+            }
+        }
+
+        &:checked {
+            @include raised-button($color-button, $color-button-border, 0);
+
+            background-image: url('data:image/svg+xml,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4,12 l5,5 l11,-11" stroke="white" stroke-width="0.2rem" fill="none"/></svg>');
+
+            &:hover, &:focus-visible {
+                @include raised-button($color-button-hover, $color-button-border-hover, 0);
+            }
+
+            &:active {
+                @include raised-button($color-button-hover, $color-button-border-hover, 1);
+            }
+
+            &:focus-visible {
+                @include raised-widget-focus($color-text-button);
+            }
+        }
+    }
+}
+
 input[type=text] {
-    height: 22px;
-    margin: 1px 1px 1px 1px;
-    padding: 7px 3px 4px 3px;
+    height: 2.2rem;
+    margin: 0.1rem 0.1rem 0.1rem 0.1rem;
+    padding: 0.7rem 0.3rem 0.4rem 0.3rem;
 
     background-color: $color-field-background;
     border: $size-widget-outline solid $color-section-border;
-    box-shadow: inset 0px 2px $color-section-border;
+    box-shadow: inset 0 0.2rem $color-section-border;
     border-radius: $size-button-radius;
 }
 
 @mixin range-thumb {
-    width: 16px;
-    height: 20px;
-    margin-top: -8px;
+    width: 1.6rem;
+    height: 2rem;
+    margin-top: -0.8rem;
     cursor: default;
 }
 
@@ -155,13 +219,13 @@ input[type=text] {
 
 @mixin range-track {
     width: 100%;
-    height: 10px;
+    height: 1rem;
     cursor: default;
-    margin: 6px 1px 6px 1px;
+    margin: 0.6rem 0.1rem 0.6rem 0.1rem;
 
     background-color: $color-slider-recess;
     border: $size-widget-outline solid $color-section-border;
-    box-shadow: inset 0px 2px $color-section-border;
+    box-shadow: inset 0 0.2rem $color-section-border;
     border-radius: $size-button-radius;
 }
 
@@ -183,7 +247,7 @@ input[type=range] {
     &::-ms-thumb {
         @include range-thumb-normal;
 
-        margin: 0px;
+        margin: 0;
     }
 
     &::-webkit-slider-runnable-track {
@@ -228,12 +292,12 @@ input[type=range] {
 }
 
 .section {
-    @include raised-box-shadow($color-section-inset, $color-section-border, $size-section-outline, $size-button-height);
+    @include raised-box-shadow($color-section-inset, $color-section-border, calc($size-section-outline / 2), $size-button-height);
 
     background-color: $color-section-background;
-    border: solid $size-section-outline $color-section-border;
-    border-radius: 10px;
-    margin: 10px 10px (10px + $size-button-height) 10px;
+    border: $size-section-outline solid $color-section-border;
+    border-radius: 1rem;
+    margin-bottom: $size-button-height;
     padding: $size-section-padding;
 }
 
@@ -243,10 +307,23 @@ input[type=range] {
     margin-right: $size-label-spacing;
 }
 
-#logo {
-    background-image: url("assets/logo.png");
-    background-repeat: no-repeat;
-    width: 428px;
-    height: 64px;
-    margin: $size-section-padding;
+.os-scrollbar {
+    padding: 0.2rem;
+    --os-size: 2rem;
+    --os-handle-bg: #{$color-slider};
+    --os-handle-bg-hover: #{$color-slider-hover};
+    --os-handle-bg-active: #{$color-slider-hover};
+    --os-handle-border-radius: #{$size-button-radius};
+    --os-handle-border: #{$size-widget-outline} solid #{$color-slider-border};
+    --os-handle-border-hover: #{$size-widget-outline} solid #{$color-slider-border-hover};
+    --os-handle-border-active: #{$size-widget-outline} solid #{$color-slider-border-hover};
+    --os-handle-interactive-area-offset: 0;
+
+    .os-scrollbar-handle {
+        @include raised-box-shadow($color-button-inset, $color-slider-border, $size-widget-outline, $size-button-height);
+
+        &:hover {
+            @include raised-box-shadow($color-button-inset, $color-slider-border, $size-widget-outline, $size-button-height);
+        }
+    }
 }

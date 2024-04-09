@@ -1,5 +1,8 @@
 @use "modern-normalize/modern-normalize.css";
+@use "overlayscrollbars/overlayscrollbars.css";
 
 @use "./base.scss";
+@use "./app.scss";
 @use "./widgets.scss";
 @use "./color-selector.scss";
+@use "./palette.scss";

@@ -8,16 +8,8 @@ enum ColorSelectorPage {
   Hsv = "HSV",
   Lch = "LCH",
   Lab = "LAB",
-  Oklch = "OKLCH",
-  Oklab = "OKLAB",
-}
-
-function backgroundColorStyle(color: Color) {
-  const [red, green, blue] = color.rgb.intNormalized();
-
-  return {
-    backgroundColor: `rgb(${red} ${green} ${blue})`
-  }
+  Oklch = "OkLCH",
+  Oklab = "OkLAB",
 }
 
 type ChannelSliderProps = {
@@ -38,7 +30,7 @@ function ChannelSlider({ value, onChange, label, min, max, step }: ChannelSlider
     <div className="color-slider">
       <span className="label-left">{label}</span>
       <input type="range" className={className} value={value} onChange={onChange} min={min} max={max} step={step} />
-      <ControlledTextInput value={value.toString()} displayValue={displayValue} onChange={onChange}
+      <ControlledTextInput value={value.toString()} title={value.toString()} displayValue={displayValue} onChange={onChange}
           inputMode="decimal"/>
     </div>
   </>
@@ -172,7 +164,7 @@ function ColorSelector({color, onColorChange}: ColorSelectorProps) {
     <>
       <div className="color-selector">
         <div className="color-sliders">
-          <div className="subsection">
+          <div>
             <ChannelSlider value={color.rgb.red} onChange={(e) => channelChanged("rgb", "red", e)}
               label={"R"} min={0} max={255} step={5} />
             <ChannelSlider value={color.rgb.green} onChange={(e) => channelChanged("rgb", "green", e)}
@@ -180,22 +172,20 @@ function ColorSelector({color, onColorChange}: ColorSelectorProps) {
             <ChannelSlider value={color.rgb.blue} onChange={(e) => channelChanged("rgb", "blue", e)}
               label={"B"} min={0} max={255} step={5} />
           </div>
-          <div className="subsection">
-            <div className="subsection-header">
-              <div className="tabbar">
-                {pageRadioButton(ColorSelectorPage.Hsl)}
-                {pageRadioButton(ColorSelectorPage.Hsv)}
-                {pageRadioButton(ColorSelectorPage.Lch)}
-                {pageRadioButton(ColorSelectorPage.Lab)}
-                {pageRadioButton(ColorSelectorPage.Oklch)}
-                {pageRadioButton(ColorSelectorPage.Oklab)}
-              </div>
+          <div>
+            <div className="tabbar">
+              {pageRadioButton(ColorSelectorPage.Hsl)}
+              {pageRadioButton(ColorSelectorPage.Hsv)}
+              {pageRadioButton(ColorSelectorPage.Lch)}
+              {pageRadioButton(ColorSelectorPage.Lab)}
+              {pageRadioButton(ColorSelectorPage.Oklch)}
+              {pageRadioButton(ColorSelectorPage.Oklab)}
             </div>
             {pageSliders()}
           </div>
         </div>
         <div className="color-preview-column">
-          <div className="color-preview" style={backgroundColorStyle(color)} />
+          <div className="color-preview" style={{backgroundColor: color.hex}} />
           <div className="color-hex">
             <HexInput color={color} onColorChange={onColorChange} />
           </div>

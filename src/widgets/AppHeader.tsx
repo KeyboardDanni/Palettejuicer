@@ -1,11 +1,11 @@
-function Header() {
+function AppHeader() {
   return (
     <>
-      <div id="header">
+      <div id="app-header">
         <div id="logo" />
       </div>
     </>
   )
 }
 
-export default Header
+export default AppHeader;
