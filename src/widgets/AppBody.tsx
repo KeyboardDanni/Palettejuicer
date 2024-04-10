@@ -1,11 +1,11 @@
 import { useState } from "react";
 
-import Color from "../model/color/Color";
-import Palette from "../model/Palette";
-import ColorSelector from "./ColorSelector";
-import PaletteView from "./PaletteView";
+import { Color } from "../model/color/Color";
+import { Palette } from "../model/Palette";
+import { ColorSelector } from "./ColorSelector";
+import { PaletteView } from "./PaletteView";
 
-function AppBody() {
+export function AppBody() {
   const [activeColorIndex, setActiveColorIndex] = useState({ x: 0, y: 0 });
   const [palette, setPalette] = useState(new Palette());
 
@@ -67,5 +67,3 @@ function AppBody() {
     </>
   );
 }
-
-export default AppBody;

@@ -1,4 +1,4 @@
-function AppHeader() {
+export function AppHeader() {
   return (
     <>
       <div id="app-header">
@@ -7,5 +7,3 @@ function AppHeader() {
     </>
   );
 }
-
-export default AppHeader;

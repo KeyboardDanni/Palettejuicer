@@ -1,4 +1,4 @@
-import Color from "./color/Color";
+import { Color } from "./color/Color";
 import { ColorRgb } from "./color/ColorRgb";
 
 // Fixed at 16x16 for now
@@ -7,7 +7,7 @@ const PALETTE_HEIGHT = 16;
 
 const DEFAULT_COLOR = Color.fromRgb(ColorRgb.from(60, 60, 60));
 
-class Palette {
+export class Palette {
   private _selectedColors: Color[];
 
   constructor() {
@@ -46,5 +46,3 @@ class Palette {
     return newPalette;
   }
 }
-
-export default Palette;

@@ -1,7 +1,7 @@
-import AppBody from "./widgets/AppBody";
-import AppHeader from "./widgets/AppHeader";
+import { AppBody } from "./widgets/AppBody";
+import { AppHeader } from "./widgets/AppHeader";
 
-function App() {
+export function App() {
   return (
     <>
       <div id="app-wrapper">
@@ -11,5 +11,3 @@ function App() {
     </>
   );
 }
-
-export default App;

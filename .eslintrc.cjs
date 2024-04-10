@@ -4,6 +4,7 @@ module.exports = {
   extends: [
     'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
+    'plugin:import/recommended',
     'plugin:react-hooks/recommended',
   ],
   ignorePatterns: ['dist', '.eslintrc.cjs'],
@@ -17,6 +18,12 @@ module.exports = {
     '@typescript-eslint/no-unused-vars': [
       'error',
       { 'argsIgnorePattern': '^_' }],
-    '@typescript-eslint/no-explicit-any': 'off'
+    'import/no-default-export': 'error',
+    '@typescript-eslint/no-explicit-any': 'off',
   },
+  settings: {
+    'import/resolver': {
+      'typescript': true
+    }
+  }
 }

@@ -22,7 +22,7 @@ const DEFAULT_HSLV = ColorHslv.fromHsl(0, 0, 0);
 const DEFAULT_LABCH = ColorLabch.fromLab(0, 0, 0);
 const DEFAULT_OKLABCH = ColorOklabch.fromOklab(0, 0, 0);
 
-class Color {
+export class Color {
   private _rgb = DEFAULT_RGB.clone();
   private _hslv = DEFAULT_HSLV.clone();
   private _labch = DEFAULT_LABCH.clone();
@@ -177,5 +177,3 @@ class Color {
     }
   }
 }
-
-export default Color;

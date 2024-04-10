@@ -1,6 +1,6 @@
 import { ChangeEvent, ChangeEventHandler, useState } from "react";
 
-import Color from "../model/color/Color";
+import { Color } from "../model/color/Color";
 import { ControlledTextInput } from "./ControlledTextInput";
 
 enum ColorSelectorPage {
@@ -68,7 +68,7 @@ type ColorSelectorProps = {
   onColorChange: (color: Color) => void;
 };
 
-function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
+export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
   const [page, setPage] = useState<string>(ColorSelectorPage.Hsl);
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
@@ -327,5 +327,3 @@ function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
     </>
   );
 }
-
-export default ColorSelector;

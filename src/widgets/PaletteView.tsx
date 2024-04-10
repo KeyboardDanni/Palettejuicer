@@ -1,6 +1,6 @@
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
-import Palette from "../model/Palette";
+import { Palette } from "../model/Palette";
 
 function paletteCel(props: PaletteViewProps, x: number, y: number) {
   const color = props.palette.color(x, y);
@@ -41,7 +41,7 @@ type PaletteViewProps = {
   onIndexClicked: (x: number, y: number) => void;
 };
 
-function PaletteView(props: PaletteViewProps) {
+export function PaletteView(props: PaletteViewProps) {
   const rows = [];
 
   for (let y = 0; y < 16; y++) {
@@ -58,5 +58,3 @@ function PaletteView(props: PaletteViewProps) {
     </>
   );
 }
-
-export default PaletteView;
