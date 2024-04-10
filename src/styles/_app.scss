@@ -1,101 +1,101 @@
 @use "./_constants.scss" as *;
 
 #root {
-    width: 100%;
-    min-height: 100vh;
-    margin: 0;
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
+  width: 100%;
+  min-height: 100vh;
+  margin: 0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 #app-wrapper {
-    min-height: 100vh;
-    width: 100%;
-    max-width: 128.0rem;
-    max-height: 100%;
-    padding: $size-section-padding;
-    display: flex;
-    flex-direction: column;
-    gap: $size-section-padding;
+  min-height: 100vh;
+  width: 100%;
+  max-width: 128rem;
+  max-height: 100%;
+  padding: $size-section-padding;
+  display: flex;
+  flex-direction: column;
+  gap: $size-section-padding;
 }
 
 #app-header {
-    #logo {
-        background-image: url("assets/logo.png");
-        background-repeat: no-repeat;
-        background-position: center;
-        width: 428px;
-        height: 64px;
-    }
+  #logo {
+    background-image: url("assets/logo.png");
+    background-repeat: no-repeat;
+    background-position: center;
+    width: 428px;
+    height: 64px;
+  }
 }
 
 #app-body {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
+
+  #app-columns {
     display: flex;
     flex-direction: row;
     flex: 1;
-
-    #app-columns {
-        display: flex;
-        flex-direction: row;
-        flex: 1;
-        column-gap: $size-section-padding;
-    }
+    column-gap: $size-section-padding;
+  }
 }
 
 #document-sidebar {
-    display: flex;
-    flex-direction: column;
-    gap: $size-section-padding;
+  display: flex;
+  flex-direction: column;
+  gap: $size-section-padding;
 }
 
 #sidebar-calculations {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 #sidebar-properties {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 #sidebar-color-selector {
-    display: flex;
-    flex-direction: column;
+  display: flex;
+  flex-direction: column;
 }
 
 #document-palette {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
+  display: flex;
+  flex-direction: column;
+  flex: 1;
 }
 
 .section-header {
-    font-size: 2.4rem;
-    font-variant: small-caps;
-    margin-bottom: 0.8rem;
+  font-size: 2.4rem;
+  font-variant: small-caps;
+  margin-bottom: 0.8rem;
 }
 
 .header-bar {
-    display: flex;
-    flex-direction: row;
-    justify-content: space-between;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
 }
 
 .placeholder {
-    color: $color-text-disabled;
-    line-height: 1.25;
-    text-align: center;
-    width: 0;
-    min-width: 100%;
-    flex: 1;
-    padding: 2rem;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+  color: $color-text-disabled;
+  line-height: 1.25;
+  text-align: center;
+  width: 0;
+  min-width: 100%;
+  flex: 1;
+  padding: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }

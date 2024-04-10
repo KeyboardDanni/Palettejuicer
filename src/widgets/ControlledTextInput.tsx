@@ -8,11 +8,10 @@ export type IntermediateTextInputProps = {
 };
 
 export function ControlledTextInput({ value, displayValue, onChange, ...other }: IntermediateTextInputProps) {
-
   const [temp, setTemp] = useState<string>(value);
   const [tempActive, setTempActive] = useState(false);
 
-  const editValue = tempActive ? temp : (displayValue ?? value);
+  const editValue = tempActive ? temp : displayValue ?? value;
 
   function handleFocus(event: React.FocusEvent<HTMLInputElement>) {
     setTemp(value);
@@ -32,8 +31,14 @@ export function ControlledTextInput({ value, displayValue, onChange, ...other }:
 
   return (
     <>
-      <input type="text" {...other} value={editValue} onFocus={handleFocus}
-        onBlur={handleBlur} onChange={handleTextChange} />
+      <input
+        type="text"
+        {...other}
+        value={editValue}
+        onFocus={handleFocus}
+        onBlur={handleBlur}
+        onChange={handleTextChange}
+      />
     </>
   );
 }

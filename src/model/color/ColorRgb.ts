@@ -8,12 +8,12 @@ export class ColorRgb implements Colorspace {
   private _green: number;
   private _blue: number;
 
-  get red() { return this._red * 255; }
-  get green() { return this._green * 255; }
-  get blue() { return this._blue * 255; }
-  get redRaw() { return this._red; }
-  get greenRaw() { return this._green; }
-  get blueRaw() { return this._blue; }
+  get red() { return this._red * 255; } // prettier-ignore
+  get green() { return this._green * 255; } // prettier-ignore
+  get blue() { return this._blue * 255; } // prettier-ignore
+  get redRaw() { return this._red; } // prettier-ignore
+  get greenRaw() { return this._green; } // prettier-ignore
+  get blueRaw() { return this._blue; } // prettier-ignore
 
   private constructor(red: number, green: number, blue: number) {
     this._red = red;

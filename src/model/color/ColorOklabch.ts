@@ -9,11 +9,11 @@ export class ColorOklabch implements Colorspace {
   private _chroma: number;
   private _hue: number;
 
-  get lightness() { return this._lightness; }
-  get a() { return this._a; }
-  get b() { return this._b; }
-  get chroma() { return this._chroma; }
-  get hue() { return this._hue; }
+  get lightness() { return this._lightness; } // prettier-ignore
+  get a() { return this._a; } // prettier-ignore
+  get b() { return this._b; } // prettier-ignore
+  get chroma() { return this._chroma; } // prettier-ignore
+  get hue() { return this._hue; } // prettier-ignore
 
   private constructor(lightness: number, a: number, b: number, chroma: number, hue: number) {
     this._lightness = lightness;
@@ -76,7 +76,7 @@ export class ColorOklabch implements Colorspace {
         throw new Error("Bad channel");
     }
   }
-  
+
   adjustOklab(lightness: number | null, a: number | null, b: number | null): ColorOklabch {
     const lab = new ColorOklabch(lightness ?? this._lightness, a ?? this._a, b ?? this._b, 0, 0);
 

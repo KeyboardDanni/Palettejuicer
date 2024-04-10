@@ -7,12 +7,7 @@ import { ColorHslv } from "./ColorHslv";
 import { ColorLabch } from "./ColorLabch";
 import { ColorOklabch } from "./ColorOklabch";
 
-const clonedProperties = [
-  "_rgb",
-  "_hslv",
-  "_labch",
-  "_oklabch"
-];
+const clonedProperties = ["_rgb", "_hslv", "_labch", "_oklabch"];
 
 export interface Colorspace {
   clone(): ThisType<this>;
@@ -29,11 +24,11 @@ class Color {
   private _oklabch = ColorOklabch.fromOklab(0, 0, 0);
   private _hex: string = "#000000";
 
-  get rgb() { return this._rgb; }
-  get hslv() { return this._hslv; }
-  get labch() { return this._labch; }
-  get oklabch() { return this._oklabch; }
-  get hex() { return this._hex; }
+  get rgb() { return this._rgb; } // prettier-ignore
+  get hslv() { return this._hslv; } // prettier-ignore
+  get labch() { return this._labch; } // prettier-ignore
+  get oklabch() { return this._oklabch; } // prettier-ignore
+  get hex() { return this._hex; } // prettier-ignore
 
   clone(): Color {
     const color = new Color();

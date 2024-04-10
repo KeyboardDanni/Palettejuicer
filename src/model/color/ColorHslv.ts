@@ -9,11 +9,11 @@ export class ColorHslv implements Colorspace {
   private _saturationV: number;
   private _value: number;
 
-  get hue() { return this._hue; }
-  get saturationL() { return this._saturationL; }
-  get lightness() { return this._lightness; }
-  get saturationV() { return this._saturationV; }
-  get value() { return this._value; }
+  get hue() { return this._hue; } // prettier-ignore
+  get saturationL() { return this._saturationL; } // prettier-ignore
+  get lightness() { return this._lightness; } // prettier-ignore
+  get saturationV() { return this._saturationV; } // prettier-ignore
+  get value() { return this._value; } // prettier-ignore
 
   private constructor(hue: number, saturationL: number, lightness: number, saturationV: number, value: number) {
     this._hue = hue;

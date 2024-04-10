@@ -20,7 +20,10 @@ function AppBody() {
               <div className="header-bar">
                 <span className="section-header">Calculations</span>
                 <div className="button-bar-spacer" />
-                <label><input type="checkbox" />Enabled</label>
+                <label>
+                  <input type="checkbox" />
+                  Enabled
+                </label>
               </div>
               <div className="button-bar">
                 <button>Add</button>
@@ -33,9 +36,7 @@ function AppBody() {
             </div>
             <div id="sidebar-properties" className="section">
               <span className="section-header">Properties</span>
-              <div className="placeholder">
-                Select a calculation to adjust its properties.
-              </div>
+              <div className="placeholder">Select a calculation to adjust its properties.</div>
             </div>
           </div>
           <div id="document-palette" className="section">
@@ -45,7 +46,7 @@ function AppBody() {
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export default AppBody;

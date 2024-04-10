@@ -5,7 +5,7 @@ function AppHeader() {
         <div id="logo" />
       </div>
     </>
-  )
+  );
 }
 
 export default AppHeader;

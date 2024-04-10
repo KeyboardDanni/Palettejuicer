@@ -32,9 +32,7 @@ const testHexNames: TestHex[] = [
   { hex: "abcf", red: 170, green: 187, blue: 204 },
 ];
 
-const testBadHexNames = [
-  "", "#aa", "#aaaaa", "#aaaaaaa"
-];
+const testBadHexNames = ["", "#aa", "#aaaaa", "#aaaaaaa"];
 
 function expectColorRgbEqual(actual: ColorRgb, expected: ColorRgb) {
   for (const property of ["red", "green", "blue"]) {
@@ -186,7 +184,9 @@ test.each(testColors)("constructs an OkLAB Color (%#)", (testColor) => {
 });
 
 test.each(testColors)("constructs an OkLCH Color (%#)", (testColor) => {
-  const color = Color.fromOklabch(ColorOklabch.fromOklch(testColor.oklabLightness, testColor.oklchChroma, testColor.oklchHue));
+  const color = Color.fromOklabch(
+    ColorOklabch.fromOklch(testColor.oklabLightness, testColor.oklchChroma, testColor.oklchHue)
+  );
 
   expectTestColorOklchEqual(color, testColor);
 });
@@ -207,13 +207,10 @@ test.each(testColors)("clones a Color (%#)", (testColor) => {
 });
 
 test.each(testColors)("converts colorspaces (%#)", (testColor) => {
-  const colorRgb = Color.fromRgb(ColorRgb.from(
-      testColor.red, testColor.green, testColor.blue));
-  const colorHsl = Color.fromHslv(ColorHslv.fromHsl(
-      testColor.hue, testColor.saturationL, testColor.lightness));
-  const colorHsv = Color.fromHslv(ColorHslv.fromHsv(
-      testColor.hue, testColor.saturationV, testColor.value));
-  
+  const colorRgb = Color.fromRgb(ColorRgb.from(testColor.red, testColor.green, testColor.blue));
+  const colorHsl = Color.fromHslv(ColorHslv.fromHsl(testColor.hue, testColor.saturationL, testColor.lightness));
+  const colorHsv = Color.fromHslv(ColorHslv.fromHsv(testColor.hue, testColor.saturationV, testColor.value));
+
   expectTestColorAllEqual(colorRgb, testColor);
   expectTestColorAllEqual(colorHsl, testColor);
   expectTestColorAllEqual(colorHsv, testColor);

@@ -9,7 +9,7 @@ function App() {
         <AppBody />
       </div>
     </>
-  )
+  );
 }
 
-export default App
+export default App;

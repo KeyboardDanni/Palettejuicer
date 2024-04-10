@@ -1,12 +1,11 @@
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 function paletteCel(x: number, y: number) {
-  
   return (
     <>
-      <div className="palette-cel" style={{backgroundColor: `rgb(${x * 8} ${(x + y) * 4} ${y * 8})`}} />
+      <div className="palette-cel" style={{ backgroundColor: `rgb(${x * 8} ${(x + y) * 4} ${y * 8})` }} />
     </>
-  )
+  );
 }
 
 function paletteRow(y: number) {
@@ -18,11 +17,9 @@ function paletteRow(y: number) {
 
   return (
     <>
-      <div className="palette-row">
-        {row}
-      </div>
+      <div className="palette-row">{row}</div>
     </>
-  )
+  );
 }
 
 function Palette() {
@@ -36,13 +33,11 @@ function Palette() {
     <>
       <div className="palette">
         <div className="palette-scroll">
-          <OverlayScrollbarsComponent defer>
-            {rows}
-          </OverlayScrollbarsComponent>
+          <OverlayScrollbarsComponent defer>{rows}</OverlayScrollbarsComponent>
         </div>
       </div>
     </>
-  )
+  );
 }
 
 export default Palette;

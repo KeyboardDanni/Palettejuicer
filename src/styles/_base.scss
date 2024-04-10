@@ -1,78 +1,96 @@
 @use "./_constants.scss" as *;
 
 @font-face {
-    font-family: "Lato";
-    src: url("assets/Lato-Regular.woff2");
+  font-family: "Lato";
+  src: url("assets/Lato-Regular.woff2");
 }
 
 html {
-    font: $size-pixel-base $font-stack;
-    line-height: 1;
-    user-select: none;
+  font: $size-pixel-base $font-stack;
+  line-height: 1;
+  user-select: none;
 }
 
 body {
-    font-size: $size-base-font;
-    color: $color-text;
-    background-color: $color-background;
-    min-height: 100vh;
+  font-size: $size-base-font;
+  color: $color-text;
+  background-color: $color-background;
+  min-height: 100vh;
 }
 
-h1, h2, h3, h4, h5, h6, p, ol, ul, textarea {
-    line-height: 1.25;
-    margin: 0;
-    outline: none;
-    user-select: text;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6,
+p,
+ol,
+ul,
+textarea {
+  line-height: 1.25;
+  margin: 0;
+  outline: none;
+  user-select: text;
 }
 
-button, input, optgroup, select {
-    line-height: 1;
-    outline: none;
+button,
+input,
+optgroup,
+select {
+  line-height: 1;
+  outline: none;
 }
 
 input {
-    user-select: text;
+  user-select: text;
 }
 
-h1, h2, h3, h4, h5, h6 {
-    font-weight: bold;
-    text-transform: uppercase;
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+  font-weight: bold;
+  text-transform: uppercase;
 }
 
 h1 {
-    font-size: 3.2rem;
+  font-size: 3.2rem;
 }
 
 h2 {
-    font-size: 2.6rem;
+  font-size: 2.6rem;
 }
 
 h3 {
-    font-size: 2.4rem;
+  font-size: 2.4rem;
 }
 
 h4 {
-    font-size: 2.2rem;
+  font-size: 2.2rem;
 }
 
 h5 {
-    font-size: 2rem;
+  font-size: 2rem;
 }
 
 h6 {
-    font-size: 1.8rem;
+  font-size: 1.8rem;
 }
 
 p {
-    font-size: 1.6rem;
+  font-size: 1.6rem;
 }
 
-ol, ul {
-    list-style: none;
-    padding-inline: 0;
+ol,
+ul {
+  list-style: none;
+  padding-inline: 0;
 }
 
 ::selection {
-    color: $color-text-selected;
-    background: $color-selected;
+  color: $color-text-selected;
+  background: $color-selected;
 }

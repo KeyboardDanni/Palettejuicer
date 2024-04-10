@@ -1,329 +1,362 @@
 @use "./_constants.scss" as *;
 
-@mixin raised-box-shadow ($color-inset, $color-border, $size-outline, $height) {
-    box-shadow: 0 $height 0 $color-border,
-        inset 0 0 0 $size-outline $color-inset;
+@mixin raised-box-shadow($color-inset, $color-border, $size-outline, $height) {
+  box-shadow:
+    0 $height 0 $color-border,
+    inset 0 0 0 $size-outline $color-inset;
 }
 
-@mixin raised-widget ($color, $color-inset, $color-border, $radius, $height, $pressed) {
-    @include raised-box-shadow($color-inset, $color-border, $size-widget-outline, ($height * (1 - $pressed)));
+@mixin raised-widget($color, $color-inset, $color-border, $radius, $height, $pressed) {
+  @include raised-box-shadow($color-inset, $color-border, $size-widget-outline, ($height * (1 - $pressed)));
 
-    background-color: $color;
-    border: $size-widget-outline solid $color-border;
-    border-radius: $radius;
-    transform: translateY($height * $pressed);
-    position: relative;
-    transition: 0.05s box-shadow ease-out, 0.05s transform ease-out;
+  background-color: $color;
+  border: $size-widget-outline solid $color-border;
+  border-radius: $radius;
+  transform: translateY($height * $pressed);
+  position: relative;
+  transition:
+    0.05s box-shadow ease-out,
+    0.05s transform ease-out;
 }
 
-@mixin raised-widget-bounds ($height, $pressed) {
-    &:after {
-        content: "";
-        position: absolute;
-        top: (-$height - $size-widget-outline) * $pressed;
-        bottom: (-$height - $size-widget-outline) * (1 - $pressed);
-        left: 0;
-        right: 0;
-    }
+@mixin raised-widget-bounds($height, $pressed) {
+  &:after {
+    content: "";
+    position: absolute;
+    top: (-$height - $size-widget-outline) * $pressed;
+    bottom: (-$height - $size-widget-outline) * (1 - $pressed);
+    left: 0;
+    right: 0;
+  }
 }
 
-@mixin raised-widget-focus ($color) {
-    outline: 0.2rem solid $color;
-    outline-offset: (-$size-widget-outline - 0.2rem);
+@mixin raised-widget-focus($color) {
+  outline: 0.2rem solid $color;
+  outline-offset: (-$size-widget-outline - 0.2rem);
 }
 
-@mixin raised-button ($color, $color-border, $pressed) {
-    @include raised-widget($color, $color-button-inset, $color-border, $size-button-radius, $size-button-height, $pressed);
-    @include raised-widget-bounds($size-button-height, $pressed);
+@mixin raised-button($color, $color-border, $pressed) {
+  @include raised-widget(
+    $color,
+    $color-button-inset,
+    $color-border,
+    $size-button-radius,
+    $size-button-height,
+    $pressed
+  );
+  @include raised-widget-bounds($size-button-height, $pressed);
 }
 
 button {
-    @include raised-button($color-button, $color-button-border, 0);
+  @include raised-button($color-button, $color-button-border, 0);
 
-    color: $color-text-button;
-    margin: $size-widget-outline $size-widget-outline ($size-button-height + $size-widget-outline) $size-widget-outline;
-    padding: 0.8rem;
+  color: $color-text-button;
+  margin: $size-widget-outline $size-widget-outline ($size-button-height + $size-widget-outline) $size-widget-outline;
+  padding: 0.8rem;
 
-    &:hover, &:focus-visible {
-        @include raised-button($color-button-hover, $color-button-border-hover, 0);
-    }
+  &:hover,
+  &:focus-visible {
+    @include raised-button($color-button-hover, $color-button-border-hover, 0);
+  }
 
-    &:active {
-        @include raised-button($color-button, $color-button-border, 1);
-    }
+  &:active {
+    @include raised-button($color-button, $color-button-border, 1);
+  }
 
-    &:focus-visible {
-        @include raised-widget-focus($color-text-button);
-    }
+  &:focus-visible {
+    @include raised-widget-focus($color-text-button);
+  }
 }
 
 .button-bar {
-    display: flex;
-    flex-direction: row;
-    align-items: baseline;
-    gap: 0.2rem;
-    column-gap: 0.2rem;
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
+  gap: 0.2rem;
+  column-gap: 0.2rem;
 
-    .button-bar-spacer {
-        min-width: 2rem;
-        flex: 1;
-    }
+  .button-bar-spacer {
+    min-width: 2rem;
+    flex: 1;
+  }
 }
 
-@mixin header-tab-button ($color, $checked) {
-    display: inline-block;
-    background-color: $color;
-    border: 0.1rem solid $color-tab-border;
-    border-bottom: none;
-    color: $color-text-radio-button;
-    text-align: center;
-    min-width: 4.8rem;
-    height: 2.8rem;
-    margin: 0 -0.1rem 0 0;
-    padding: (0.6rem + $checked * 0.1) 0.6rem (0.6rem - $checked * 0.1) 0.6rem;
-    transform: translateY(0.1rem * $checked);
-    position: relative;
+@mixin header-tab-button($color, $checked) {
+  display: inline-block;
+  background-color: $color;
+  border: 0.1rem solid $color-tab-border;
+  border-bottom: none;
+  color: $color-text-radio-button;
+  text-align: center;
+  min-width: 4.8rem;
+  height: 2.8rem;
+  margin: 0 -0.1rem 0 0;
+  padding: (0.6rem + $checked * 0.1) 0.6rem (0.6rem - $checked * 0.1) 0.6rem;
+  transform: translateY(0.1rem * $checked);
+  position: relative;
 
-    @if $checked > 0 {
-        &::after {
-            position: absolute;
-            content: "";
-            top: 2.6rem;
-            left: 0;
-            width: 100%;
-            height: 0.2rem;
-            background-color: $color-button;
-        }
+  @if $checked > 0 {
+    &::after {
+      position: absolute;
+      content: "";
+      top: 2.6rem;
+      left: 0;
+      width: 100%;
+      height: 0.2rem;
+      background-color: $color-button;
     }
+  }
 }
 
 .tabbar {
-    margin: 0.8rem 0.1rem 0.8rem 0.1rem;
-    border-bottom: 0.1rem solid $color-tab-border;
+  margin: 0.8rem 0.1rem 0.8rem 0.1rem;
+  border-bottom: 0.1rem solid $color-tab-border;
 }
 
 label.tabbar-tab {
-    input[type=radio], input[type=checkbox] {
-        position: absolute;
-        overflow: hidden;
-        clip: rect(0 0 0 0);
-        width: 0.1rem;
-        height: 0.1rem;
-        margin: -0.1rem;
-        padding: 0;
-        border: 0;
+  input[type="radio"],
+  input[type="checkbox"] {
+    position: absolute;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    width: 0.1rem;
+    height: 0.1rem;
+    margin: -0.1rem;
+    padding: 0;
+    border: 0;
 
-        &:not(:checked) + span {
-            @include header-tab-button($color-tab, 0);
-        }
-
-        &:hover:not(:checked) + span {
-            @include header-tab-button($color-tab-hover, 0);
-        }
-
-        &:checked + span {
-            @include header-tab-button($color-tab-active, 1);
-        }
-
-        &:focus-visible + span {
-            box-shadow: inset 0 0 0 0.2rem $color-button;
-        }
+    &:not(:checked) + span {
+      @include header-tab-button($color-tab, 0);
     }
 
-    &:first-child input + span {
-        border-top-left-radius: $size-button-radius;
+    &:hover:not(:checked) + span {
+      @include header-tab-button($color-tab-hover, 0);
     }
 
-    &:last-child input + span {
-        border-top-right-radius: $size-button-radius;
+    &:checked + span {
+      @include header-tab-button($color-tab-active, 1);
     }
+
+    &:focus-visible + span {
+      box-shadow: inset 0 0 0 0.2rem $color-button;
+    }
+  }
+
+  &:first-child input + span {
+    border-top-left-radius: $size-button-radius;
+  }
+
+  &:last-child input + span {
+    border-top-right-radius: $size-button-radius;
+  }
 }
 
 label {
-    &:has(input[type=checkbox]) {
-        text-wrap: nowrap;
-        margin-right: 0.4rem;
+  &:has(input[type="checkbox"]) {
+    text-wrap: nowrap;
+    margin-right: 0.4rem;
+  }
+
+  input[type="checkbox"] {
+    appearance: none;
+    width: 2.4rem;
+    height: 2.4rem;
+    margin-bottom: 0.6rem;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+
+    &:not(:checked) {
+      @include raised-button($color-checkbox, $color-checkbox-border, 0);
+
+      &:hover,
+      &:focus-visible {
+        @include raised-button($color-checkbox-hover, $color-checkbox-border-hover, 0);
+      }
+
+      &:active {
+        @include raised-button($color-checkbox-hover, $color-checkbox-border-hover, 1);
+      }
+
+      &:focus-visible {
+        @include raised-widget-focus($color-button);
+      }
     }
-    
-    input[type=checkbox] {
-        appearance: none;
-        width: 2.4rem;
-        height: 2.4rem;
-        margin-bottom: 0.6rem;
-        margin-right: 0.4rem;
-        vertical-align: middle;
 
-        &:not(:checked) {
-            @include raised-button($color-checkbox, $color-checkbox-border, 0);
+    &:checked {
+      @include raised-button($color-button, $color-button-border, 0);
 
-            &:hover, &:focus-visible {
-                @include raised-button($color-checkbox-hover, $color-checkbox-border-hover, 0);
-            }
+      background-image: url('data:image/svg+xml,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4,12 l5,5 l11,-11" stroke="white" stroke-width="0.2rem" fill="none"/></svg>');
 
-            &:active {
-                @include raised-button($color-checkbox-hover, $color-checkbox-border-hover, 1);
-            }
+      &:hover,
+      &:focus-visible {
+        @include raised-button($color-button-hover, $color-button-border-hover, 0);
+      }
 
-            &:focus-visible {
-                @include raised-widget-focus($color-button);
-            }
-        }
+      &:active {
+        @include raised-button($color-button-hover, $color-button-border-hover, 1);
+      }
 
-        &:checked {
-            @include raised-button($color-button, $color-button-border, 0);
-
-            background-image: url('data:image/svg+xml,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4,12 l5,5 l11,-11" stroke="white" stroke-width="0.2rem" fill="none"/></svg>');
-
-            &:hover, &:focus-visible {
-                @include raised-button($color-button-hover, $color-button-border-hover, 0);
-            }
-
-            &:active {
-                @include raised-button($color-button-hover, $color-button-border-hover, 1);
-            }
-
-            &:focus-visible {
-                @include raised-widget-focus($color-text-button);
-            }
-        }
+      &:focus-visible {
+        @include raised-widget-focus($color-text-button);
+      }
     }
+  }
 }
 
-input[type=text] {
-    height: 2.2rem;
-    margin: 0.1rem 0.1rem 0.1rem 0.1rem;
-    padding: 0.7rem 0.3rem 0.4rem 0.3rem;
+input[type="text"] {
+  height: 2.2rem;
+  margin: 0.1rem 0.1rem 0.1rem 0.1rem;
+  padding: 0.7rem 0.3rem 0.4rem 0.3rem;
 
-    background-color: $color-field-background;
-    border: $size-widget-outline solid $color-section-border;
-    box-shadow: inset 0 0.2rem $color-section-border;
-    border-radius: $size-button-radius;
+  background-color: $color-field-background;
+  border: $size-widget-outline solid $color-section-border;
+  box-shadow: inset 0 0.2rem $color-section-border;
+  border-radius: $size-button-radius;
 }
 
 @mixin range-thumb {
-    width: 1.6rem;
-    height: 2rem;
-    margin-top: -0.8rem;
-    cursor: default;
+  width: 1.6rem;
+  height: 2rem;
+  margin-top: -0.8rem;
+  cursor: default;
 }
 
 @mixin range-thumb-normal {
-    @include raised-widget($color-slider, $color-button-inset, $color-slider-border, $size-button-radius, $size-button-height, 0);
-    @include range-thumb;
+  @include raised-widget(
+    $color-slider,
+    $color-button-inset,
+    $color-slider-border,
+    $size-button-radius,
+    $size-button-height,
+    0
+  );
+  @include range-thumb;
 }
 
 @mixin range-thumb-hover {
-    @include raised-widget($color-slider-hover, $color-button-inset, $color-slider-border-hover, $size-button-radius, $size-button-height, 0);
-    @include range-thumb;
+  @include raised-widget(
+    $color-slider-hover,
+    $color-button-inset,
+    $color-slider-border-hover,
+    $size-button-radius,
+    $size-button-height,
+    0
+  );
+  @include range-thumb;
 }
 
 @mixin range-track {
-    width: 100%;
-    height: 1rem;
-    cursor: default;
-    margin: 0.6rem 0.1rem 0.6rem 0.1rem;
+  width: 100%;
+  height: 1rem;
+  cursor: default;
+  margin: 0.6rem 0.1rem 0.6rem 0.1rem;
 
-    background-color: $color-slider-recess;
-    border: $size-widget-outline solid $color-section-border;
-    box-shadow: inset 0 0.2rem $color-section-border;
-    border-radius: $size-button-radius;
+  background-color: $color-slider-recess;
+  border: $size-widget-outline solid $color-section-border;
+  box-shadow: inset 0 0.2rem $color-section-border;
+  border-radius: $size-button-radius;
 }
 
-input[type=range] {
+input[type="range"] {
+  -webkit-appearance: none;
+  width: 100%;
+  background: transparent;
+
+  &::-webkit-slider-thumb {
+    @include range-thumb-normal;
+
     -webkit-appearance: none;
-    width: 100%;
-    background: transparent;
+  }
 
+  &::-moz-range-thumb {
+    @include range-thumb-normal;
+  }
+
+  &::-ms-thumb {
+    @include range-thumb-normal;
+
+    margin: 0;
+  }
+
+  &::-webkit-slider-runnable-track {
+    @include range-track;
+  }
+
+  &::-moz-range-track {
+    @include range-track;
+  }
+
+  &::-ms-track {
+    @include range-track;
+  }
+
+  &:hover {
     &::-webkit-slider-thumb {
-        @include range-thumb-normal;
-
-        -webkit-appearance: none;
+      @include range-thumb-hover;
     }
 
     &::-moz-range-thumb {
-        @include range-thumb-normal;
+      @include range-thumb-hover;
     }
 
     &::-ms-thumb {
-        @include range-thumb-normal;
+      @include range-thumb-hover;
+    }
+  }
 
-        margin: 0;
+  &:focus-visible {
+    &::-webkit-slider-thumb {
+      @include raised-widget-focus($color-text-button);
     }
 
-    &::-webkit-slider-runnable-track {
-        @include range-track;
+    &::-moz-range-thumb {
+      @include raised-widget-focus($color-text-button);
     }
 
-    &::-moz-range-track {
-        @include range-track;
+    &::-ms-thumb {
+      @include raised-widget-focus($color-text-button);
     }
-
-    &::-ms-track {
-        @include range-track;
-    }
-
-    &:hover {
-        &::-webkit-slider-thumb {
-            @include range-thumb-hover;
-        }
-    
-        &::-moz-range-thumb {
-            @include range-thumb-hover;
-        }
-    
-        &::-ms-thumb {
-            @include range-thumb-hover;
-        }
-    }
-
-    &:focus-visible {
-        &::-webkit-slider-thumb {
-            @include raised-widget-focus($color-text-button);
-        }
-    
-        &::-moz-range-thumb {
-            @include raised-widget-focus($color-text-button);
-        }
-    
-        &::-ms-thumb {
-            @include raised-widget-focus($color-text-button);
-        }
-    }
+  }
 }
 
 .section {
-    @include raised-box-shadow($color-section-inset, $color-section-border, calc($size-section-outline / 2), $size-button-height);
+  @include raised-box-shadow(
+    $color-section-inset,
+    $color-section-border,
+    calc($size-section-outline / 2),
+    $size-button-height
+  );
 
-    background-color: $color-section-background;
-    border: $size-section-outline solid $color-section-border;
-    border-radius: 1rem;
-    margin-bottom: $size-button-height;
-    padding: $size-section-padding;
+  background-color: $color-section-background;
+  border: $size-section-outline solid $color-section-border;
+  border-radius: 1rem;
+  margin-bottom: $size-button-height;
+  padding: $size-section-padding;
 }
 
 .label-left {
-    display: inline-block;
-    text-align: right;
-    margin-right: $size-label-spacing;
+  display: inline-block;
+  text-align: right;
+  margin-right: $size-label-spacing;
 }
 
 .os-scrollbar {
-    padding: 0.2rem;
-    --os-size: 2rem;
-    --os-handle-bg: #{$color-slider};
-    --os-handle-bg-hover: #{$color-slider-hover};
-    --os-handle-bg-active: #{$color-slider-hover};
-    --os-handle-border-radius: #{$size-button-radius};
-    --os-handle-border: #{$size-widget-outline} solid #{$color-slider-border};
-    --os-handle-border-hover: #{$size-widget-outline} solid #{$color-slider-border-hover};
-    --os-handle-border-active: #{$size-widget-outline} solid #{$color-slider-border-hover};
-    --os-handle-interactive-area-offset: 0;
+  padding: 0.2rem;
+  --os-size: 2rem;
+  --os-handle-bg: #{$color-slider};
+  --os-handle-bg-hover: #{$color-slider-hover};
+  --os-handle-bg-active: #{$color-slider-hover};
+  --os-handle-border-radius: #{$size-button-radius};
+  --os-handle-border: #{$size-widget-outline} solid #{$color-slider-border};
+  --os-handle-border-hover: #{$size-widget-outline} solid #{$color-slider-border-hover};
+  --os-handle-border-active: #{$size-widget-outline} solid #{$color-slider-border-hover};
+  --os-handle-interactive-area-offset: 0;
 
-    .os-scrollbar-handle {
-        @include raised-box-shadow($color-button-inset, $color-slider-border, $size-widget-outline, $size-button-height);
+  .os-scrollbar-handle {
+    @include raised-box-shadow($color-button-inset, $color-slider-border, $size-widget-outline, $size-button-height);
 
-        &:hover {
-            @include raised-box-shadow($color-button-inset, $color-slider-border, $size-widget-outline, $size-button-height);
-        }
+    &:hover {
+      @include raised-box-shadow($color-button-inset, $color-slider-border, $size-widget-outline, $size-button-height);
     }
+  }
 }
