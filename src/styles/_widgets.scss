@@ -6,6 +6,29 @@
     inset 0 0 0 $size-outline $color-inset;
 }
 
+.section {
+  @include raised-box-shadow(
+    $color-section-inset,
+    $color-section-border,
+    calc($size-section-outline / 2),
+    $size-button-height
+  );
+
+  background-color: $color-section-background;
+  border: $size-section-outline solid $color-section-border;
+  border-radius: $size-section-radius;
+  margin-bottom: $size-button-height;
+  padding: $size-section-padding;
+}
+
+.section-gray-background {
+  background-color: $color-section-gray;
+  margin: 0 (-$size-section-padding / 2) (-$size-section-padding / 2) (-$size-section-padding / 2);
+  padding: $size-section-padding;
+  border: $size-widget-outline solid $color-section-gray-border;
+  border-radius: ($size-section-radius - $size-section-outline);
+}
+
 @mixin raised-widget($color, $color-inset, $color-border, $radius, $height, $pressed) {
   @include raised-box-shadow($color-inset, $color-border, $size-widget-outline, ($height * (1 - $pressed)));
 
@@ -317,21 +340,6 @@ input[type="range"] {
       @include raised-widget-focus($color-text-button);
     }
   }
-}
-
-.section {
-  @include raised-box-shadow(
-    $color-section-inset,
-    $color-section-border,
-    calc($size-section-outline / 2),
-    $size-button-height
-  );
-
-  background-color: $color-section-background;
-  border: $size-section-outline solid $color-section-border;
-  border-radius: 1rem;
-  margin-bottom: $size-button-height;
-  padding: $size-section-padding;
 }
 
 .label-left {

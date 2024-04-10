@@ -41,7 +41,9 @@ function AppBody() {
           </div>
           <div id="document-palette" className="section">
             <span className="section-header">Palette</span>
-            <Palette />
+            <div id="palette-inner-bg" className="section-gray-background">
+              <Palette />
+            </div>
           </div>
         </div>
       </div>
