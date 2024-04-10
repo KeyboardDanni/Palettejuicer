@@ -1,7 +1,7 @@
 import { expect, test } from "vitest";
-import Color from "../model/color/Color";
+import { Color } from "../model/color/Color";
 import { ColorRgb } from "../model/color/ColorRgb";
-import ColorHslv from "../model/color/ColorHslv";
+import { ColorHslv } from "../model/color/ColorHslv";
 import { TestColor, testColors, TestColorNames } from "./TestColors";
 import { ColorLabch } from "../model/color/ColorLabch";
 import { ColorOklabch } from "../model/color/ColorOklabch";

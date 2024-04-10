@@ -1,0 +1,1 @@
+npx vitest run && npm run lint && npx prettier -c "src/**/*.{ts,tsx,scss}"
