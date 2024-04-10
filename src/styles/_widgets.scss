@@ -23,7 +23,7 @@
 
 .section-gray-background {
   background-color: $color-section-gray;
-  margin: 0 (-$size-section-padding / 2) (-$size-section-padding / 2) (-$size-section-padding / 2);
+  margin: 0 calc($size-section-padding / -2) calc($size-section-padding / -2) calc($size-section-padding / -2);
   padding: $size-section-padding;
   border: $size-widget-outline solid $color-section-gray-border;
   border-radius: ($size-section-radius - $size-section-outline);
