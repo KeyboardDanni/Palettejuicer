@@ -57,7 +57,7 @@ export function AppBody() {
             <div id="palette-inner-bg" className="section-gray-background">
               <PaletteView
                 palette={palette}
-                index={activeColorIndex}
+                active={activeColorIndex}
                 onIndexClicked={(x, y) => setActiveColorIndex({ x, y })}
               />
             </div>
