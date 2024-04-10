@@ -5,7 +5,7 @@ import { ColorRgb } from "./color/ColorRgb";
 const PALETTE_WIDTH = 16;
 const PALETTE_HEIGHT = 16;
 
-const DEFAULT_COLOR = Color.fromRgb(ColorRgb.from(64, 64, 64));
+const DEFAULT_COLOR = Color.fromRgb(ColorRgb.from(60, 60, 60));
 
 class Palette {
   private _selectedColors: Color[];
