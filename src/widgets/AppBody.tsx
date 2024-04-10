@@ -1,11 +1,19 @@
 import { useState } from "react";
 
 import Color from "../model/color/Color";
+import Palette from "../model/Palette";
 import ColorSelector from "./ColorSelector";
-import Palette from "./Palette";
+import PaletteView from "./PaletteView";
 
 function AppBody() {
-  const [color, setColor] = useState(new Color());
+  const [activeColorIndex, setActiveColorIndex] = useState({ x: 0, y: 0 });
+  const [palette, setPalette] = useState(new Palette());
+
+  function handleColorChange(color: Color) {
+    const newPalette = palette.setSelectedColor(activeColorIndex.x, activeColorIndex.y, color);
+
+    setPalette(newPalette);
+  }
 
   return (
     <>
@@ -13,8 +21,13 @@ function AppBody() {
         <div id="app-columns">
           <div id="document-sidebar">
             <div id="sidebar-color-selector" className="section">
-              <span className="section-header">Selected Color</span>
-              <ColorSelector color={color} onColorChange={(color) => setColor(color)} />
+              <span className="section-header">
+                Selected Color ({activeColorIndex.x}, {activeColorIndex.y})
+              </span>
+              <ColorSelector
+                color={palette.selectedColor(activeColorIndex.x, activeColorIndex.y)}
+                onColorChange={handleColorChange}
+              />
             </div>
             <div id="sidebar-calculations" className="section">
               <div className="header-bar">
@@ -42,7 +55,11 @@ function AppBody() {
           <div id="document-palette" className="section">
             <span className="section-header">Palette</span>
             <div id="palette-inner-bg" className="section-gray-background">
-              <Palette />
+              <PaletteView
+                palette={palette}
+                index={activeColorIndex}
+                onIndexClicked={(x, y) => setActiveColorIndex({ x, y })}
+              />
             </div>
           </div>
         </div>

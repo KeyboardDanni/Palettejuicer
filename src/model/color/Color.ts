@@ -17,11 +17,16 @@ export interface Colorspace {
   converter(): Colorjs;
 }
 
+const DEFAULT_RGB = ColorRgb.fromRaw(0, 0, 0);
+const DEFAULT_HSLV = ColorHslv.fromHsl(0, 0, 0);
+const DEFAULT_LABCH = ColorLabch.fromLab(0, 0, 0);
+const DEFAULT_OKLABCH = ColorOklabch.fromOklab(0, 0, 0);
+
 class Color {
-  private _rgb = ColorRgb.fromRaw(0, 0, 0);
-  private _hslv = ColorHslv.fromHsl(0, 0, 0);
-  private _labch = ColorLabch.fromLab(0, 0, 0);
-  private _oklabch = ColorOklabch.fromOklab(0, 0, 0);
+  private _rgb = DEFAULT_RGB.clone();
+  private _hslv = DEFAULT_HSLV.clone();
+  private _labch = DEFAULT_LABCH.clone();
+  private _oklabch = DEFAULT_OKLABCH.clone();
   private _hex: string = "#000000";
 
   get rgb() { return this._rgb; } // prettier-ignore
