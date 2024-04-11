@@ -1,13 +1,16 @@
+import { immerable, produce } from "immer";
 import Colorjs from "colorjs.io";
 
 import { Colorspace } from "./Color";
 
 export class ColorHslv implements Colorspace {
-  private _hue: number;
-  private _saturationL: number;
-  private _lightness: number;
-  private _saturationV: number;
-  private _value: number;
+  [immerable] = true;
+
+  private _hue: number = 0;
+  private _saturationL: number = 0;
+  private _lightness: number = 0;
+  private _saturationV: number = 0;
+  private _value: number = 0;
 
   get hue() { return this._hue; } // prettier-ignore
   get saturationL() { return this._saturationL; } // prettier-ignore
@@ -15,28 +18,16 @@ export class ColorHslv implements Colorspace {
   get saturationV() { return this._saturationV; } // prettier-ignore
   get value() { return this._value; } // prettier-ignore
 
-  private constructor(hue: number, saturationL: number, lightness: number, saturationV: number, value: number) {
-    this._hue = hue;
-    this._saturationL = saturationL;
-    this._lightness = lightness;
-    this._saturationV = saturationV;
-    this._value = value;
-  }
-
   static fromHsl(hue: number, saturationL: number, lightness: number): ColorHslv {
-    const hsl = new ColorHslv(hue, saturationL, lightness, 0, 0);
+    const color = new ColorHslv();
 
-    return hsl.computeFromHsl();
+    return color.adjustHsl(hue, saturationL, lightness);
   }
 
   static fromHsv(hue: number, saturationV: number, value: number): ColorHslv {
-    const hsv = new ColorHslv(hue, 0, 0, saturationV, value);
+    const color = new ColorHslv();
 
-    return hsv.computeFromHsv();
-  }
-
-  clone(): ColorHslv {
-    return new ColorHslv(this._hue, this._saturationL, this._lightness, this._saturationV, this._value);
+    return color.adjustHsv(hue, saturationV, value);
   }
 
   channel(name: string): number {
@@ -78,36 +69,31 @@ export class ColorHslv implements Colorspace {
   }
 
   adjustHsl(hue: number | null, saturationL: number | null, lightness: number | null): ColorHslv {
-    const hsl = new ColorHslv(hue ?? this._hue, saturationL ?? this._saturationL, lightness ?? this._lightness, 0, 0);
+    return produce(this, (draft: this) => {
+      draft._hue = hue ?? this._hue;
+      draft._saturationL = saturationL ?? this._saturationL;
+      draft._lightness = lightness ?? this._lightness;
 
-    return hsl.computeFromHsl();
+      const converter = new Colorjs("hsl", [draft._hue, draft._saturationL, draft._lightness]);
+      [, draft._saturationV, draft._value] = converter.hsv;
+    });
   }
 
   adjustHsv(hue: number | null, saturationV: number | null, value: number | null): ColorHslv {
-    const hsv = new ColorHslv(hue ?? this._hue, 0, 0, saturationV ?? this._saturationV, value ?? this._value);
+    return produce(this, (draft: this) => {
+      draft._hue = hue ?? this._hue;
+      draft._saturationV = saturationV ?? this._saturationV;
+      draft._value = value ?? this._value;
 
-    return hsv.computeFromHsv();
+      const converter = new Colorjs("hsv", [draft._hue, draft._saturationV, draft._value]);
+      [, draft._saturationL, draft._lightness] = converter.hsl;
+    });
   }
 
   compute(converter: Colorjs): ColorHslv {
     const [hue, saturationL, lightness] = converter.hsl;
-    const [, saturationV, value] = converter.hsv;
 
-    return new ColorHslv(!Number.isNaN(hue) ? hue : this._hue, saturationL, lightness, saturationV, value);
-  }
-
-  computeFromHsl(): ColorHslv {
-    const converter = new Colorjs("hsl", [this._hue, this._saturationL, this._lightness]);
-    const [, saturationV, value] = converter.hsv;
-
-    return new ColorHslv(this._hue, this._saturationL, this._lightness, saturationV, value);
-  }
-
-  computeFromHsv(): ColorHslv {
-    const converter = new Colorjs("hsv", [this._hue, this._saturationV, this._value]);
-    const [, saturationL, lightness] = converter.hsl;
-
-    return new ColorHslv(this._hue, saturationL, lightness, this._saturationV, this._value);
+    return this.adjustHsl(!Number.isNaN(hue) ? hue : this._hue, saturationL, lightness);
   }
 
   converter(): Colorjs {

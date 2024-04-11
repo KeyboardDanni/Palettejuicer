@@ -66,7 +66,7 @@ function HexInput({ color, onColorChange }: HexInputProps) {
 
   return (
     <>
-      <ControlledTextInput value={color.hex} onChange={handleChange} />
+      <ControlledTextInput value={color.rgb.hex} onChange={handleChange} />
     </>
   );
 }
@@ -326,7 +326,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
           </div>
         </div>
         <div className="color-preview-column">
-          <div className="color-preview" style={{ backgroundColor: color.hex }} />
+          <div className="color-preview" style={{ backgroundColor: color.rgb.hex }} />
           <div className="color-hex">
             <HexInput color={color} onColorChange={onColorChange} />
           </div>

@@ -1,13 +1,16 @@
+import { immerable, produce } from "immer";
 import Colorjs from "colorjs.io";
 
 import { Colorspace } from "./Color";
 
 export class ColorLabch implements Colorspace {
-  private _lightness: number;
-  private _a: number;
-  private _b: number;
-  private _chroma: number;
-  private _hue: number;
+  [immerable] = true;
+
+  private _lightness: number = 0;
+  private _a: number = 0;
+  private _b: number = 0;
+  private _chroma: number = 0;
+  private _hue: number = 0;
 
   get lightness() { return this._lightness; } // prettier-ignore
   get a() { return this._a; } // prettier-ignore
@@ -15,28 +18,16 @@ export class ColorLabch implements Colorspace {
   get chroma() { return this._chroma; } // prettier-ignore
   get hue() { return this._hue; } // prettier-ignore
 
-  private constructor(lightness: number, a: number, b: number, chroma: number, hue: number) {
-    this._lightness = lightness;
-    this._a = a;
-    this._b = b;
-    this._chroma = chroma;
-    this._hue = hue;
-  }
-
   static fromLab(lightness: number, a: number, b: number): ColorLabch {
-    const lab = new ColorLabch(lightness, a, b, 0, 0);
+    const color = new ColorLabch();
 
-    return lab.computeFromLab();
+    return color.adjustLab(lightness, a, b);
   }
 
   static fromLch(lightness: number, chroma: number, hue: number): ColorLabch {
-    const lch = new ColorLabch(lightness, 0, 0, chroma, hue);
+    const color = new ColorLabch();
 
-    return lch.computeFromLch();
-  }
-
-  clone(): ColorLabch {
-    return new ColorLabch(this._lightness, this._a, this._b, this._chroma, this._hue);
+    return color.adjustLch(lightness, chroma, hue);
   }
 
   channel(name: string): number {
@@ -78,36 +69,33 @@ export class ColorLabch implements Colorspace {
   }
 
   adjustLab(lightness: number | null, a: number | null, b: number | null): ColorLabch {
-    const lab = new ColorLabch(lightness ?? this._lightness, a ?? this._a, b ?? this._b, 0, 0);
+    return produce(this, (draft: this) => {
+      draft._lightness = lightness ?? this._lightness;
+      draft._a = a ?? this._a;
+      draft._b = b ?? this._b;
 
-    return lab.computeFromLab();
+      const converter = new Colorjs("lab", [draft._lightness, draft._a, draft._b]);
+      const [, chroma, hue] = converter.lch;
+      draft._chroma = chroma;
+      draft._hue = !Number.isNaN(hue) ? hue : this._hue;
+    });
   }
 
   adjustLch(lightness: number | null, chroma: number | null, hue: number | null): ColorLabch {
-    const lch = new ColorLabch(lightness ?? this._lightness, 0, 0, chroma ?? this._chroma, hue ?? this._hue);
+    return produce(this, (draft: this) => {
+      draft._lightness = lightness ?? this._lightness;
+      draft._chroma = chroma ?? this._chroma;
+      draft._hue = hue !== null && !Number.isNaN(hue) ? hue : this._hue;
 
-    return lch.computeFromLch();
+      const converter = new Colorjs("lch", [draft._lightness, draft._chroma, draft._hue]);
+      [, draft._a, draft._b] = converter.lab;
+    });
   }
 
   compute(converter: Colorjs): ColorLabch {
     const [lightness, a, b] = converter.lab;
-    const [, chroma, hue] = converter.lch;
 
-    return new ColorLabch(lightness, a, b, chroma, !Number.isNaN(hue) ? hue : this._hue);
-  }
-
-  computeFromLab(): ColorLabch {
-    const converter = new Colorjs("lab", [this._lightness, this._a, this._b]);
-    const [, chroma, hue] = converter.lch;
-
-    return new ColorLabch(this._lightness, this._a, this._b, chroma, !Number.isNaN(hue) ? hue : this._hue);
-  }
-
-  computeFromLch(): ColorLabch {
-    const converter = new Colorjs("lch", [this._lightness, this._chroma, this._hue]);
-    const [, a, b] = converter.lab;
-
-    return new ColorLabch(this._lightness, a, b, this._chroma, this._hue);
+    return this.adjustLab(lightness, a, b);
   }
 
   converter(): Colorjs {

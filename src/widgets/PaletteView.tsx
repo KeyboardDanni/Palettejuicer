@@ -29,7 +29,7 @@ function PaletteCel(props: PaletteCelProps) {
 
   return (
     <>
-      <div className={className} style={{ backgroundColor: color.hex }} onMouseDown={handleClick} />
+      <div className={className} style={{ backgroundColor: color.rgb.hex }} onMouseDown={handleClick} />
     </>
   );
 }

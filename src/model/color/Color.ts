@@ -1,16 +1,12 @@
+import { immerable, produce } from "immer";
 import Colorjs from "colorjs.io";
-import hexRgb from "hex-rgb";
-import rgbHex from "rgb-hex";
 
 import { ColorRgb } from "./ColorRgb";
 import { ColorHslv } from "./ColorHslv";
 import { ColorLabch } from "./ColorLabch";
 import { ColorOklabch } from "./ColorOklabch";
 
-const clonedProperties = ["_rgb", "_hslv", "_labch", "_oklabch"];
-
 export interface Colorspace {
-  clone(): ThisType<this>;
   channel(name: string): number;
   adjustChannel(channel: string, value: number): ThisType<this>;
   compute(converter: Colorjs): ThisType<this>;
@@ -23,30 +19,17 @@ const DEFAULT_LABCH = ColorLabch.fromLab(0, 0, 0);
 const DEFAULT_OKLABCH = ColorOklabch.fromOklab(0, 0, 0);
 
 export class Color {
-  private _rgb = DEFAULT_RGB.clone();
-  private _hslv = DEFAULT_HSLV.clone();
-  private _labch = DEFAULT_LABCH.clone();
-  private _oklabch = DEFAULT_OKLABCH.clone();
-  private _hex: string = "#000000";
+  [immerable] = true;
+
+  private _rgb = DEFAULT_RGB;
+  private _hslv = DEFAULT_HSLV;
+  private _labch = DEFAULT_LABCH;
+  private _oklabch = DEFAULT_OKLABCH;
 
   get rgb() { return this._rgb; } // prettier-ignore
   get hslv() { return this._hslv; } // prettier-ignore
   get labch() { return this._labch; } // prettier-ignore
   get oklabch() { return this._oklabch; } // prettier-ignore
-  get hex() { return this._hex; } // prettier-ignore
-
-  clone(): Color {
-    const color = new Color();
-
-    for (const name of clonedProperties) {
-      // @ts-expect-error tsc complains about incompatible properties that aren't being used if we try to type this
-      color[name] = this[name].clone();
-    }
-
-    color._hex = `${this._hex}`;
-
-    return color;
-  }
 
   static fromRgb(newRgb: ColorRgb): Color {
     return new Color().withRgb(newRgb);
@@ -68,77 +51,58 @@ export class Color {
     return new Color().withHex(hex);
   }
 
-  private _computeHex() {
-    const [red, green, blue] = this.rgb.intNormalized();
-    this._hex = "#" + rgbHex(red, green, blue);
-  }
-
   withRgb(newRgb: ColorRgb): Color {
-    const color = this.clone();
     const converter = newRgb.converter();
 
-    color._rgb = newRgb;
-    color._hslv = color._hslv.compute(converter);
-    color._labch = color._labch.compute(converter);
-    color._oklabch = color._oklabch.compute(converter);
-
-    color._computeHex();
-
-    return color;
+    return produce(this, (draft: this) => {
+      draft._rgb = newRgb;
+      draft._hslv = draft._hslv.compute(converter);
+      draft._labch = draft._labch.compute(converter);
+      draft._oklabch = draft._oklabch.compute(converter);
+    });
   }
 
   withHslv(newHslv: ColorHslv): Color {
-    const color = this.clone();
     const converter = newHslv.converter();
 
-    color._rgb = color._rgb.compute(converter);
-    color._hslv = newHslv;
-    color._labch = color._labch.compute(converter);
-    color._oklabch = color._oklabch.compute(converter);
-
-    color._computeHex();
-
-    return color;
+    return produce(this, (draft: this) => {
+      draft._rgb = draft._rgb.compute(converter);
+      draft._hslv = newHslv;
+      draft._labch = draft._labch.compute(converter);
+      draft._oklabch = draft._oklabch.compute(converter);
+    });
   }
 
   withLabch(newLabch: ColorLabch): Color {
-    const color = this.clone();
     const converter = newLabch.converter();
 
-    color._rgb = color._rgb.compute(converter);
-    color._hslv = color._hslv.compute(converter);
-    color._labch = newLabch;
-    color._oklabch = color._oklabch.compute(converter);
-
-    color._computeHex();
-
-    return color;
+    return produce(this, (draft: this) => {
+      draft._rgb = draft._rgb.compute(converter);
+      draft._hslv = draft._hslv.compute(converter);
+      draft._labch = newLabch;
+      draft._oklabch = draft._oklabch.compute(converter);
+    });
   }
 
   withOklabch(newOklabch: ColorOklabch): Color {
-    const color = this.clone();
     const converter = newOklabch.converter();
 
-    color._rgb = color._rgb.compute(converter);
-    color._hslv = color._hslv.compute(converter);
-    color._labch = color._labch.compute(converter);
-    color._oklabch = newOklabch;
-
-    color._computeHex();
-
-    return color;
+    return produce(this, (draft: this) => {
+      draft._rgb = draft._rgb.compute(converter);
+      draft._hslv = draft._hslv.compute(converter);
+      draft._labch = draft._labch.compute(converter);
+      draft._oklabch = newOklabch;
+    });
   }
 
   withHex(hex: string): Color | null {
-    let rgb;
+    const hexColor = ColorRgb.fromHex(hex);
 
-    try {
-      rgb = hexRgb(hex);
-    } catch (error) {
-      return null;
+    if (hexColor !== null) {
+      return this.withRgb(hexColor);
     }
 
-    return this.withRgb(ColorRgb.from(rgb.red, rgb.green, rgb.blue));
+    return null;
   }
 
   channel(colorspace: string, channel: string): number {

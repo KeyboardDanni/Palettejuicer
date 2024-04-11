@@ -1,3 +1,5 @@
+import { immerable, produce } from "immer";
+
 import { Color } from "./color/Color";
 import { ColorRgb } from "./color/ColorRgb";
 
@@ -8,18 +10,12 @@ const PALETTE_HEIGHT = 16;
 const DEFAULT_COLOR = Color.fromRgb(ColorRgb.from(60, 60, 60));
 
 export class Palette {
-  private _selectedColors: Color[];
+  [immerable] = true;
+
+  readonly selectedColors: Color[];
 
   constructor() {
-    this._selectedColors = new Array(PALETTE_WIDTH * PALETTE_HEIGHT).fill(null).map((_) => DEFAULT_COLOR.clone());
-  }
-
-  clone(): Palette {
-    const newPalette = new Palette();
-
-    newPalette._selectedColors = this._selectedColors.map((color) => color.clone());
-
-    return newPalette;
+    this.selectedColors = new Array(PALETTE_WIDTH * PALETTE_HEIGHT).fill(null).map((_) => DEFAULT_COLOR);
   }
 
   color(x: number, y: number): Color {
@@ -31,7 +27,7 @@ export class Palette {
       throw new Error("Bad coordinates");
     }
 
-    return this._selectedColors[y * PALETTE_WIDTH + x];
+    return this.selectedColors[y * PALETTE_WIDTH + x];
   }
 
   setSelectedColor(x: number, y: number, color: Color): Palette {
@@ -39,10 +35,8 @@ export class Palette {
       throw new Error("Bad coordinates");
     }
 
-    const newPalette = this.clone();
-
-    newPalette._selectedColors[y * PALETTE_WIDTH + x] = color;
-
-    return newPalette;
+    return produce(this, (draft: this) => {
+      draft.selectedColors[y * PALETTE_WIDTH + x] = color;
+    });
   }
 }

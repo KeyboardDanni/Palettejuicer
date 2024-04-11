@@ -1,12 +1,18 @@
+import { immerable, produce } from "immer";
 import Colorjs from "colorjs.io";
+import hexRgb from "hex-rgb";
+import rgbHex from "rgb-hex";
 
 import { Colorspace } from "./Color";
 import { clamp } from "../../util/math";
 
 export class ColorRgb implements Colorspace {
-  private _red: number;
-  private _green: number;
-  private _blue: number;
+  [immerable] = true;
+
+  private _red: number = 0;
+  private _green: number = 0;
+  private _blue: number = 0;
+  private _hex: string = "#000000";
 
   get red() { return this._red * 255; } // prettier-ignore
   get green() { return this._green * 255; } // prettier-ignore
@@ -14,23 +20,28 @@ export class ColorRgb implements Colorspace {
   get redRaw() { return this._red; } // prettier-ignore
   get greenRaw() { return this._green; } // prettier-ignore
   get blueRaw() { return this._blue; } // prettier-ignore
-
-  private constructor(red: number, green: number, blue: number) {
-    this._red = red;
-    this._green = green;
-    this._blue = blue;
-  }
+  get hex() { return this._hex; } // prettier-ignore
 
   static from(red: number, green: number, blue: number): ColorRgb {
-    return new ColorRgb(red / 255, green / 255, blue / 255);
+    return ColorRgb.fromRaw(red / 255, green / 255, blue / 255);
   }
 
   static fromRaw(red: number, green: number, blue: number): ColorRgb {
-    return new ColorRgb(red, green, blue);
+    const color = new ColorRgb();
+
+    return color.adjustRaw(red, green, blue);
   }
 
-  clone(): ColorRgb {
-    return new ColorRgb(this._red, this._green, this._blue);
+  static fromHex(hex: string) {
+    let rgb;
+
+    try {
+      rgb = hexRgb(hex);
+    } catch (error) {
+      return null;
+    }
+
+    return ColorRgb.fromRaw(rgb.red / 255, rgb.green / 255, rgb.blue / 255);
   }
 
   channel(name: string): number {
@@ -80,13 +91,21 @@ export class ColorRgb implements Colorspace {
   }
 
   adjustRaw(red: number | null, green: number | null, blue: number | null): ColorRgb {
-    return new ColorRgb(red ?? this._red, green ?? this._green, blue ?? this._blue);
+    return produce(this, (draft: this) => {
+      if (red !== null) draft._red = red;
+      if (green !== null) draft._green = green;
+      if (blue !== null) draft._blue = blue;
+
+      const [redNormal, greenNormal, blueNormal] = draft.intNormalized();
+
+      draft._hex = "#" + rgbHex(redNormal, greenNormal, blueNormal);
+    });
   }
 
   compute(converter: Colorjs): ColorRgb {
     const [red, green, blue] = converter.srgb;
 
-    return new ColorRgb(red, green, blue);
+    return ColorRgb.fromRaw(red, green, blue);
   }
 
   converter(): Colorjs {

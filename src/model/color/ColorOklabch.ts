@@ -1,13 +1,16 @@
+import { immerable, produce } from "immer";
 import Colorjs from "colorjs.io";
 
 import { Colorspace } from "./Color";
 
 export class ColorOklabch implements Colorspace {
-  private _lightness: number;
-  private _a: number;
-  private _b: number;
-  private _chroma: number;
-  private _hue: number;
+  [immerable] = true;
+
+  private _lightness: number = 0;
+  private _a: number = 0;
+  private _b: number = 0;
+  private _chroma: number = 0;
+  private _hue: number = 0;
 
   get lightness() { return this._lightness; } // prettier-ignore
   get a() { return this._a; } // prettier-ignore
@@ -15,28 +18,16 @@ export class ColorOklabch implements Colorspace {
   get chroma() { return this._chroma; } // prettier-ignore
   get hue() { return this._hue; } // prettier-ignore
 
-  private constructor(lightness: number, a: number, b: number, chroma: number, hue: number) {
-    this._lightness = lightness;
-    this._a = a;
-    this._b = b;
-    this._chroma = chroma;
-    this._hue = hue;
-  }
-
   static fromOklab(lightness: number, a: number, b: number): ColorOklabch {
-    const lab = new ColorOklabch(lightness, a, b, 0, 0);
+    const color = new ColorOklabch();
 
-    return lab.computeFromOklab();
+    return color.adjustOklab(lightness, a, b);
   }
 
   static fromOklch(lightness: number, chroma: number, hue: number): ColorOklabch {
-    const lch = new ColorOklabch(lightness, 0, 0, chroma, hue);
+    const color = new ColorOklabch();
 
-    return lch.computeFromOklch();
-  }
-
-  clone(): ColorOklabch {
-    return new ColorOklabch(this._lightness, this._a, this._b, this._chroma, this._hue);
+    return color.adjustOklch(lightness, chroma, hue);
   }
 
   channel(name: string): number {
@@ -78,36 +69,35 @@ export class ColorOklabch implements Colorspace {
   }
 
   adjustOklab(lightness: number | null, a: number | null, b: number | null): ColorOklabch {
-    const lab = new ColorOklabch(lightness ?? this._lightness, a ?? this._a, b ?? this._b, 0, 0);
+    return produce(this, (draft: this) => {
+      draft._lightness = lightness ?? this._lightness;
+      draft._a = a ?? this._a;
+      draft._b = b ?? this._b;
 
-    return lab.computeFromOklab();
+      const converter = new Colorjs("oklab", [draft._lightness / 100, draft._a / 100, draft._b / 100]);
+      const [, chroma, hue] = converter.oklch;
+      draft._chroma = chroma * 100;
+      draft._hue = !Number.isNaN(hue) ? hue : this._hue;
+    });
   }
 
   adjustOklch(lightness: number | null, chroma: number | null, hue: number | null): ColorOklabch {
-    const lch = new ColorOklabch(lightness ?? this._lightness, 0, 0, chroma ?? this._chroma, hue ?? this._hue);
+    return produce(this, (draft: this) => {
+      draft._lightness = lightness ?? this._lightness;
+      draft._chroma = chroma ?? this._chroma;
+      draft._hue = hue !== null && !Number.isNaN(hue) ? hue : this._hue;
 
-    return lch.computeFromOklch();
+      const converter = new Colorjs("oklch", [draft._lightness / 100, draft._chroma / 100, draft._hue]);
+      const [, a, b] = converter.oklab;
+      draft._a = a * 100;
+      draft._b = b * 100;
+    });
   }
 
   compute(converter: Colorjs): ColorOklabch {
     const [lightness, a, b] = converter.oklab;
-    const [, chroma, hue] = converter.oklch;
 
-    return new ColorOklabch(lightness * 100, a * 100, b * 100, chroma * 100, !Number.isNaN(hue) ? hue : this._hue);
-  }
-
-  computeFromOklab(): ColorOklabch {
-    const converter = new Colorjs("oklab", [this._lightness / 100, this._a / 100, this._b / 100]);
-    const [, chroma, hue] = converter.oklch;
-
-    return new ColorOklabch(this._lightness, this._a, this._b, chroma * 100, !Number.isNaN(hue) ? hue : this._hue);
-  }
-
-  computeFromOklch(): ColorOklabch {
-    const converter = new Colorjs("oklch", [this._lightness / 100, this._chroma / 100, this._hue]);
-    const [, a, b] = converter.oklab;
-
-    return new ColorOklabch(this._lightness, a * 100, b * 100, this._chroma, this._hue);
+    return this.adjustOklab(lightness * 100, a * 100, b * 100);
   }
 
   converter(): Colorjs {
