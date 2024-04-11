@@ -21,20 +21,28 @@ type ChannelSliderProps = {
   step: number;
 };
 
-function ChannelSlider({ value, onChange, label, min, max, step }: ChannelSliderProps) {
-  const displayValue = step >= 1 ? (Math.round(value * 10) / 10).toString() : value.toString();
-  const className = value < min || value > max ? "out-of-gamut" : "";
+function ChannelSlider(props: ChannelSliderProps) {
+  const displayValue = props.step >= 1 ? (Math.round(props.value * 10) / 10).toString() : props.value.toString();
+  const className = props.value < props.min || props.value > props.max ? "out-of-gamut" : "";
 
   return (
     <>
       <div className="color-slider">
-        <span className="label-left">{label}</span>
-        <input type="range" className={className} value={value} onChange={onChange} min={min} max={max} step={step} />
+        <span className="label-left">{props.label}</span>
+        <input
+          type="range"
+          className={className}
+          value={props.value}
+          onChange={props.onChange}
+          min={props.min}
+          max={props.max}
+          step={props.step}
+        />
         <ControlledTextInput
-          value={value.toString()}
-          title={value.toString()}
+          value={props.value.toString()}
+          title={props.value.toString()}
           displayValue={displayValue}
-          onChange={onChange}
+          onChange={props.onChange}
           inputMode="decimal"
         />
       </div>
