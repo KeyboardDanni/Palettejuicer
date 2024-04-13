@@ -1,10 +1,120 @@
-import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import React, { useEffect, useRef } from "react";
+import Popup from "reactjs-popup";
+import { PopupActions } from "reactjs-popup/dist/types";
 import { Updater } from "use-immer";
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { Palette } from "../../model/Palette";
-import { CalcGradient } from "../../model/calculation/CalcGradient";
+import { Calculation } from "../../model/calculation/Calculation";
+import { CalcInterpolateStrip } from "../../model/calculation/CalcInterpolateStrip";
 import { clamp } from "../../util/math";
-import { useEffect, useRef } from "react";
+
+const AVAILABLE_CALCS = [CalcInterpolateStrip];
+
+type AddCalculationMenuItemProps = {
+  palette: Palette;
+  calcClass: typeof Calculation;
+  itemId: number;
+  nextIndex: number;
+  popupRef: React.RefObject<PopupActions>;
+  onPaletteChange: Updater<Palette>;
+  onIndexChange: (index: number) => void;
+};
+
+function AddCalculationMenuItem(props: AddCalculationMenuItemProps) {
+  function handleKey(event: React.KeyboardEvent) {
+    switch (event.key) {
+      case "Enter":
+        handleAdd();
+        break;
+    }
+  }
+
+  function handleAdd() {
+    props.onPaletteChange((draft) => {
+      // @ts-expect-error No way to tell tsc that this won't be abstract, and we need more than the new() function
+      draft.calculations.splice(props.nextIndex, 0, new props.calcClass());
+    });
+
+    props.onIndexChange(props.nextIndex);
+    props.popupRef.current?.close();
+  }
+
+  return (
+    <>
+      <li data-id={props.itemId} tabIndex={0} onMouseUp={handleAdd} onKeyDown={handleKey}>
+        <div title={props.calcClass.description()}>{props.calcClass.name()}</div>
+      </li>
+    </>
+  );
+}
+
+export type CalculationsViewProps = {
+  palette: Palette;
+  activeCalcIndex: number;
+  onPaletteChange: Updater<Palette>;
+  onIndexChange: (index: number) => void;
+};
+
+function AddCalculationMenu(props: CalculationsViewProps) {
+  const ref = useRef<HTMLUListElement>(null);
+  const popupRef = useRef<PopupActions>(null);
+  const nextIndex = Math.min(props.activeCalcIndex + 1, props.palette.calculations.length);
+  const calcClasses: JSX.Element[] = [];
+
+  for (const [id, calcClass] of AVAILABLE_CALCS.entries()) {
+    calcClasses.push(
+      <AddCalculationMenuItem
+        key={calcClass.name()}
+        palette={props.palette}
+        calcClass={calcClass}
+        nextIndex={nextIndex}
+        onPaletteChange={props.onPaletteChange}
+        onIndexChange={props.onIndexChange}
+        popupRef={popupRef}
+        itemId={id}
+      />
+    );
+  }
+
+  function addButton(isOpen: boolean): JSX.Element {
+    const className = isOpen ? "selected" : "";
+
+    return <button className={className}>Add</button>;
+  }
+
+  function handleKey(event: React.KeyboardEvent) {
+    if (!ref.current) {
+      return;
+    }
+
+    const currentId = parseInt((event.target as HTMLElement).dataset["id"] ?? "0");
+    const items = ref.current.children;
+
+    switch (event.key) {
+      case "ArrowUp":
+        (items[Math.max(0, currentId - 1)] as HTMLElement).focus();
+        event.preventDefault();
+        break;
+      case "ArrowDown":
+        (items[Math.min(currentId + 1, items.length - 1)] as HTMLElement).focus();
+        event.preventDefault();
+        break;
+    }
+  }
+
+  return (
+    <>
+      <Popup trigger={addButton} ref={popupRef} position="bottom left" arrow={false}>
+        <div className="popup">
+          <div className="menu" onKeyDown={handleKey}>
+            <ul ref={ref}>{calcClasses}</ul>
+          </div>
+        </div>
+      </Popup>
+    </>
+  );
+}
 
 type CalculationItemProps = {
   palette: Palette;
@@ -20,10 +130,10 @@ function CalculationItem(props: CalculationItemProps) {
     }
   });
 
+  const ref = useRef<HTMLLIElement>(null);
   const calcs = props.palette.calculations;
   const calculation = calcs[props.index];
   const className = props.active ? "active-calc" : "";
-  const ref = useRef<HTMLLIElement>(null);
 
   function handleMouseDown(event: React.MouseEvent) {
     if (event.buttons === 1) {
@@ -37,7 +147,7 @@ function CalculationItem(props: CalculationItemProps) {
     }
   }
 
-  const description = calculation.description();
+  const description = calculation.listDescription();
 
   return (
     <>
@@ -49,13 +159,6 @@ function CalculationItem(props: CalculationItemProps) {
     </>
   );
 }
-
-export type CalculationsViewProps = {
-  palette: Palette;
-  activeCalcIndex: number;
-  onPaletteChange: Updater<Palette>;
-  onIndexChange: (index: number) => void;
-};
 
 function CalculationsList(props: CalculationsViewProps) {
   const calcs = props.palette.calculations;
@@ -86,8 +189,6 @@ function CalculationsList(props: CalculationsViewProps) {
       case "Home":
       case "End":
         event.preventDefault();
-        break;
-      default:
         break;
     }
   }
@@ -125,17 +226,11 @@ function CalculationsList(props: CalculationsViewProps) {
 export function CalculationsView(props: CalculationsViewProps) {
   const calcs = props.palette.calculations;
   const nextIndex = Math.min(props.activeCalcIndex + 1, calcs.length);
-  const prevIndex = clamp(props.activeCalcIndex - 1, 0, calcs.length);
-
-  function handleAdd() {
-    props.onPaletteChange((draft) => {
-      draft.calculations.splice(nextIndex, 0, new CalcGradient());
-    });
-
-    props.onIndexChange(nextIndex);
-  }
+  const prevIndex = clamp(props.activeCalcIndex - 1, 0, calcs.length - 1);
 
   function handleClone() {
+    if (calcs.length <= 0) return;
+
     const cloned = calcs[props.activeCalcIndex].withNewUid();
 
     props.onPaletteChange((draft) => {
@@ -146,12 +241,13 @@ export function CalculationsView(props: CalculationsViewProps) {
   }
 
   function handleRemove() {
+    if (calcs.length <= 0) return;
+
     props.onPaletteChange((draft) => {
       draft.calculations.splice(props.activeCalcIndex, 1);
     });
 
-    const newIndex = clamp(props.activeCalcIndex, 0, calcs.length - 2);
-    props.onIndexChange(newIndex);
+    props.onIndexChange(prevIndex);
   }
 
   function handleMoveUp() {
@@ -180,7 +276,7 @@ export function CalculationsView(props: CalculationsViewProps) {
   return (
     <>
       <div className="button-bar">
-        <button onClick={handleAdd}>Add</button>
+        <AddCalculationMenu {...props} />
         <button onClick={handleClone}>Clone</button>
         <button onClick={handleRemove}>Remove</button>
         <div className="button-bar-spacer" />

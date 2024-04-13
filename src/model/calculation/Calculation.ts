@@ -28,7 +28,13 @@ export abstract class Calculation {
     });
   }
 
-  abstract description(): string;
+  static name(): string {
+    return "Calculation";
+  }
+  static description(): string {
+    return "";
+  }
+  abstract listDescription(): string;
   abstract affectedCels(): CelIndex[];
   abstract dependentCels(): CelIndex[];
   abstract computeColors(palette: Palette): CalculationResult;

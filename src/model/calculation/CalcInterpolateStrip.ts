@@ -3,11 +3,18 @@ import { immerable } from "immer";
 import { CelIndex, Palette } from "../Palette";
 import { Calculation, CalculationResult } from "./Calculation";
 
-export class CalcGradient extends Calculation {
+export class CalcInterpolateStrip extends Calculation {
   [immerable] = true;
 
-  description(): string {
-    return `Gradient Strip ${this.uid}`;
+  static name(): string {
+    return "Interpolate Strip";
+  }
+  static description(): string {
+    return "Creates a gradient strip between two selected color cels.";
+  }
+
+  listDescription(): string {
+    return `Interpolate Strip ${this.uid}`;
   }
 
   affectedCels(): CelIndex[] {
