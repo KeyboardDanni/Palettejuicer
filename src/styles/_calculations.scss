@@ -1,0 +1,49 @@
+@use "./_constants.scss" as *;
+@use "sass:color";
+
+.calculations-list {
+  min-height: 12.8rem;
+  margin-top: $size-section-padding;
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  overflow: hidden;
+
+  .calculations-scroll {
+    background-color: $color-field-background;
+    border: $size-widget-outline solid $color-section-border;
+    border-radius: $size-button-radius;
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow-x: clip;
+    overflow-y: hidden;
+
+    .os-scrollbar {
+      background-color: color.adjust($color-field-background, $alpha: -0.5);
+    }
+
+    li {
+      display: flex;
+      flex-direction: row;
+      padding: $size-list-padding ($size-list-padding + $size-scrollbar-width) $size-list-padding $size-list-padding;
+
+      &.active-calc {
+        background-color: $color-selected;
+        color: $color-text-selected;
+      }
+
+      .calc-label {
+        max-width: 30rem;
+        text-wrap: nowrap;
+        text-overflow: ellipsis;
+        overflow: hidden;
+      }
+    }
+
+    &:focus-visible {
+      outline: $size-widget-focus-outline solid $color-selected;
+      outline-offset: (-$size-widget-outline - $size-widget-focus-outline);
+    }
+  }
+}

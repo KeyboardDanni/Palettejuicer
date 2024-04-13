@@ -71,7 +71,7 @@ function HexInput({ color, onColorChange }: HexInputProps) {
   );
 }
 
-type ColorSelectorProps = {
+export type ColorSelectorProps = {
   color: Color;
   onColorChange: (color: Color) => void;
 };
@@ -94,7 +94,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
     );
   }
 
-  function channelChanged(colorspace: string, channel: string, event: ChangeEvent<HTMLInputElement>) {
+  function handleChannelChange(colorspace: string, channel: string, event: ChangeEvent<HTMLInputElement>) {
     const newValue = parseFloat(event.target.value) || 0;
 
     if (newValue !== color.channel(colorspace, channel)) {
@@ -109,7 +109,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
           <>
             <ChannelSlider
               value={color.hslv.hue}
-              onChange={(e) => channelChanged("hslv", "hueL", e)}
+              onChange={(e) => handleChannelChange("hslv", "hueL", e)}
               label={"H"}
               min={0}
               max={360}
@@ -117,7 +117,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.hslv.saturationL}
-              onChange={(e) => channelChanged("hslv", "saturationL", e)}
+              onChange={(e) => handleChannelChange("hslv", "saturationL", e)}
               label={"S"}
               min={0}
               max={100}
@@ -125,7 +125,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.hslv.lightness}
-              onChange={(e) => channelChanged("hslv", "lightness", e)}
+              onChange={(e) => handleChannelChange("hslv", "lightness", e)}
               label={"L"}
               min={0}
               max={100}
@@ -138,7 +138,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
           <>
             <ChannelSlider
               value={color.hslv.hue}
-              onChange={(e) => channelChanged("hslv", "hueV", e)}
+              onChange={(e) => handleChannelChange("hslv", "hueV", e)}
               label={"H"}
               min={0}
               max={360}
@@ -146,7 +146,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.hslv.saturationV}
-              onChange={(e) => channelChanged("hslv", "saturationV", e)}
+              onChange={(e) => handleChannelChange("hslv", "saturationV", e)}
               label={"S"}
               min={0}
               max={100}
@@ -154,7 +154,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.hslv.value}
-              onChange={(e) => channelChanged("hslv", "value", e)}
+              onChange={(e) => handleChannelChange("hslv", "value", e)}
               label={"V"}
               min={0}
               max={100}
@@ -167,7 +167,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
           <>
             <ChannelSlider
               value={color.labch.lightness}
-              onChange={(e) => channelChanged("labch", "lightnessLch", e)}
+              onChange={(e) => handleChannelChange("labch", "lightnessLch", e)}
               label={"L"}
               min={0}
               max={100}
@@ -175,7 +175,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.labch.chroma}
-              onChange={(e) => channelChanged("labch", "chroma", e)}
+              onChange={(e) => handleChannelChange("labch", "chroma", e)}
               label={"C"}
               min={0}
               max={150}
@@ -183,7 +183,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.labch.hue}
-              onChange={(e) => channelChanged("labch", "hue", e)}
+              onChange={(e) => handleChannelChange("labch", "hue", e)}
               label={"H"}
               min={0}
               max={360}
@@ -196,7 +196,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
           <>
             <ChannelSlider
               value={color.labch.lightness}
-              onChange={(e) => channelChanged("labch", "lightnessLab", e)}
+              onChange={(e) => handleChannelChange("labch", "lightnessLab", e)}
               label={"L"}
               min={0}
               max={100}
@@ -204,7 +204,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.labch.a}
-              onChange={(e) => channelChanged("labch", "a", e)}
+              onChange={(e) => handleChannelChange("labch", "a", e)}
               label={"A"}
               min={-125}
               max={125}
@@ -212,7 +212,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.labch.b}
-              onChange={(e) => channelChanged("labch", "b", e)}
+              onChange={(e) => handleChannelChange("labch", "b", e)}
               label={"B"}
               min={-125}
               max={125}
@@ -225,7 +225,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
           <>
             <ChannelSlider
               value={color.oklabch.lightness}
-              onChange={(e) => channelChanged("oklabch", "lightnessLch", e)}
+              onChange={(e) => handleChannelChange("oklabch", "lightnessLch", e)}
               label={"L"}
               min={0}
               max={100}
@@ -233,7 +233,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.oklabch.chroma}
-              onChange={(e) => channelChanged("oklabch", "chroma", e)}
+              onChange={(e) => handleChannelChange("oklabch", "chroma", e)}
               label={"C"}
               min={0}
               max={40}
@@ -241,7 +241,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.oklabch.hue}
-              onChange={(e) => channelChanged("oklabch", "hue", e)}
+              onChange={(e) => handleChannelChange("oklabch", "hue", e)}
               label={"H"}
               min={0}
               max={360}
@@ -254,7 +254,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
           <>
             <ChannelSlider
               value={color.oklabch.lightness}
-              onChange={(e) => channelChanged("oklabch", "lightnessLab", e)}
+              onChange={(e) => handleChannelChange("oklabch", "lightnessLab", e)}
               label={"L"}
               min={0}
               max={100}
@@ -262,7 +262,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.oklabch.a}
-              onChange={(e) => channelChanged("oklabch", "a", e)}
+              onChange={(e) => handleChannelChange("oklabch", "a", e)}
               label={"A"}
               min={-40}
               max={40}
@@ -270,7 +270,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.oklabch.b}
-              onChange={(e) => channelChanged("oklabch", "b", e)}
+              onChange={(e) => handleChannelChange("oklabch", "b", e)}
               label={"B"}
               min={-40}
               max={40}
@@ -290,7 +290,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
           <div>
             <ChannelSlider
               value={color.rgb.red}
-              onChange={(e) => channelChanged("rgb", "red", e)}
+              onChange={(e) => handleChannelChange("rgb", "red", e)}
               label={"R"}
               min={0}
               max={255}
@@ -298,7 +298,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.rgb.green}
-              onChange={(e) => channelChanged("rgb", "green", e)}
+              onChange={(e) => handleChannelChange("rgb", "green", e)}
               label={"G"}
               min={0}
               max={255}
@@ -306,7 +306,7 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
             />
             <ChannelSlider
               value={color.rgb.blue}
-              onChange={(e) => channelChanged("rgb", "blue", e)}
+              onChange={(e) => handleChannelChange("rgb", "blue", e)}
               label={"B"}
               min={0}
               max={255}

@@ -96,8 +96,8 @@ $size-palette-color-minimum: 2rem;
 
         background-color: $color-slider-recess;
         box-shadow:
-          inset 0 0 0 0.1rem $color-section-border,
-          inset 0 0.3rem $color-section-border;
+          inset 0 0 0 $size-widget-outline $color-section-border,
+          inset 0 $size-button-height $color-section-border;
         border-radius: $size-button-radius;
 
         .os-scrollbar-handle {

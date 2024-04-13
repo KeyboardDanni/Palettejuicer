@@ -25,13 +25,17 @@ h4,
 h5,
 h6,
 p,
-ol,
-ul,
 textarea {
   line-height: 1.25;
   margin: 0;
   outline: none;
   user-select: text;
+}
+
+ol,
+ul {
+  margin: 0;
+  outline: none;
 }
 
 button,

@@ -1,16 +1,16 @@
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
-import { Palette } from "../model/Palette";
+import { CelIndex, PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
 
 type PaletteCelProps = {
   palette: Palette;
-  index: { x: number; y: number };
+  index: CelIndex;
   active: boolean;
-  onIndexClicked: (x: number, y: number) => void;
+  onIndexClicked: (index: CelIndex) => void;
 };
 
 function PaletteCel(props: PaletteCelProps) {
-  const color = props.palette.color(props.index.x, props.index.y);
+  const color = props.palette.color(props.index);
   let className = "palette-cel";
 
   if (props.active) {
@@ -24,7 +24,7 @@ function PaletteCel(props: PaletteCelProps) {
   }
 
   function handleClick() {
-    props.onIndexClicked(props.index.x, props.index.y);
+    props.onIndexClicked(props.index);
   }
 
   return (
@@ -38,13 +38,13 @@ type PaletteRowProps = {
   palette: Palette;
   y: number;
   activeX: number | null;
-  onIndexClicked: (x: number, y: number) => void;
+  onIndexClicked: (index: CelIndex) => void;
 };
 
 function PaletteRow(props: PaletteRowProps) {
   const row = [];
 
-  for (let x = 0; x < 16; x++) {
+  for (let x = 0; x < PALETTE_WIDTH; x++) {
     const active = x === props.activeX;
     row.push(
       <PaletteCel
@@ -64,16 +64,16 @@ function PaletteRow(props: PaletteRowProps) {
   );
 }
 
-type PaletteViewProps = {
+export type PaletteViewProps = {
   palette: Palette;
-  active: { x: number; y: number };
-  onIndexClicked: (x: number, y: number) => void;
+  active: CelIndex;
+  onIndexClicked: (index: CelIndex) => void;
 };
 
 export function PaletteView(props: PaletteViewProps) {
   const rows = [];
 
-  for (let y = 0; y < 16; y++) {
+  for (let y = 0; y < PALETTE_HEIGHT; y++) {
     const activeX = y === props.active.y ? props.active.x : null;
     rows.push(
       <PaletteRow key={y} y={y} palette={props.palette} activeX={activeX} onIndexClicked={props.onIndexClicked} />

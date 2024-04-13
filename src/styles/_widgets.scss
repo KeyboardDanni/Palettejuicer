@@ -53,9 +53,9 @@
   }
 }
 
-@mixin raised-widget-focus($color) {
-  outline: 0.2rem solid $color;
-  outline-offset: (-$size-widget-outline - 0.2rem);
+@mixin widget-focus($color) {
+  outline: $size-widget-focus-outline solid $color;
+  outline-offset: (-$size-widget-outline - $size-widget-focus-outline);
 }
 
 @mixin raised-button($color, $color-border, $pressed) {
@@ -87,7 +87,7 @@ button {
   }
 
   &:focus-visible {
-    @include raised-widget-focus($color-text-button);
+    @include widget-focus($color-text-button);
   }
 }
 
@@ -98,9 +98,13 @@ button {
   gap: 0.2rem;
   column-gap: 0.2rem;
 
+  button {
+    flex: 0.5;
+  }
+
   .button-bar-spacer {
     min-width: 2rem;
-    flex: 1;
+    flex: 0.5;
   }
 }
 
@@ -201,7 +205,7 @@ label {
       }
 
       &:focus-visible {
-        @include raised-widget-focus($color-button);
+        @include widget-focus($color-button);
       }
     }
 
@@ -220,7 +224,7 @@ label {
       }
 
       &:focus-visible {
-        @include raised-widget-focus($color-text-button);
+        @include widget-focus($color-text-button);
       }
     }
   }
@@ -329,15 +333,15 @@ input[type="range"] {
 
   &:focus-visible {
     &::-webkit-slider-thumb {
-      @include raised-widget-focus($color-text-button);
+      @include widget-focus($color-text-button);
     }
 
     &::-moz-range-thumb {
-      @include raised-widget-focus($color-text-button);
+      @include widget-focus($color-text-button);
     }
 
     &::-ms-thumb {
-      @include raised-widget-focus($color-text-button);
+      @include widget-focus($color-text-button);
     }
   }
 }
@@ -350,7 +354,8 @@ input[type="range"] {
 
 .os-scrollbar {
   padding: 0.2rem;
-  --os-size: 2rem;
+  pointer-events: auto;
+  --os-size: #{$size-scrollbar-width};
   --os-handle-bg: #{$color-slider};
   --os-handle-bg-hover: #{$color-slider-hover};
   --os-handle-bg-active: #{$color-slider-hover};
