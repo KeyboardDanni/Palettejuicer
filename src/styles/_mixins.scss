@@ -22,7 +22,7 @@
 }
 
 @mixin raised-widget-bounds($height, $pressed) {
-  &:after {
+  &:before {
     content: "";
     position: absolute;
     top: (-$height - $size-widget-outline) * $pressed;

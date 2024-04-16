@@ -10,8 +10,8 @@ import {
 } from "../../model/calculation/CalcInterpolateStrip";
 import { CelIndex } from "../../model/Palette";
 import { CalcPropertiesViewProps } from "../PropertiesView";
-import { PopupMenu } from "../common/PopupMenu";
 import { NumberSlider } from "../common/NumberSlider";
+import { DropdownButton } from "../common/DropdownButton";
 
 export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
   if (!(props.calc instanceof CalcInterpolateStrip)) {
@@ -60,27 +60,8 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
     );
   }
 
-  function colorspaceButton(isOpen: boolean): JSX.Element {
-    const className = isOpen ? "selected" : "";
-    const colorspaceData = lerpColorspaceData[calc.colorspace];
-
-    return (
-      <button className={className} title={colorspaceData.description}>
-        {colorspaceData.name} ▾
-      </button>
-    );
-  }
-
-  function hueModeButton(isOpen: boolean): JSX.Element {
-    const className = isOpen ? "selected" : "";
-    const hueModeData = lerpHueModeData[calc.hueMode];
-
-    return (
-      <button className={className} title={hueModeData.description}>
-        {hueModeData.name} ▾
-      </button>
-    );
-  }
+  const colorspaceData = lerpColorspaceData[calc.colorspace];
+  const hueModeData = lerpHueModeData[calc.hueMode];
 
   return (
     <>
@@ -97,13 +78,23 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
           <span>Blend colorspace</span>
         </div>
         <div>
-          <PopupMenu button={colorspaceButton} items={lerpColorspaceData} onItemSelect={handleColorspaceChange} />
+          <DropdownButton
+            label={colorspaceData.name}
+            title={colorspaceData.description}
+            items={lerpColorspaceData}
+            onItemSelect={handleColorspaceChange}
+          />
         </div>
         <div className="grid-label">
           <span>Blend hue mode</span>
         </div>
         <div>
-          <PopupMenu button={hueModeButton} items={lerpHueModeData} onItemSelect={handleHueModeChange} />
+          <DropdownButton
+            label={hueModeData.name}
+            title={hueModeData.description}
+            items={lerpHueModeData}
+            onItemSelect={handleHueModeChange}
+          />
         </div>
         <div className="grid-label">
           <span>Curve</span>

@@ -4,10 +4,11 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { clamp } from "../../util/math";
 import { Palette } from "../../model/Palette";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
-import { PopupMenu, PopupMenuItemData } from "../common/PopupMenu";
+import { PopupMenuItemData } from "../common/PopupMenu";
 
 import { CalcCopyColors } from "../../model/calculation/CalcCopyColors";
 import { CalcInterpolateStrip } from "../../model/calculation/CalcInterpolateStrip";
+import { DropdownButton } from "../common/DropdownButton";
 
 const AVAILABLE_CALCS = [CalcCopyColors, CalcInterpolateStrip];
 
@@ -29,12 +30,6 @@ function AddCalculationButton(props: CalculationsViewProps) {
     });
   }
 
-  function addButton(isOpen: boolean): JSX.Element {
-    const className = isOpen ? "selected" : "";
-
-    return <button className={className}>Add</button>;
-  }
-
   function handleAdd(index: number) {
     const calcClass = AVAILABLE_CALCS[index];
 
@@ -51,7 +46,7 @@ function AddCalculationButton(props: CalculationsViewProps) {
 
   return (
     <>
-      <PopupMenu button={addButton} items={items} onItemSelect={handleAdd} />
+      <DropdownButton label={"Add"} items={items} onItemSelect={handleAdd} />
     </>
   );
 }

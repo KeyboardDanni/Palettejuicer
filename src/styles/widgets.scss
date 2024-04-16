@@ -149,6 +149,12 @@ button {
       @include widget-focus($color-text-selected);
     }
   }
+
+  &.dropdown {
+    &:after {
+      content: "\00a0▾";
+    }
+  }
 }
 
 .button-bar {
