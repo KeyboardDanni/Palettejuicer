@@ -109,7 +109,7 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
           <span>Curve</span>
         </div>
         <div>
-          <NumberSlider value={calc.curve} onChange={handleCurveChange} disabled={false} min={0} max={3} step={0.1} />
+          <NumberSlider value={calc.curve} onChange={handleCurveChange} disabled={false} min={0.1} max={3} step={0.1} />
         </div>
       </div>
     </>
