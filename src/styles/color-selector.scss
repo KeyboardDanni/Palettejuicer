@@ -1,6 +1,6 @@
 @use "./_constants.scss" as *;
 
-@keyframes out-of-gamut-pulse {
+@keyframes out-of-range-pulse {
   from {
     outline-width: 0;
     outline-offset: 0;
@@ -45,41 +45,8 @@
         flex: 0 0;
       }
 
-      input[type="range"] {
-        margin-right: $size-label-spacing;
-        min-width: (2rem + 14.4rem);
-        max-width: (2rem + 25.6rem);
-        background: none;
-        border-radius: $size-button-radius;
-        position: relative;
-
-        &.out-of-gamut {
-          background: repeating-linear-gradient(
-            -45deg,
-            $color-section-warning,
-            $color-section-warning 1rem,
-            $color-section-warning-alt 1rem,
-            $color-section-warning-alt 2rem
-          );
-
-          &:after {
-            content: "";
-            position: absolute;
-            top: 0;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            z-index: 100;
-            border-radius: $size-button-radius;
-            outline: $color-section-warning-outline solid 0;
-            animation: out-of-gamut-pulse 0.25s;
-          }
-        }
-      }
-
-      input[type="text"] {
-        width: 5rem;
-        text-align: right;
+      .number-slider {
+        flex: 1;
       }
     }
   }

@@ -3,6 +3,7 @@ import { ChangeEvent, useState } from "react";
 import { Color } from "../../model/color/Color";
 import { ColorspaceInfo } from "../../model/color/Colorspace";
 import { ControlledTextInput } from "./ControlledTextInput";
+import { NumberSlider } from "./NumberSlider";
 
 enum ColorSelectorPage {
   Lch = "LCH",
@@ -23,40 +24,17 @@ type ChannelSliderProps = {
   step: number;
 };
 
-const GAMUT_ROUNDING_ERROR = 0.0001;
-
 function ChannelSlider(props: ChannelSliderProps) {
-  const displayValue = props.step >= 1 ? Math.round(props.value * 10) / 10 : props.value;
-  const min = props.min - GAMUT_ROUNDING_ERROR;
-  const max = props.max + GAMUT_ROUNDING_ERROR;
-  const className = props.value < min || props.value > max ? "out-of-gamut" : "";
-
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const value = parseFloat(event.target.value) || 0;
-
-    props.onChange(value);
-  }
-
   return (
     <>
       <div className="color-slider">
         <span className="label-left">{props.label}</span>
-        <input
-          type="range"
-          className={className}
+        <NumberSlider
           value={props.value}
-          onChange={handleChange}
+          onChange={props.onChange}
           min={props.min}
           max={props.max}
           step={props.step}
-          disabled={props.disabled}
-        />
-        <ControlledTextInput
-          value={props.value.toString()}
-          title={props.value.toString()}
-          displayValue={displayValue.toString()}
-          inputMode="decimal"
-          onChange={handleChange}
           disabled={props.disabled}
         />
       </div>

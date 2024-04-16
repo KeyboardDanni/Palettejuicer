@@ -11,6 +11,7 @@ import {
 import { CelIndex } from "../../model/Palette";
 import { CalcPropertiesViewProps } from "../PropertiesView";
 import { PopupMenu } from "../common/PopupMenu";
+import { NumberSlider } from "../common/NumberSlider";
 
 export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
   if (!(props.calc instanceof CalcInterpolateStrip)) {
@@ -19,7 +20,7 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
 
   const calc = props.calc as CalcInterpolateStrip;
 
-  function onStartChange(index: CelIndex) {
+  function handleStartChange(index: CelIndex) {
     props.onCalcChange(
       produce(calc, (draft) => {
         draft.startCel = index;
@@ -27,7 +28,7 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
     );
   }
 
-  function onEndChange(index: CelIndex) {
+  function handleEndChange(index: CelIndex) {
     props.onCalcChange(
       produce(calc, (draft) => {
         draft.endCel = index;
@@ -35,7 +36,7 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
     );
   }
 
-  function onColorspaceChange(index: number) {
+  function handleColorspaceChange(index: number) {
     props.onCalcChange(
       produce(calc, (draft) => {
         draft.colorspace = index as LerpColorspace;
@@ -43,10 +44,18 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
     );
   }
 
-  function onHueModeChange(index: number) {
+  function handleHueModeChange(index: number) {
     props.onCalcChange(
       produce(calc, (draft) => {
         draft.hueMode = index as LerpHueMode;
+      })
+    );
+  }
+
+  function handleCurveChange(curve: number) {
+    props.onCalcChange(
+      produce(calc, (draft) => {
+        draft.curve = curve;
       })
     );
   }
@@ -80,21 +89,27 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
           <span>Cel range</span>
         </div>
         <div>
-          <CelSelector index={calc.startCel} onIndexChange={onStartChange} />
+          <CelSelector index={calc.startCel} onIndexChange={handleStartChange} />
           <span className="label-mid">to</span>
-          <CelSelector index={calc.endCel} onIndexChange={onEndChange} />
+          <CelSelector index={calc.endCel} onIndexChange={handleEndChange} />
         </div>
         <div className="grid-label">
           <span>Blend colorspace</span>
         </div>
         <div>
-          <PopupMenu button={colorspaceButton} items={lerpColorspaceData} onItemSelect={onColorspaceChange} />
+          <PopupMenu button={colorspaceButton} items={lerpColorspaceData} onItemSelect={handleColorspaceChange} />
         </div>
         <div className="grid-label">
           <span>Blend hue mode</span>
         </div>
         <div>
-          <PopupMenu button={hueModeButton} items={lerpHueModeData} onItemSelect={onHueModeChange} />
+          <PopupMenu button={hueModeButton} items={lerpHueModeData} onItemSelect={handleHueModeChange} />
+        </div>
+        <div className="grid-label">
+          <span>Curve</span>
+        </div>
+        <div>
+          <NumberSlider value={calc.curve} onChange={handleCurveChange} disabled={false} min={0} max={3} step={0.1} />
         </div>
       </div>
     </>

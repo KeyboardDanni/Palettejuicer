@@ -89,6 +89,7 @@ export class CalcInterpolateStrip extends Calculation {
   readonly endCel: CelIndex = { x: 0, y: 0 };
   readonly colorspace: LerpColorspace = LerpColorspace.OkLch;
   readonly hueMode: LerpHueMode = LerpHueMode.Shorter;
+  readonly curve: number = 1;
 
   static name(): string {
     return "Interpolate Strip";
@@ -144,6 +145,7 @@ export class CalcInterpolateStrip extends Calculation {
       space: lerpColorspaceData[this.colorspace].colorspace,
       outputSpace: "srgb",
       hue: lerpHueModeData[this.hueMode].mode,
+      progression: (p) => Math.pow(p, this.curve),
     });
 
     for (let i = 0; i < indexes.length; i++) {

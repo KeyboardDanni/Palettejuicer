@@ -406,6 +406,48 @@ input[type="range"] {
   }
 }
 
+.number-slider {
+  display: flex;
+  align-items: center;
+
+  input[type="range"] {
+    margin-right: $size-label-spacing;
+    min-width: (2rem + 14.4rem);
+    max-width: (2rem + 25.6rem);
+    background: none;
+    border-radius: $size-button-radius;
+    position: relative;
+
+    &.out-of-range {
+      background: repeating-linear-gradient(
+        -45deg,
+        $color-section-warning,
+        $color-section-warning 1rem,
+        $color-section-warning-alt 1rem,
+        $color-section-warning-alt 2rem
+      );
+
+      &:after {
+        content: "";
+        position: absolute;
+        top: 0;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: 100;
+        border-radius: $size-button-radius;
+        outline: $color-section-warning-outline solid 0;
+        animation: out-of-range-pulse 0.25s;
+      }
+    }
+  }
+
+  input[type="text"] {
+    width: 5rem;
+    text-align: right;
+  }
+}
+
 .label-left {
   display: inline-block;
   text-align: right;
