@@ -1,7 +1,7 @@
 import { ChangeEvent, useState } from "react";
 
-import { Color } from "../model/color/Color";
-import { ColorspaceInfo } from "../model/color/Colorspace";
+import { Color } from "../../model/color/Color";
+import { ColorspaceInfo } from "../../model/color/Colorspace";
 import { ControlledTextInput } from "./ControlledTextInput";
 
 enum ColorSelectorPage {

@@ -1,6 +1,6 @@
 import { produce } from "immer";
 
-import { CelSelector } from "../CelSelector";
+import { CelSelector } from "../common/CelSelector";
 import {
   CalcInterpolateStrip,
   LerpColorspace,
@@ -10,7 +10,7 @@ import {
 } from "../../model/calculation/CalcInterpolateStrip";
 import { CelIndex } from "../../model/Palette";
 import { CalcPropertiesViewProps } from "../PropertiesView";
-import { PopupMenu } from "../PopupMenu";
+import { PopupMenu } from "../common/PopupMenu";
 
 export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
   if (!(props.calc instanceof CalcInterpolateStrip)) {

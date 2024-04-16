@@ -4,7 +4,7 @@ import { useImmer, useImmerReducer } from "use-immer";
 
 import { Color } from "../model/color/Color";
 import { CelIndex, Palette } from "../model/Palette";
-import { ColorSelector } from "./ColorSelector";
+import { ColorSelector } from "./common/ColorSelector";
 import { PaletteView } from "./PaletteView";
 import { CalculationsView, CalculationsViewProps } from "./calculations/CalculationsView";
 import { PropertiesView, PropertiesViewProps } from "./PropertiesView";

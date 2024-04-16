@@ -1,7 +1,7 @@
 import { ChangeEvent } from "react";
-import { CelIndex } from "../model/Palette";
+import { CelIndex } from "../../model/Palette";
 import { ControlledTextInput } from "./ControlledTextInput";
-import { clamp } from "../util/math";
+import { clamp } from "../../util/math";
 
 export type CelNumberInputProps = {
   value: number;

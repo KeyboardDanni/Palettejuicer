@@ -4,7 +4,7 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { Palette } from "../../model/Palette";
 import { CalcInterpolateStrip } from "../../model/calculation/CalcInterpolateStrip";
 import { clamp } from "../../util/math";
-import { PopupMenu, PopupMenuItemData } from "../PopupMenu";
+import { PopupMenu, PopupMenuItemData } from "../common/PopupMenu";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
 
 const AVAILABLE_CALCS = [CalcInterpolateStrip];
