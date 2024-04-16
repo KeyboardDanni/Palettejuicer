@@ -3,10 +3,10 @@ import Colorjs from "colorjs.io";
 import hexRgb from "hex-rgb";
 import rgbHex from "rgb-hex";
 
-import { Colorspace } from "./Color";
+import { Colorspace, ColorspaceInfo } from "./Colorspace";
 import { clamp } from "../../util/math";
 
-export class ColorRgb implements Colorspace {
+export class ColorRgb extends Colorspace {
   [immerable] = true;
 
   private _red: number = 0;
@@ -118,5 +118,16 @@ export class ColorRgb implements Colorspace {
     const blue = clamp(Math.round(this.blue), 0, 255);
 
     return [red, green, blue];
+  }
+
+  static colorspaceInfo(_variant?: string): ColorspaceInfo {
+    return {
+      colorspace: "rgb",
+      channels: [
+        { channel: "red", label: "R", range: [0, 255], step: 5 },
+        { channel: "green", label: "G", range: [0, 255], step: 5 },
+        { channel: "blue", label: "B", range: [0, 255], step: 5 },
+      ],
+    };
   }
 }

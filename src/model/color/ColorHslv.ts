@@ -1,9 +1,9 @@
 import { immerable, produce } from "immer";
 import Colorjs from "colorjs.io";
 
-import { Colorspace } from "./Color";
+import { Colorspace, ColorspaceInfo } from "./Colorspace";
 
-export class ColorHslv implements Colorspace {
+export class ColorHslv extends Colorspace {
   [immerable] = true;
 
   private _hue: number = 0;
@@ -98,5 +98,30 @@ export class ColorHslv implements Colorspace {
 
   converter(): Colorjs {
     return new Colorjs("hsv", [this._hue, this._saturationV, this._value]);
+  }
+
+  static colorspaceInfo(variant?: string): ColorspaceInfo {
+    switch (variant) {
+      case "hsl":
+        return {
+          colorspace: "hslv",
+          channels: [
+            { channel: "hueL", label: "H", range: [0, 360], step: 5 },
+            { channel: "saturationL", label: "S", range: [0, 100], step: 2 },
+            { channel: "lightness", label: "L", range: [0, 100], step: 2 },
+          ],
+        };
+      case "hsv":
+        return {
+          colorspace: "hslv",
+          channels: [
+            { channel: "hueV", label: "H", range: [0, 360], step: 5 },
+            { channel: "saturationV", label: "S", range: [0, 100], step: 2 },
+            { channel: "value", label: "V", range: [0, 100], step: 2 },
+          ],
+        };
+      default:
+        throw new Error("Bad variant");
+    }
   }
 }

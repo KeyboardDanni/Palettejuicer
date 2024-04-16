@@ -1,9 +1,9 @@
 import { immerable, produce } from "immer";
 import Colorjs from "colorjs.io";
 
-import { Colorspace } from "./Color";
+import { Colorspace, ColorspaceInfo } from "./Colorspace";
 
-export class ColorOklabch implements Colorspace {
+export class ColorOklabch extends Colorspace {
   [immerable] = true;
 
   private _lightness: number = 0;
@@ -102,5 +102,30 @@ export class ColorOklabch implements Colorspace {
 
   converter(): Colorjs {
     return new Colorjs("oklab", [this._lightness / 100, this._a / 100, this._b / 100]);
+  }
+
+  static colorspaceInfo(variant?: string): ColorspaceInfo {
+    switch (variant) {
+      case "oklab":
+        return {
+          colorspace: "oklabch",
+          channels: [
+            { channel: "lightnessLab", label: "L", range: [0, 100], step: 2 },
+            { channel: "a", label: "A", range: [-40, 40], step: 2 },
+            { channel: "b", label: "B", range: [-40, 40], step: 2 },
+          ],
+        };
+      case "oklch":
+        return {
+          colorspace: "oklabch",
+          channels: [
+            { channel: "lightnessLch", label: "L", range: [0, 100], step: 2 },
+            { channel: "chroma", label: "C", range: [0, 40], step: 1 },
+            { channel: "hue", label: "H", range: [0, 360], step: 5 },
+          ],
+        };
+      default:
+        throw new Error("Bad variant");
+    }
   }
 }

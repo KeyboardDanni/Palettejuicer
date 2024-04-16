@@ -1,9 +1,9 @@
 import { immerable, produce } from "immer";
 import Colorjs from "colorjs.io";
 
-import { Colorspace } from "./Color";
+import { Colorspace, ColorspaceInfo } from "./Colorspace";
 
-export class ColorLabch implements Colorspace {
+export class ColorLabch extends Colorspace {
   [immerable] = true;
 
   private _lightness: number = 0;
@@ -100,5 +100,30 @@ export class ColorLabch implements Colorspace {
 
   converter(): Colorjs {
     return new Colorjs("lab", [this._lightness, this._a, this._b]);
+  }
+
+  static colorspaceInfo(variant?: string): ColorspaceInfo {
+    switch (variant) {
+      case "lab":
+        return {
+          colorspace: "labch",
+          channels: [
+            { channel: "lightnessLab", label: "L", range: [0, 100], step: 2 },
+            { channel: "a", label: "A", range: [-125, 125], step: 5 },
+            { channel: "b", label: "B", range: [-125, 125], step: 5 },
+          ],
+        };
+      case "lch":
+        return {
+          colorspace: "labch",
+          channels: [
+            { channel: "lightnessLch", label: "L", range: [0, 100], step: 2 },
+            { channel: "chroma", label: "C", range: [0, 150], step: 5 },
+            { channel: "hue", label: "H", range: [0, 360], step: 5 },
+          ],
+        };
+      default:
+        throw new Error("Bad variant");
+    }
   }
 }

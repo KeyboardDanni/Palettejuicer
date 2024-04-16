@@ -1,17 +1,10 @@
 import { immerable, produce } from "immer";
-import Colorjs from "colorjs.io";
 
 import { ColorRgb } from "./ColorRgb";
 import { ColorHslv } from "./ColorHslv";
 import { ColorLabch } from "./ColorLabch";
 import { ColorOklabch } from "./ColorOklabch";
-
-export interface Colorspace {
-  channel(name: string): number;
-  adjustChannel(channel: string, value: number): ThisType<this>;
-  compute(converter: Colorjs): ThisType<this>;
-  converter(): Colorjs;
-}
+import { ColorspaceInfo } from "./Colorspace";
 
 const DEFAULT_RGB = ColorRgb.fromRaw(0, 0, 0);
 const DEFAULT_HSLV = ColorHslv.fromHsl(0, 0, 0);
@@ -136,6 +129,27 @@ export class Color {
       case "oklabch":
         newColorspace = this.oklabch.adjustChannel(channel, value);
         return this.withOklabch(newColorspace);
+      default:
+        throw new Error("Bad colorspace");
+    }
+  }
+
+  static colorspaceInfo(variant: string): ColorspaceInfo {
+    switch (variant) {
+      case "rgb":
+        return ColorRgb.colorspaceInfo();
+      case "hsl":
+        return ColorHslv.colorspaceInfo("hsl");
+      case "hsv":
+        return ColorHslv.colorspaceInfo("hsv");
+      case "lab":
+        return ColorLabch.colorspaceInfo("lab");
+      case "lch":
+        return ColorLabch.colorspaceInfo("lch");
+      case "oklab":
+        return ColorOklabch.colorspaceInfo("oklab");
+      case "oklch":
+        return ColorOklabch.colorspaceInfo("oklch");
       default:
         throw new Error("Bad colorspace");
     }
