@@ -1,8 +1,9 @@
-import { immerable, produce } from "immer";
+import { immerable } from "immer";
 
 import { Color } from "./color/Color";
 import { ColorRgb } from "./color/ColorRgb";
 import { Calculation } from "./calculation/Calculation";
+import { throwOnNullIndex } from "../util/checks";
 
 // Fixed at 16x16 for now
 export const PALETTE_WIDTH = 16;
@@ -23,18 +24,18 @@ export class Palette {
   readonly calculations: readonly Calculation[];
   readonly useCalculations: boolean = true;
 
-  readonly selectedColors: readonly Color[];
+  readonly baseColors: readonly Color[];
   readonly computedColors: readonly NullableColor[];
 
   constructor() {
     this.calculations = [];
-    this.selectedColors = new Array(PALETTE_WIDTH * PALETTE_HEIGHT).fill(null).map((_) => DEFAULT_COLOR);
+    this.baseColors = new Array(PALETTE_WIDTH * PALETTE_HEIGHT).fill(null).map((_) => DEFAULT_COLOR);
     this.computedColors = new Array(PALETTE_WIDTH * PALETTE_HEIGHT).fill(null);
   }
 
-  indexToOffset(index: CelIndex): number {
+  indexToOffset(index: CelIndex): number | null {
     if (index.x < 0 || index.x >= PALETTE_WIDTH || index.y < 0 || index.y >= PALETTE_HEIGHT) {
-      throw new Error("Bad coordinates");
+      return null;
     }
 
     return index.y * PALETTE_WIDTH + index.x;
@@ -51,34 +52,56 @@ export class Palette {
   isComputed(index: CelIndex): boolean {
     const offset = this.indexToOffset(index);
 
+    if (offset === null) return false;
+
     return this.isOffsetComputed(offset);
   }
 
   color(index: CelIndex): Color {
-    const offset = this.indexToOffset(index);
+    const offset = throwOnNullIndex(this.indexToOffset(index));
 
     if (this.isOffsetComputed(offset)) {
       return this.computedColors[offset] as Color;
     }
 
-    return this.selectedColors[offset];
+    return this.baseColors[offset];
   }
 
-  selectedColor(index: CelIndex): Color {
-    const offset = this.indexToOffset(index);
+  baseColor(index: CelIndex): Color {
+    const offset = throwOnNullIndex(this.indexToOffset(index));
 
-    return this.selectedColors[offset];
+    return this.baseColors[offset];
   }
 
-  setSelectedColor(index: CelIndex, color: Color): Palette {
-    const offset = this.indexToOffset(index);
+  computeColors(): NullableColor[] {
+    const computedColors = new Array(PALETTE_WIDTH * PALETTE_HEIGHT).fill(null);
 
-    return produce(this, (draft) => {
-      draft.selectedColors[offset] = color;
-    });
-  }
+    const getTempColor = (index: CelIndex): Color => {
+      const offset = throwOnNullIndex(this.indexToOffset(index));
 
-  updateComputedColors() {
-    throw new Error("Not implemented");
+      return computedColors[offset] ?? this.baseColors[offset];
+    };
+
+    for (const calc of this.calculations) {
+      try {
+        const inputIndexes = calc.inputCels();
+        const colors = inputIndexes.map((index) => getTempColor(index));
+
+        const result = calc.computeColors(colors);
+
+        for (const cel of result.cels) {
+          const offset = this.indexToOffset(cel.index);
+
+          if (offset !== null) {
+            computedColors[offset] = cel.color;
+          }
+        }
+      } catch (error) {
+        // TODO better error handling
+        console.log("Bad calculation: " + error);
+      }
+    }
+
+    return computedColors;
   }
 }

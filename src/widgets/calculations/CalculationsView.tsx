@@ -1,80 +1,30 @@
 import React, { useEffect, useRef } from "react";
-import Popup from "reactjs-popup";
-import { PopupActions } from "reactjs-popup/dist/types";
-import { Updater } from "use-immer";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { Palette } from "../../model/Palette";
-import { Calculation } from "../../model/calculation/Calculation";
 import { CalcInterpolateStrip } from "../../model/calculation/CalcInterpolateStrip";
 import { clamp } from "../../util/math";
+import { PopupMenu, PopupMenuItemData } from "../PopupMenu";
+import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
 
 const AVAILABLE_CALCS = [CalcInterpolateStrip];
-
-type AddCalculationMenuItemProps = {
-  palette: Palette;
-  calcClass: typeof Calculation;
-  itemId: number;
-  nextIndex: number;
-  popupRef: React.RefObject<PopupActions>;
-  onPaletteChange: Updater<Palette>;
-  onIndexChange: (index: number) => void;
-};
-
-function AddCalculationMenuItem(props: AddCalculationMenuItemProps) {
-  function handleKey(event: React.KeyboardEvent) {
-    switch (event.key) {
-      case "Enter":
-        handleAdd();
-        break;
-    }
-  }
-
-  function handleAdd() {
-    props.onPaletteChange((draft) => {
-      // @ts-expect-error No way to tell tsc that this won't be abstract, and we need more than the new() function
-      draft.calculations.splice(props.nextIndex, 0, new props.calcClass());
-    });
-
-    props.onIndexChange(props.nextIndex);
-    props.popupRef.current?.close();
-  }
-
-  return (
-    <>
-      <li data-id={props.itemId} tabIndex={0} onMouseUp={handleAdd} onKeyDown={handleKey}>
-        <div title={props.calcClass.description()}>{props.calcClass.name()}</div>
-      </li>
-    </>
-  );
-}
 
 export type CalculationsViewProps = {
   palette: Palette;
   activeCalcIndex: number;
-  onPaletteChange: Updater<Palette>;
+  onPaletteChange: React.Dispatch<PaletteAction>;
   onIndexChange: (index: number) => void;
 };
 
-function AddCalculationMenu(props: CalculationsViewProps) {
-  const ref = useRef<HTMLUListElement>(null);
-  const popupRef = useRef<PopupActions>(null);
+function AddCalculationButton(props: CalculationsViewProps) {
   const nextIndex = Math.min(props.activeCalcIndex + 1, props.palette.calculations.length);
-  const calcClasses: JSX.Element[] = [];
+  const items: PopupMenuItemData[] = [];
 
-  for (const [id, calcClass] of AVAILABLE_CALCS.entries()) {
-    calcClasses.push(
-      <AddCalculationMenuItem
-        key={calcClass.name()}
-        palette={props.palette}
-        calcClass={calcClass}
-        nextIndex={nextIndex}
-        onPaletteChange={props.onPaletteChange}
-        onIndexChange={props.onIndexChange}
-        popupRef={popupRef}
-        itemId={id}
-      />
-    );
+  for (const calcClass of AVAILABLE_CALCS) {
+    items.push({
+      name: calcClass.name(),
+      description: calcClass.description(),
+    });
   }
 
   function addButton(isOpen: boolean): JSX.Element {
@@ -83,35 +33,23 @@ function AddCalculationMenu(props: CalculationsViewProps) {
     return <button className={className}>Add</button>;
   }
 
-  function handleKey(event: React.KeyboardEvent) {
-    if (!ref.current) {
-      return;
-    }
+  function handleAdd(index: number) {
+    const calcClass = AVAILABLE_CALCS[index];
 
-    const currentId = parseInt((event.target as HTMLElement).dataset["id"] ?? "0");
-    const items = ref.current.children;
+    props.onPaletteChange({
+      actionType: PaletteActionType.AddCalculation,
+      args: {
+        index: nextIndex,
+        calcClass,
+      },
+    });
 
-    switch (event.key) {
-      case "ArrowUp":
-        (items[Math.max(0, currentId - 1)] as HTMLElement).focus();
-        event.preventDefault();
-        break;
-      case "ArrowDown":
-        (items[Math.min(currentId + 1, items.length - 1)] as HTMLElement).focus();
-        event.preventDefault();
-        break;
-    }
+    props.onIndexChange(nextIndex);
   }
 
   return (
     <>
-      <Popup trigger={addButton} ref={popupRef} position="bottom left" arrow={false}>
-        <div className="popup">
-          <div className="menu" onKeyDown={handleKey}>
-            <ul ref={ref}>{calcClasses}</ul>
-          </div>
-        </div>
-      </Popup>
+      <PopupMenu button={addButton} items={items} onItemSelect={handleAdd} />
     </>
   );
 }
@@ -229,44 +167,46 @@ export function CalculationsView(props: CalculationsViewProps) {
   const prevIndex = clamp(props.activeCalcIndex - 1, 0, calcs.length - 1);
 
   function handleClone() {
-    if (calcs.length <= 0) return;
-
-    const cloned = calcs[props.activeCalcIndex].withNewUid();
-
-    props.onPaletteChange((draft) => {
-      draft.calculations.splice(nextIndex, 0, cloned);
+    props.onPaletteChange({
+      actionType: PaletteActionType.CloneCalculation,
+      args: {
+        index: props.activeCalcIndex,
+      },
     });
 
     props.onIndexChange(nextIndex);
   }
 
   function handleRemove() {
-    if (calcs.length <= 0) return;
-
-    props.onPaletteChange((draft) => {
-      draft.calculations.splice(props.activeCalcIndex, 1);
+    props.onPaletteChange({
+      actionType: PaletteActionType.RemoveCalculation,
+      args: {
+        index: props.activeCalcIndex,
+      },
     });
 
     props.onIndexChange(prevIndex);
   }
 
   function handleMoveUp() {
-    if (props.activeCalcIndex === 0) return;
-
-    props.onPaletteChange((draft) => {
-      const [popped] = draft.calculations.splice(props.activeCalcIndex, 1);
-      draft.calculations.splice(prevIndex, 0, popped);
+    props.onPaletteChange({
+      actionType: PaletteActionType.MoveCalculation,
+      args: {
+        index: props.activeCalcIndex,
+        newIndex: prevIndex,
+      },
     });
 
     props.onIndexChange(prevIndex);
   }
 
   function handleMoveDown() {
-    if (props.activeCalcIndex >= calcs.length - 1) return;
-
-    props.onPaletteChange((draft) => {
-      const [popped] = draft.calculations.splice(props.activeCalcIndex, 1);
-      draft.calculations.splice(nextIndex, 0, popped);
+    props.onPaletteChange({
+      actionType: PaletteActionType.MoveCalculation,
+      args: {
+        index: props.activeCalcIndex,
+        newIndex: nextIndex,
+      },
     });
 
     const newIndex = clamp(props.activeCalcIndex + 1, 0, calcs.length - 1);
@@ -276,7 +216,7 @@ export function CalculationsView(props: CalculationsViewProps) {
   return (
     <>
       <div className="button-bar">
-        <AddCalculationMenu {...props} />
+        <AddCalculationButton {...props} />
         <button onClick={handleClone}>Clone</button>
         <button onClick={handleRemove}>Remove</button>
         <div className="button-bar-spacer" />

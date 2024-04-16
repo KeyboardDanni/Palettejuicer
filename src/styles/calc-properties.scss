@@ -1,0 +1,13 @@
+@use "./_constants.scss" as *;
+
+.calc-grid {
+  display: grid;
+  grid-template-columns: auto auto;
+  align-items: baseline;
+  gap: 0.4rem;
+
+  .grid-label {
+    font-weight: $font-weight-heading;
+    padding-right: 0.4rem;
+  }
+}

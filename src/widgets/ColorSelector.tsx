@@ -1,4 +1,4 @@
-import { ChangeEvent, ChangeEventHandler, useState } from "react";
+import { ChangeEvent, useState } from "react";
 
 import { Color } from "../model/color/Color";
 import { ControlledTextInput } from "./ControlledTextInput";
@@ -14,16 +14,28 @@ enum ColorSelectorPage {
 
 type ChannelSliderProps = {
   value: number;
-  onChange: ChangeEventHandler<HTMLInputElement>;
+  onChange: (value: number) => void;
+  disabled: boolean;
   label: string;
   min: number;
   max: number;
   step: number;
 };
 
+const GAMUT_ROUNDING_ERROR = 0.0001;
+
 function ChannelSlider(props: ChannelSliderProps) {
   const displayValue = props.step >= 1 ? (Math.round(props.value * 10) / 10).toString() : props.value.toString();
-  const className = props.value < props.min || props.value > props.max ? "out-of-gamut" : "";
+  const className =
+    props.value + GAMUT_ROUNDING_ERROR < props.min || props.value - GAMUT_ROUNDING_ERROR > props.max
+      ? "out-of-gamut"
+      : "";
+
+  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+    const value = parseFloat(event.target.value) || 0;
+
+    props.onChange(value);
+  }
 
   return (
     <>
@@ -33,17 +45,19 @@ function ChannelSlider(props: ChannelSliderProps) {
           type="range"
           className={className}
           value={props.value}
-          onChange={props.onChange}
+          onChange={handleChange}
           min={props.min}
           max={props.max}
           step={props.step}
+          disabled={props.disabled}
         />
         <ControlledTextInput
           value={props.value.toString()}
           title={props.value.toString()}
           displayValue={displayValue}
-          onChange={props.onChange}
           inputMode="decimal"
+          onChange={handleChange}
+          disabled={props.disabled}
         />
       </div>
     </>
@@ -53,33 +67,41 @@ function ChannelSlider(props: ChannelSliderProps) {
 type HexInputProps = {
   color: Color;
   onColorChange: (color: Color) => void;
+  disabled: boolean;
 };
 
-function HexInput({ color, onColorChange }: HexInputProps) {
+function HexInput(props: HexInputProps) {
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     const newColor = Color.fromHex(event.target.value);
 
     if (newColor !== null) {
-      onColorChange(newColor);
+      props.onColorChange(newColor);
     }
   }
 
   return (
     <>
-      <ControlledTextInput value={color.rgb.hex} onChange={handleChange} />
+      <ControlledTextInput value={props.color.rgb.hex} onChange={handleChange} disabled={props.disabled} />
     </>
   );
 }
 
 export type ColorSelectorProps = {
   color: Color;
+  computed: boolean;
   onColorChange: (color: Color) => void;
 };
 
-export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
+export function ColorSelector(props: ColorSelectorProps) {
   const [page, setPage] = useState<string>(ColorSelectorPage.Hsl);
 
-  function handleChange(event: ChangeEvent<HTMLInputElement>) {
+  function tryColorChange(color: Color) {
+    if (!props.computed) {
+      props.onColorChange(color);
+    }
+  }
+
+  function handlePageChange(event: ChangeEvent<HTMLInputElement>) {
     setPage(event.target.value);
   }
 
@@ -87,18 +109,22 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
     return (
       <>
         <label className="tabbar-tab">
-          <input type="radio" name="colorspace" value={pageName} onChange={handleChange} checked={page === pageName} />
+          <input
+            type="radio"
+            name="colorspace"
+            value={pageName}
+            onChange={handlePageChange}
+            checked={page === pageName}
+          />
           <span>{pageName}</span>
         </label>
       </>
     );
   }
 
-  function handleChannelChange(colorspace: string, channel: string, event: ChangeEvent<HTMLInputElement>) {
-    const newValue = parseFloat(event.target.value) || 0;
-
-    if (newValue !== color.channel(colorspace, channel)) {
-      onColorChange(color.adjustChannel(colorspace, channel, newValue));
+  function handleChannelChange(colorspace: string, channel: string, value: number) {
+    if (value !== props.color.channel(colorspace, channel)) {
+      tryColorChange(props.color.adjustChannel(colorspace, channel, value));
     }
   }
 
@@ -108,28 +134,31 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
         return (
           <>
             <ChannelSlider
-              value={color.hslv.hue}
-              onChange={(e) => handleChannelChange("hslv", "hueL", e)}
+              value={props.color.hslv.hue}
+              onChange={(value) => handleChannelChange("hslv", "hueL", value)}
               label={"H"}
               min={0}
               max={360}
               step={5}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.hslv.saturationL}
-              onChange={(e) => handleChannelChange("hslv", "saturationL", e)}
+              value={props.color.hslv.saturationL}
+              onChange={(value) => handleChannelChange("hslv", "saturationL", value)}
               label={"S"}
               min={0}
               max={100}
               step={2}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.hslv.lightness}
-              onChange={(e) => handleChannelChange("hslv", "lightness", e)}
+              value={props.color.hslv.lightness}
+              onChange={(value) => handleChannelChange("hslv", "lightness", value)}
               label={"L"}
               min={0}
               max={100}
               step={2}
+              disabled={props.computed}
             />
           </>
         );
@@ -137,28 +166,31 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
         return (
           <>
             <ChannelSlider
-              value={color.hslv.hue}
-              onChange={(e) => handleChannelChange("hslv", "hueV", e)}
+              value={props.color.hslv.hue}
+              onChange={(value) => handleChannelChange("hslv", "hueV", value)}
               label={"H"}
               min={0}
               max={360}
               step={5}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.hslv.saturationV}
-              onChange={(e) => handleChannelChange("hslv", "saturationV", e)}
+              value={props.color.hslv.saturationV}
+              onChange={(value) => handleChannelChange("hslv", "saturationV", value)}
               label={"S"}
               min={0}
               max={100}
               step={2}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.hslv.value}
-              onChange={(e) => handleChannelChange("hslv", "value", e)}
+              value={props.color.hslv.value}
+              onChange={(value) => handleChannelChange("hslv", "value", value)}
               label={"V"}
               min={0}
               max={100}
               step={2}
+              disabled={props.computed}
             />
           </>
         );
@@ -166,28 +198,31 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
         return (
           <>
             <ChannelSlider
-              value={color.labch.lightness}
-              onChange={(e) => handleChannelChange("labch", "lightnessLch", e)}
+              value={props.color.labch.lightness}
+              onChange={(value) => handleChannelChange("labch", "lightnessLch", value)}
               label={"L"}
               min={0}
               max={100}
               step={2}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.labch.chroma}
-              onChange={(e) => handleChannelChange("labch", "chroma", e)}
+              value={props.color.labch.chroma}
+              onChange={(value) => handleChannelChange("labch", "chroma", value)}
               label={"C"}
               min={0}
               max={150}
               step={3}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.labch.hue}
-              onChange={(e) => handleChannelChange("labch", "hue", e)}
+              value={props.color.labch.hue}
+              onChange={(value) => handleChannelChange("labch", "hue", value)}
               label={"H"}
               min={0}
               max={360}
               step={5}
+              disabled={props.computed}
             />
           </>
         );
@@ -195,28 +230,31 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
         return (
           <>
             <ChannelSlider
-              value={color.labch.lightness}
-              onChange={(e) => handleChannelChange("labch", "lightnessLab", e)}
+              value={props.color.labch.lightness}
+              onChange={(value) => handleChannelChange("labch", "lightnessLab", value)}
               label={"L"}
               min={0}
               max={100}
               step={2}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.labch.a}
-              onChange={(e) => handleChannelChange("labch", "a", e)}
+              value={props.color.labch.a}
+              onChange={(value) => handleChannelChange("labch", "a", value)}
               label={"A"}
               min={-125}
               max={125}
               step={5}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.labch.b}
-              onChange={(e) => handleChannelChange("labch", "b", e)}
+              value={props.color.labch.b}
+              onChange={(value) => handleChannelChange("labch", "b", value)}
               label={"B"}
               min={-125}
               max={125}
               step={5}
+              disabled={props.computed}
             />
           </>
         );
@@ -224,28 +262,31 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
         return (
           <>
             <ChannelSlider
-              value={color.oklabch.lightness}
-              onChange={(e) => handleChannelChange("oklabch", "lightnessLch", e)}
+              value={props.color.oklabch.lightness}
+              onChange={(value) => handleChannelChange("oklabch", "lightnessLch", value)}
               label={"L"}
               min={0}
               max={100}
               step={2}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.oklabch.chroma}
-              onChange={(e) => handleChannelChange("oklabch", "chroma", e)}
+              value={props.color.oklabch.chroma}
+              onChange={(value) => handleChannelChange("oklabch", "chroma", value)}
               label={"C"}
               min={0}
               max={40}
               step={1}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.oklabch.hue}
-              onChange={(e) => handleChannelChange("oklabch", "hue", e)}
+              value={props.color.oklabch.hue}
+              onChange={(value) => handleChannelChange("oklabch", "hue", value)}
               label={"H"}
               min={0}
               max={360}
               step={5}
+              disabled={props.computed}
             />
           </>
         );
@@ -253,28 +294,31 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
         return (
           <>
             <ChannelSlider
-              value={color.oklabch.lightness}
-              onChange={(e) => handleChannelChange("oklabch", "lightnessLab", e)}
+              value={props.color.oklabch.lightness}
+              onChange={(value) => handleChannelChange("oklabch", "lightnessLab", value)}
               label={"L"}
               min={0}
               max={100}
               step={2}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.oklabch.a}
-              onChange={(e) => handleChannelChange("oklabch", "a", e)}
+              value={props.color.oklabch.a}
+              onChange={(value) => handleChannelChange("oklabch", "a", value)}
               label={"A"}
               min={-40}
               max={40}
               step={2}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.oklabch.b}
-              onChange={(e) => handleChannelChange("oklabch", "b", e)}
+              value={props.color.oklabch.b}
+              onChange={(value) => handleChannelChange("oklabch", "b", value)}
               label={"B"}
               min={-40}
               max={40}
               step={2}
+              disabled={props.computed}
             />
           </>
         );
@@ -289,28 +333,31 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
         <div className="color-sliders">
           <div>
             <ChannelSlider
-              value={color.rgb.red}
-              onChange={(e) => handleChannelChange("rgb", "red", e)}
+              value={props.color.rgb.red}
+              onChange={(value) => handleChannelChange("rgb", "red", value)}
               label={"R"}
               min={0}
               max={255}
               step={5}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.rgb.green}
-              onChange={(e) => handleChannelChange("rgb", "green", e)}
+              value={props.color.rgb.green}
+              onChange={(value) => handleChannelChange("rgb", "green", value)}
               label={"G"}
               min={0}
               max={255}
               step={5}
+              disabled={props.computed}
             />
             <ChannelSlider
-              value={color.rgb.blue}
-              onChange={(e) => handleChannelChange("rgb", "blue", e)}
+              value={props.color.rgb.blue}
+              onChange={(value) => handleChannelChange("rgb", "blue", value)}
               label={"B"}
               min={0}
               max={255}
               step={5}
+              disabled={props.computed}
             />
           </div>
           <div>
@@ -326,9 +373,9 @@ export function ColorSelector({ color, onColorChange }: ColorSelectorProps) {
           </div>
         </div>
         <div className="color-preview-column">
-          <div className="color-preview" style={{ backgroundColor: color.rgb.hex }} />
+          <div className="color-preview" style={{ backgroundColor: props.color.rgb.hex }} />
           <div className="color-hex">
-            <HexInput color={color} onColorChange={onColorChange} />
+            <HexInput color={props.color} onColorChange={tryColorChange} disabled={props.computed} />
           </div>
         </div>
       </div>

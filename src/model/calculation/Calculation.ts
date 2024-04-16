@@ -1,8 +1,9 @@
 import { v4 as uuidv4 } from "uuid";
 import { immerable, produce } from "immer";
 
-import { CelIndex, Palette } from "../Palette";
+import { CelIndex } from "../Palette";
 import { Color } from "../color/Color";
+import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 
 export interface CalculationCel {
   index: CelIndex;
@@ -35,7 +36,8 @@ export abstract class Calculation {
     return "";
   }
   abstract listDescription(): string;
-  abstract affectedCels(): CelIndex[];
-  abstract dependentCels(): CelIndex[];
-  abstract computeColors(palette: Palette): CalculationResult;
+  abstract inputCels(): CelIndex[];
+  abstract outputCels(): CelIndex[];
+  abstract computeColors(colors: Color[]): CalculationResult;
+  abstract propertiesView(): (props: CalcPropertiesViewProps) => JSX.Element;
 }

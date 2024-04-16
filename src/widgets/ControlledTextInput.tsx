@@ -4,10 +4,11 @@ export type IntermediateTextInputProps = {
   value: string;
   displayValue?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
+  disabled: boolean;
   [key: string]: any;
 };
 
-export function ControlledTextInput({ value, displayValue, onChange, ...other }: IntermediateTextInputProps) {
+export function ControlledTextInput({ value, displayValue, onChange, disabled, ...other }: IntermediateTextInputProps) {
   const [temp, setTemp] = useState<string>(value);
   const [tempActive, setTempActive] = useState(false);
 
@@ -25,6 +26,8 @@ export function ControlledTextInput({ value, displayValue, onChange, ...other }:
   }
 
   function handleTextChange(event: ChangeEvent<HTMLInputElement>) {
+    if (event.target.disabled) return;
+
     onChange(event);
     setTemp(event.target.value);
   }
@@ -33,6 +36,8 @@ export function ControlledTextInput({ value, displayValue, onChange, ...other }:
     <>
       <input
         type="text"
+        tabIndex={0}
+        readOnly={disabled}
         {...other}
         value={editValue}
         onFocus={handleFocus}

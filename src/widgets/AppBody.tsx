@@ -1,12 +1,15 @@
 import { ChangeEvent } from "react";
-import { immerable, produce } from "immer";
-import { Updater, useImmer } from "use-immer";
+import { immerable } from "immer";
+import { useImmer, useImmerReducer } from "use-immer";
 
 import { Color } from "../model/color/Color";
 import { CelIndex, Palette } from "../model/Palette";
 import { ColorSelector } from "./ColorSelector";
 import { PaletteView } from "./PaletteView";
 import { CalculationsView, CalculationsViewProps } from "./calculations/CalculationsView";
+import { PropertiesView, PropertiesViewProps } from "./PropertiesView";
+import { Calculation } from "../model/calculation/Calculation";
+import { PaletteAction, PaletteActionType, PaletteReducer } from "../reducers/PaletteReducer";
 
 class AppViewState {
   [immerable] = true;
@@ -18,23 +21,32 @@ class AppViewState {
 type AppColorSelectorProps = {
   palette: Palette;
   activeColorIndex: CelIndex;
-  onPaletteChange: Updater<Palette>;
+  onPaletteChange: React.Dispatch<PaletteAction>;
 };
 
 function AppColorSelector(props: AppColorSelectorProps) {
   function handleColorChange(color: Color) {
-    const newPalette = props.palette.setSelectedColor(props.activeColorIndex, color);
-
-    props.onPaletteChange(newPalette);
+    props.onPaletteChange({
+      actionType: PaletteActionType.SetBaseColor,
+      args: { index: props.activeColorIndex, color },
+    });
   }
+
+  const color = props.palette.color(props.activeColorIndex);
+  const computed = props.palette.isComputed(props.activeColorIndex);
+  const colorTypeName = computed ? "Computed Color" : "Base Color";
 
   return (
     <>
       <div id="sidebar-color-selector" className="section">
-        <span className="section-header">
-          Selected Color ({props.activeColorIndex.x}, {props.activeColorIndex.y})
-        </span>
-        <ColorSelector color={props.palette.selectedColor(props.activeColorIndex)} onColorChange={handleColorChange} />
+        <div className="header-bar">
+          <span className="section-header">Color Picker</span>
+          <span className="section-subheader">∙</span>
+          <span className="section-subheader">
+            {colorTypeName} [{props.activeColorIndex.x}, {props.activeColorIndex.y}]
+          </span>
+        </div>
+        <ColorSelector color={color} onColorChange={handleColorChange} computed={computed} />
       </div>
     </>
   );
@@ -42,11 +54,12 @@ function AppColorSelector(props: AppColorSelectorProps) {
 
 export function AppCalculations(props: CalculationsViewProps) {
   function handleCalcToggle(event: ChangeEvent<HTMLInputElement>) {
-    props.onPaletteChange(
-      produce(props.palette, (draft) => {
-        draft.useCalculations = event.target.checked;
-      })
-    );
+    props.onPaletteChange({
+      actionType: PaletteActionType.EnableCalculations,
+      args: {
+        enabled: event.target.checked,
+      },
+    });
   }
 
   return (
@@ -54,7 +67,7 @@ export function AppCalculations(props: CalculationsViewProps) {
       <div id="sidebar-calculations" className="section">
         <div className="header-bar">
           <span className="section-header">Calculations</span>
-          <div className="button-bar-spacer" />
+          <div className="header-bar-spacer" />
           <label>
             <input type="checkbox" checked={props.palette.useCalculations} onChange={handleCalcToggle} />
             Enabled
@@ -66,12 +79,31 @@ export function AppCalculations(props: CalculationsViewProps) {
   );
 }
 
-function AppProperties() {
+function AppProperties(props: PropertiesViewProps) {
+  const calcs = props.palette.calculations;
+  const calc = calcs[props.activeCalcIndex];
+  let subheader = "";
+
+  if (calc) {
+    // @ts-expect-error Constructor is Calculation class
+    const calcClass = calc.constructor as typeof Calculation;
+    subheader = `${calcClass.name()} [${props.activeCalcIndex}]`;
+  }
+
   return (
     <>
       <div id="sidebar-properties" className="section">
-        <span className="section-header">Properties</span>
-        <div className="placeholder">Select a calculation to adjust its properties.</div>
+        <div className="header-bar">
+          <span className="section-header">Properties</span>
+          <span className="section-subheader" hidden={!calc}>
+            ∙
+          </span>
+          <span className="section-subheader" hidden={!calc}>
+            {subheader}
+          </span>
+          <div className="button-bar-spacer" />
+        </div>
+        <PropertiesView {...props} />
       </div>
     </>
   );
@@ -87,7 +119,6 @@ function AppPalette(props: AppPaletteProps) {
   return (
     <>
       <div id="document-palette" className="section">
-        <span className="section-header">Palette</span>
         <div id="palette-inner-bg" className="section-gray-background">
           <PaletteView
             palette={props.palette}
@@ -102,7 +133,7 @@ function AppPalette(props: AppPaletteProps) {
 
 export function AppBody() {
   const [viewState, updateViewState] = useImmer(new AppViewState());
-  const [palette, updatePalette] = useImmer(new Palette());
+  const [palette, dispatchPalette] = useImmerReducer(PaletteReducer, new Palette());
 
   function setActiveColorIndex(index: CelIndex) {
     updateViewState((draft) => {
@@ -123,16 +154,20 @@ export function AppBody() {
           <div id="document-sidebar">
             <AppColorSelector
               palette={palette}
-              onPaletteChange={updatePalette}
+              onPaletteChange={dispatchPalette}
               activeColorIndex={viewState.activeColorIndex}
             />
             <AppCalculations
               palette={palette}
-              onPaletteChange={updatePalette}
+              onPaletteChange={dispatchPalette}
               activeCalcIndex={viewState.activeCalcIndex}
               onIndexChange={setActiveCalcIndex}
             />
-            <AppProperties />
+            <AppProperties
+              palette={palette}
+              onPaletteChange={dispatchPalette}
+              activeCalcIndex={viewState.activeCalcIndex}
+            />
           </div>
           <AppPalette
             palette={palette}

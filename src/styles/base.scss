@@ -2,11 +2,18 @@
 
 @font-face {
   font-family: "Lato";
+  font-weight: 400;
   src: url("assets/Lato-Regular.woff2");
 }
 
+@font-face {
+  font-family: "Lato";
+  font-weight: 600;
+  src: url("assets/Lato-Semibold.woff2");
+}
+
 html {
-  font: $size-pixel-base $font-stack;
+  font: $font-weight-normal $size-pixel-base $font-stack;
   line-height: 1;
   user-select: none;
 }
