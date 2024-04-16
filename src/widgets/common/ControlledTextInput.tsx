@@ -4,7 +4,7 @@ export type IntermediateTextInputProps = {
   value: string;
   displayValue?: string;
   onChange: ChangeEventHandler<HTMLInputElement>;
-  disabled: boolean;
+  disabled?: boolean;
   [key: string]: any;
 };
 

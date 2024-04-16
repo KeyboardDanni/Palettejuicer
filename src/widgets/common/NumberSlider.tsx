@@ -1,10 +1,10 @@
 import { ChangeEvent } from "react";
 import { ControlledTextInput } from "./ControlledTextInput";
 
-type NumberSliderProps = {
+export type NumberSliderProps = {
   value: number;
   onChange: (value: number) => void;
-  disabled: boolean;
+  disabled?: boolean;
   min: number;
   max: number;
   step: number;
@@ -43,7 +43,7 @@ export function NumberSlider(props: NumberSliderProps) {
           displayValue={displayValue.toString()}
           inputMode="decimal"
           onChange={handleChange}
-          disabled={props.disabled}
+          disabled={props.disabled ?? false}
         />
       </div>
     </>

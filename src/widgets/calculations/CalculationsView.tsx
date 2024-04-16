@@ -1,13 +1,15 @@
 import React, { useEffect, useRef } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
-import { Palette } from "../../model/Palette";
-import { CalcInterpolateStrip } from "../../model/calculation/CalcInterpolateStrip";
 import { clamp } from "../../util/math";
-import { PopupMenu, PopupMenuItemData } from "../common/PopupMenu";
+import { Palette } from "../../model/Palette";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
+import { PopupMenu, PopupMenuItemData } from "../common/PopupMenu";
 
-const AVAILABLE_CALCS = [CalcInterpolateStrip];
+import { CalcCopyColors } from "../../model/calculation/CalcCopyColors";
+import { CalcInterpolateStrip } from "../../model/calculation/CalcInterpolateStrip";
+
+const AVAILABLE_CALCS = [CalcCopyColors, CalcInterpolateStrip];
 
 export type CalculationsViewProps = {
   palette: Palette;

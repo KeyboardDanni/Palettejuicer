@@ -3,15 +3,20 @@ import { CelIndex } from "../../model/Palette";
 import { ControlledTextInput } from "./ControlledTextInput";
 import { clamp } from "../../util/math";
 
-export type CelNumberInputProps = {
+type CelNumberInputProps = {
   value: number;
   onValueChange: (value: number) => void;
+  relative?: boolean;
+  disabled: boolean;
   [key: string]: any;
 };
 
-function CelNumberInput({ value, onValueChange, ...other }: CelNumberInputProps) {
+function CelNumberInput({ value, onValueChange, disabled, relative, ...other }: CelNumberInputProps) {
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const newValue = clamp(parseInt(event.target.value) || 0, 0, 999);
+    let newValue = parseInt(event.target.value) || 0;
+
+    newValue = relative ? clamp(newValue, -999, 999) : clamp(newValue, 0, 999);
+
     onValueChange(newValue);
   }
 
@@ -19,7 +24,13 @@ function CelNumberInput({ value, onValueChange, ...other }: CelNumberInputProps)
 
   return (
     <>
-      <ControlledTextInput {...other} value={valueString} displayValue={valueString} onChange={handleChange} />
+      <ControlledTextInput
+        {...other}
+        value={valueString}
+        displayValue={valueString}
+        onChange={handleChange}
+        disabled={disabled}
+      />
     </>
   );
 }
@@ -27,22 +38,39 @@ function CelNumberInput({ value, onValueChange, ...other }: CelNumberInputProps)
 export type CelSelectorProps = {
   index: CelIndex;
   onIndexChange: (index: CelIndex) => void;
+  relative?: boolean;
+  disabled?: boolean;
+  [key: string]: any;
 };
 
-export function CelSelector(props: CelSelectorProps) {
+export function CelSelector({ index, onIndexChange, relative, disabled, ...other }: CelSelectorProps) {
   function handleChangeX(value: number) {
-    props.onIndexChange({ x: value, y: props.index.y });
+    onIndexChange({ x: value, y: index.y });
   }
 
   function handleChangeY(value: number) {
-    props.onIndexChange({ x: props.index.x, y: value });
+    onIndexChange({ x: index.x, y: value });
   }
 
   return (
     <>
       <div className="cel-selector">
-        <CelNumberInput name="x" value={props.index.x} onValueChange={handleChangeX} />
-        <CelNumberInput name="y" value={props.index.y} onValueChange={handleChangeY} />
+        <CelNumberInput
+          {...other}
+          name="x"
+          value={index.x}
+          onValueChange={handleChangeX}
+          relative={relative}
+          disabled={disabled ?? false}
+        />
+        <CelNumberInput
+          {...other}
+          name="y"
+          value={index.y}
+          onValueChange={handleChangeY}
+          relative={relative}
+          disabled={disabled ?? false}
+        />
       </div>
     </>
   );
