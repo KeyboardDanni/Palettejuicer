@@ -1,4 +1,5 @@
 import { immerable, produce } from "immer";
+import { Expose } from "class-transformer";
 import Colorjs from "colorjs.io";
 
 import { Colorspace, ColorspaceInfo } from "./Colorspace";
@@ -6,10 +7,15 @@ import { Colorspace, ColorspaceInfo } from "./Colorspace";
 export class ColorHslv extends Colorspace {
   [immerable] = true;
 
+  @Expose({ name: "hue" })
   private _hue: number = 0;
+  @Expose({ name: "saturationL" })
   private _saturationL: number = 0;
+  @Expose({ name: "lightness" })
   private _lightness: number = 0;
+  @Expose({ name: "saturationV" })
   private _saturationV: number = 0;
+  @Expose({ name: "value" })
   private _value: number = 0;
 
   get hue() { return this._hue; } // prettier-ignore

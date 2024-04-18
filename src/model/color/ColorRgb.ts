@@ -1,4 +1,5 @@
 import { immerable, produce } from "immer";
+import { Expose } from "class-transformer";
 import Colorjs from "colorjs.io";
 import hexRgb from "hex-rgb";
 import rgbHex from "rgb-hex";
@@ -9,9 +10,13 @@ import { clamp } from "../../util/math";
 export class ColorRgb extends Colorspace {
   [immerable] = true;
 
+  @Expose({ name: "red" })
   private _red: number = 0;
+  @Expose({ name: "green" })
   private _green: number = 0;
+  @Expose({ name: "blue" })
   private _blue: number = 0;
+  @Expose({ name: "hex" })
   private _hex: string = "#000000";
 
   get red() { return this._red * 255; } // prettier-ignore

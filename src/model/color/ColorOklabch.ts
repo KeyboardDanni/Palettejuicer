@@ -1,4 +1,5 @@
 import { immerable, produce } from "immer";
+import { Expose } from "class-transformer";
 import Colorjs from "colorjs.io";
 
 import { Colorspace, ColorspaceInfo } from "./Colorspace";
@@ -6,10 +7,15 @@ import { Colorspace, ColorspaceInfo } from "./Colorspace";
 export class ColorOklabch extends Colorspace {
   [immerable] = true;
 
+  @Expose({ name: "lightness" })
   private _lightness: number = 0;
+  @Expose({ name: "a" })
   private _a: number = 0;
+  @Expose({ name: "b" })
   private _b: number = 0;
+  @Expose({ name: "chroma" })
   private _chroma: number = 0;
+  @Expose({ name: "hue" })
   private _hue: number = 0;
 
   get lightness() { return this._lightness; } // prettier-ignore

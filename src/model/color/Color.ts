@@ -1,4 +1,5 @@
 import { immerable, produce } from "immer";
+import { Expose, Type } from "class-transformer";
 
 import { ColorRgb } from "./ColorRgb";
 import { ColorHslv } from "./ColorHslv";
@@ -14,10 +15,18 @@ const DEFAULT_OKLABCH = ColorOklabch.fromOklab(0, 0, 0);
 export class Color {
   [immerable] = true;
 
-  private _rgb = DEFAULT_RGB;
-  private _hslv = DEFAULT_HSLV;
-  private _labch = DEFAULT_LABCH;
-  private _oklabch = DEFAULT_OKLABCH;
+  @Expose({ name: "rgb" })
+  @Type(() => ColorRgb)
+  private _rgb: ColorRgb = DEFAULT_RGB;
+  @Expose({ name: "hslv" })
+  @Type(() => ColorHslv)
+  private _hslv: ColorHslv = DEFAULT_HSLV;
+  @Expose({ name: "labch" })
+  @Type(() => ColorLabch)
+  private _labch: ColorLabch = DEFAULT_LABCH;
+  @Expose({ name: "oklabch" })
+  @Type(() => ColorOklabch)
+  private _oklabch: ColorOklabch = DEFAULT_OKLABCH;
 
   get rgb() { return this._rgb; } // prettier-ignore
   get hslv() { return this._hslv; } // prettier-ignore

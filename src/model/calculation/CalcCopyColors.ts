@@ -15,7 +15,7 @@ export class CalcCopyColors extends Calculation {
   readonly offset: CelIndex = { x: 0, y: 0 };
   readonly copies: number = 1;
 
-  static name(): string {
+  static calcName(): string {
     return "Copy Colors";
   }
 

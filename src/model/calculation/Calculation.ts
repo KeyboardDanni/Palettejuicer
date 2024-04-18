@@ -29,7 +29,7 @@ export abstract class Calculation {
     });
   }
 
-  static name(): string {
+  static calcName(): string {
     return "Calculation";
   }
   static description(): string {

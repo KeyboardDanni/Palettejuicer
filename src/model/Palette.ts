@@ -1,9 +1,23 @@
 import { immerable } from "immer";
+import { Type } from "class-transformer";
 
 import { Color } from "./color/Color";
 import { ColorRgb } from "./color/ColorRgb";
 import { Calculation } from "./calculation/Calculation";
 import { throwOnNullIndex } from "../util/checks";
+
+import { CalcCopyColors } from "./calculation/CalcCopyColors";
+import { CalcInterpolateStrip } from "./calculation/CalcInterpolateStrip";
+
+type AvailableCalcItem = {
+  value: typeof Calculation;
+  name: string;
+};
+
+export const availableCalcs: AvailableCalcItem[] = [
+  { value: CalcCopyColors, name: "CalcCopyColors" },
+  { value: CalcInterpolateStrip, name: "CalcInterpolateStrip" },
+];
 
 // Fixed at 16x16 for now
 export const PALETTE_WIDTH = 16;
@@ -21,10 +35,19 @@ type NullableColor = Color | null;
 export class Palette {
   [immerable] = true;
 
+  @Type(() => Calculation, {
+    discriminator: {
+      property: "calcType",
+      // @ts-expect-error Can't tell TS that this won't receive an abstract class
+      subTypes: availableCalcs,
+    },
+  })
   readonly calculations: readonly Calculation[];
   readonly useCalculations: boolean = true;
 
+  @Type(() => Color)
   readonly baseColors: readonly Color[];
+  @Type(() => Color)
   readonly computedColors: readonly NullableColor[];
 
   constructor() {

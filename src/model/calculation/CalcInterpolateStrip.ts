@@ -7,6 +7,7 @@ import { CalcInterpolateStripView } from "../../widgets/calculations/CalcInterpo
 import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 import { Color } from "../color/Color";
 import { ColorRgb } from "../color/ColorRgb";
+import { Transform } from "class-transformer";
 
 export enum LerpColorspace {
   OkLch,
@@ -87,11 +88,13 @@ export class CalcInterpolateStrip extends Calculation {
 
   readonly startCel: CelIndex = { x: 0, y: 0 };
   readonly endCel: CelIndex = { x: 0, y: 0 };
+  @Transform((options) => LerpColorspace[options.value])
   readonly colorspace: LerpColorspace = LerpColorspace.OkLch;
+  @Transform((options) => LerpHueMode[options.value])
   readonly hueMode: LerpHueMode = LerpHueMode.Shorter;
   readonly curve: number = 1;
 
-  static name(): string {
+  static calcName(): string {
     return "Interpolate Strip";
   }
 

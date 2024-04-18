@@ -17,10 +17,12 @@ export function PropertiesView(props: PropertiesViewProps) {
   const calc = props.palette.calculations[props.activeCalcIndex];
 
   function onCalcChange(calc: Calculation) {
-    props.onPaletteChange({
-      actionType: PaletteActionType.SetCalculation,
-      args: { index: props.activeCalcIndex, calc },
-    });
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.SetCalculation,
+        args: { index: props.activeCalcIndex, calc },
+      })
+    );
   }
 
   if (!calc) {

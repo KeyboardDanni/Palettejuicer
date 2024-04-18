@@ -1,6 +1,6 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useCallback } from "react";
 import { immerable } from "immer";
-import { useImmer, useImmerReducer } from "use-immer";
+import { useImmer } from "use-immer";
 
 import { Color } from "../model/color/Color";
 import { CelIndex, Palette } from "../model/Palette";
@@ -9,7 +9,9 @@ import { PaletteView } from "./PaletteView";
 import { CalculationsView, CalculationsViewProps } from "./calculations/CalculationsView";
 import { PropertiesView, PropertiesViewProps } from "./PropertiesView";
 import { Calculation } from "../model/calculation/Calculation";
-import { PaletteAction, PaletteActionType, PaletteReducer } from "../reducers/PaletteReducer";
+import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
+import { ProjectAction } from "../reducers/ProjectReducer";
+import { Project } from "../model/Project";
 
 class AppViewState {
   [immerable] = true;
@@ -26,10 +28,12 @@ type AppColorSelectorProps = {
 
 function AppColorSelector(props: AppColorSelectorProps) {
   function handleColorChange(color: Color) {
-    props.onPaletteChange({
-      actionType: PaletteActionType.SetBaseColor,
-      args: { index: props.activeColorIndex, color },
-    });
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.SetBaseColor,
+        args: { index: props.activeColorIndex, color },
+      })
+    );
   }
 
   const color = props.palette.color(props.activeColorIndex);
@@ -54,12 +58,14 @@ function AppColorSelector(props: AppColorSelectorProps) {
 
 export function AppCalculations(props: CalculationsViewProps) {
   function handleCalcToggle(event: ChangeEvent<HTMLInputElement>) {
-    props.onPaletteChange({
-      actionType: PaletteActionType.EnableCalculations,
-      args: {
-        enabled: event.target.checked,
-      },
-    });
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.EnableCalculations,
+        args: {
+          enabled: event.target.checked,
+        },
+      })
+    );
   }
 
   return (
@@ -69,7 +75,7 @@ export function AppCalculations(props: CalculationsViewProps) {
           <span className="section-header">Calculations</span>
           <div className="header-bar-spacer" />
           <label>
-            <input type="checkbox" checked={props.palette.useCalculations} onChange={handleCalcToggle} />
+            <input type="checkbox" checked={props.useCalculations} onChange={handleCalcToggle} />
             Enabled
           </label>
         </div>
@@ -85,9 +91,8 @@ function AppProperties(props: PropertiesViewProps) {
   let subheader = "";
 
   if (calc) {
-    // @ts-expect-error Constructor is Calculation class
     const calcClass = calc.constructor as typeof Calculation;
-    subheader = `${calcClass.name()} [${props.activeCalcIndex}]`;
+    subheader = `${calcClass.calcName()} [${props.activeCalcIndex}]`;
   }
 
   return (
@@ -116,36 +121,52 @@ type AppPaletteProps = {
 };
 
 function AppPalette(props: AppPaletteProps) {
+  const onIndexChange = props.onIndexChange;
+  const handleClick = useCallback(
+    function (index: CelIndex) {
+      onIndexChange(index);
+    },
+    [onIndexChange]
+  );
+
   return (
     <>
       <div id="document-palette" className="section">
         <div id="palette-inner-bg" className="section-gray-background">
-          <PaletteView
-            palette={props.palette}
-            active={props.activeColorIndex}
-            onIndexClicked={(index) => props.onIndexChange(index)}
-          />
+          <PaletteView palette={props.palette} active={props.activeColorIndex} onIndexClick={handleClick} />
         </div>
       </div>
     </>
   );
 }
 
-export function AppBody() {
-  const [viewState, updateViewState] = useImmer(new AppViewState());
-  const [palette, dispatchPalette] = useImmerReducer(PaletteReducer, new Palette());
+export type AppBodyProps = {
+  project: Project;
+  onProjectChange: React.Dispatch<ProjectAction>;
+};
 
-  function setActiveColorIndex(index: CelIndex) {
-    updateViewState((draft) => {
-      draft.activeColorIndex = index;
-    });
-  }
+const initialAppState = new AppViewState();
 
-  function setActiveCalcIndex(index: number) {
-    updateViewState((draft) => {
-      draft.activeCalcIndex = index;
-    });
-  }
+export function AppBody(props: AppBodyProps) {
+  const [viewState, updateViewState] = useImmer(initialAppState);
+
+  const setActiveColorIndex = useCallback(
+    function (index: CelIndex) {
+      updateViewState((draft) => {
+        draft.activeColorIndex = index;
+      });
+    },
+    [updateViewState]
+  );
+
+  const setActiveCalcIndex = useCallback(
+    function (index: number) {
+      updateViewState((draft) => {
+        draft.activeCalcIndex = index;
+      });
+    },
+    [updateViewState]
+  );
 
   return (
     <>
@@ -153,24 +174,25 @@ export function AppBody() {
         <div id="app-columns">
           <div id="document-sidebar">
             <AppColorSelector
-              palette={palette}
-              onPaletteChange={dispatchPalette}
+              palette={props.project.palette}
+              onPaletteChange={props.onProjectChange}
               activeColorIndex={viewState.activeColorIndex}
             />
             <AppCalculations
-              palette={palette}
-              onPaletteChange={dispatchPalette}
+              useCalculations={props.project.palette.useCalculations}
+              calculations={props.project.palette.calculations}
+              onPaletteChange={props.onProjectChange}
               activeCalcIndex={viewState.activeCalcIndex}
               onIndexChange={setActiveCalcIndex}
             />
             <AppProperties
-              palette={palette}
-              onPaletteChange={dispatchPalette}
+              palette={props.project.palette}
+              onPaletteChange={props.onProjectChange}
               activeCalcIndex={viewState.activeCalcIndex}
             />
           </div>
           <AppPalette
-            palette={palette}
+            palette={props.project.palette}
             activeColorIndex={viewState.activeColorIndex}
             onIndexChange={setActiveColorIndex}
           />

@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { expect, test } from "vitest";
 import { Color } from "../model/color/Color";
 import { ColorRgb } from "../model/color/ColorRgb";

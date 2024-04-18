@@ -1,16 +1,25 @@
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { CelIndex, PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
+import { memo, useCallback } from "react";
 
 type PaletteCelProps = {
   palette: Palette;
   index: CelIndex;
   active: boolean;
-  onIndexClicked: (index: CelIndex) => void;
+  onIndexClick: (index: CelIndex) => void;
 };
 
 function PaletteCel(props: PaletteCelProps) {
   const color = props.palette.color(props.index);
+  const onIndexClick = props.onIndexClick;
+  const handleClick = useCallback(
+    function () {
+      onIndexClick(props.index);
+    },
+    [props.index, onIndexClick]
+  );
+
   let className = "palette-cel";
 
   if (props.active) {
@@ -21,10 +30,6 @@ function PaletteCel(props: PaletteCelProps) {
     } else {
       className += " dark-color";
     }
-  }
-
-  function handleClick() {
-    props.onIndexClicked(props.index);
   }
 
   return (
@@ -38,10 +43,10 @@ type PaletteRowProps = {
   palette: Palette;
   y: number;
   activeX: number | null;
-  onIndexClicked: (index: CelIndex) => void;
+  onIndexClick: (index: CelIndex) => void;
 };
 
-function PaletteRow(props: PaletteRowProps) {
+const PaletteRow = memo(function (props: PaletteRowProps) {
   const row = [];
 
   for (let x = 0; x < PALETTE_WIDTH; x++) {
@@ -52,7 +57,7 @@ function PaletteRow(props: PaletteRowProps) {
         index={{ x: x, y: props.y }}
         palette={props.palette}
         active={active}
-        onIndexClicked={props.onIndexClicked}
+        onIndexClick={props.onIndexClick}
       />
     );
   }
@@ -62,22 +67,20 @@ function PaletteRow(props: PaletteRowProps) {
       <div className="palette-row">{row}</div>
     </>
   );
-}
+});
 
 export type PaletteViewProps = {
   palette: Palette;
   active: CelIndex;
-  onIndexClicked: (index: CelIndex) => void;
+  onIndexClick: (index: CelIndex) => void;
 };
 
-export function PaletteView(props: PaletteViewProps) {
+export const PaletteView = memo(function (props: PaletteViewProps) {
   const rows = [];
 
   for (let y = 0; y < PALETTE_HEIGHT; y++) {
     const activeX = y === props.active.y ? props.active.x : null;
-    rows.push(
-      <PaletteRow key={y} y={y} palette={props.palette} activeX={activeX} onIndexClicked={props.onIndexClicked} />
-    );
+    rows.push(<PaletteRow key={y} y={y} palette={props.palette} activeX={activeX} onIndexClick={props.onIndexClick} />);
   }
 
   return (
@@ -89,4 +92,4 @@ export function PaletteView(props: PaletteViewProps) {
       </div>
     </>
   );
-}
+});

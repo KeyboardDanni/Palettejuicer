@@ -1,3 +1,5 @@
+import "reflect-metadata";
+
 import { expect, test } from "vitest";
 import { immerable, produce } from "immer";
 
@@ -17,7 +19,7 @@ class TestCalculation extends Calculation {
   readonly source: CelIndex = { x: 0, y: 0 };
   readonly destinations: readonly CelIndex[] = [];
 
-  static name(): string {
+  static calcName(): string {
     return "Test Calculation";
   }
   static description(): string {

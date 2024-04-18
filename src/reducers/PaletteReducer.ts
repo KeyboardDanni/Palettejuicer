@@ -50,10 +50,14 @@ export interface SetCalculationArgs extends PaletteActionArgs {
   calc: Calculation;
 }
 
-export type PaletteAction = {
-  actionType: PaletteActionType;
-  args: PaletteActionArgs;
-};
+export class PaletteAction {
+  actionType!: PaletteActionType;
+  args!: PaletteActionArgs;
+
+  constructor(options: PaletteAction) {
+    Object.assign(this, options);
+  }
+}
 
 function checkCalcIndex(draft: Draft<Palette>, calcIndex: number, isAdd: boolean = false) {
   const extra = isAdd ? 1 : 0;
@@ -128,6 +132,4 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
   }
 
   draft.computedColors = draft.computeColors();
-
-  return void draft;
 }

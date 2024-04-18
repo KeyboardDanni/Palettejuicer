@@ -1,45 +1,45 @@
-import React, { useEffect, useRef } from "react";
+import React, { memo, useEffect, useRef } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { clamp } from "../../util/math";
-import { Palette } from "../../model/Palette";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
 import { PopupMenuItemData } from "../common/PopupMenu";
 
-import { CalcCopyColors } from "../../model/calculation/CalcCopyColors";
-import { CalcInterpolateStrip } from "../../model/calculation/CalcInterpolateStrip";
 import { DropdownButton } from "../common/DropdownButton";
-
-const AVAILABLE_CALCS = [CalcCopyColors, CalcInterpolateStrip];
+import { Calculation } from "../../model/calculation/Calculation";
+import { availableCalcs } from "../../model/Palette";
 
 export type CalculationsViewProps = {
-  palette: Palette;
+  useCalculations: boolean;
+  calculations: readonly Calculation[];
   activeCalcIndex: number;
   onPaletteChange: React.Dispatch<PaletteAction>;
   onIndexChange: (index: number) => void;
 };
 
 function AddCalculationButton(props: CalculationsViewProps) {
-  const nextIndex = Math.min(props.activeCalcIndex + 1, props.palette.calculations.length);
+  const nextIndex = Math.min(props.activeCalcIndex + 1, props.calculations.length);
   const items: PopupMenuItemData[] = [];
 
-  for (const calcClass of AVAILABLE_CALCS) {
+  for (const calcClass of availableCalcs) {
     items.push({
-      name: calcClass.name(),
-      description: calcClass.description(),
+      name: calcClass.value.calcName(),
+      description: calcClass.value.description(),
     });
   }
 
   function handleAdd(index: number) {
-    const calcClass = AVAILABLE_CALCS[index];
+    const calcClass = availableCalcs[index].value;
 
-    props.onPaletteChange({
-      actionType: PaletteActionType.AddCalculation,
-      args: {
-        index: nextIndex,
-        calcClass,
-      },
-    });
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.AddCalculation,
+        args: {
+          index: nextIndex,
+          calcClass,
+        },
+      })
+    );
 
     props.onIndexChange(nextIndex);
   }
@@ -52,23 +52,23 @@ function AddCalculationButton(props: CalculationsViewProps) {
 }
 
 type CalculationItemProps = {
-  palette: Palette;
+  calculations: readonly Calculation[];
   index: number;
-  active: boolean;
+  activeIndex: number;
   onIndexChange: (index: number) => void;
 };
 
 function CalculationItem(props: CalculationItemProps) {
   useEffect(() => {
-    if (props.active) {
+    if (props.index === props.activeIndex) {
       ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
-  });
+  }, [props.index, props.activeIndex]);
 
   const ref = useRef<HTMLLIElement>(null);
-  const calcs = props.palette.calculations;
+  const calcs = props.calculations;
   const calculation = calcs[props.index];
-  const className = props.active ? "active-calc" : "";
+  const className = props.index === props.activeIndex ? "active-calc" : "";
 
   function handleMouseDown(event: React.MouseEvent) {
     if (event.buttons === 1) {
@@ -96,10 +96,10 @@ function CalculationItem(props: CalculationItemProps) {
 }
 
 function CalculationsList(props: CalculationsViewProps) {
-  const calcs = props.palette.calculations;
+  const calcs = props.calculations;
   const items = [];
 
-  if (props.palette.calculations.length <= 0) {
+  if (props.calculations.length <= 0) {
     return (
       <>
         <div className="placeholder">
@@ -131,15 +131,14 @@ function CalculationsList(props: CalculationsViewProps) {
   const activeIndex = props.activeCalcIndex;
 
   for (let i = 0; i < calcs.length; i++) {
-    const active = i === activeIndex;
-    const calculation = props.palette.calculations[i];
+    const calculation = props.calculations[i];
 
     items.push(
       <CalculationItem
         key={calculation.uid}
-        palette={props.palette}
+        calculations={props.calculations}
         index={i}
-        active={active}
+        activeIndex={activeIndex}
         onIndexChange={props.onIndexChange}
       />
     );
@@ -158,55 +157,62 @@ function CalculationsList(props: CalculationsViewProps) {
   );
 }
 
-export function CalculationsView(props: CalculationsViewProps) {
-  const calcs = props.palette.calculations;
-  const nextIndex = Math.min(props.activeCalcIndex + 1, calcs.length);
-  const prevIndex = clamp(props.activeCalcIndex - 1, 0, calcs.length - 1);
+export const CalculationsView = memo(function (props: CalculationsViewProps) {
+  const nextIndex = Math.min(props.activeCalcIndex + 1, props.calculations.length);
+  const prevIndex = clamp(props.activeCalcIndex - 1, 0, props.calculations.length - 1);
 
   function handleClone() {
-    props.onPaletteChange({
-      actionType: PaletteActionType.CloneCalculation,
-      args: {
-        index: props.activeCalcIndex,
-      },
-    });
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.CloneCalculation,
+        args: {
+          index: props.activeCalcIndex,
+        },
+      })
+    );
 
     props.onIndexChange(nextIndex);
   }
 
   function handleRemove() {
-    props.onPaletteChange({
-      actionType: PaletteActionType.RemoveCalculation,
-      args: {
-        index: props.activeCalcIndex,
-      },
-    });
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.RemoveCalculation,
+        args: {
+          index: props.activeCalcIndex,
+        },
+      })
+    );
 
     props.onIndexChange(prevIndex);
   }
 
   function handleMoveUp() {
-    props.onPaletteChange({
-      actionType: PaletteActionType.MoveCalculation,
-      args: {
-        index: props.activeCalcIndex,
-        newIndex: prevIndex,
-      },
-    });
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.MoveCalculation,
+        args: {
+          index: props.activeCalcIndex,
+          newIndex: prevIndex,
+        },
+      })
+    );
 
     props.onIndexChange(prevIndex);
   }
 
   function handleMoveDown() {
-    props.onPaletteChange({
-      actionType: PaletteActionType.MoveCalculation,
-      args: {
-        index: props.activeCalcIndex,
-        newIndex: nextIndex,
-      },
-    });
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.MoveCalculation,
+        args: {
+          index: props.activeCalcIndex,
+          newIndex: nextIndex,
+        },
+      })
+    );
 
-    const newIndex = clamp(props.activeCalcIndex + 1, 0, calcs.length - 1);
+    const newIndex = clamp(props.activeCalcIndex + 1, 0, props.calculations.length - 1);
     props.onIndexChange(newIndex);
   }
 
@@ -223,4 +229,4 @@ export function CalculationsView(props: CalculationsViewProps) {
       <CalculationsList {...props} />
     </>
   );
-}
+});
