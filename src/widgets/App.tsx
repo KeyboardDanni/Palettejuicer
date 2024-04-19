@@ -1,18 +1,11 @@
-import "reflect-metadata";
-
-import { setAutoFreeze } from "immer";
-
-// Needed so that class-transformer works with immer
-setAutoFreeze(false);
-
 import { useEffect } from "react";
 import { useImmerReducer } from "use-immer";
 
-import { AppBody } from "./widgets/AppBody";
-import { AppHeader } from "./widgets/AppHeader";
-import { ProjectReducer } from "./reducers/ProjectReducer";
-import { Project } from "./model/Project";
-import { LocalStorage } from "./storage/LocalStorage";
+import { AppBody } from "./AppBody";
+import { AppHeader } from "./AppHeader";
+import { ProjectReducer } from "../reducers/ProjectReducer";
+import { Project } from "../model/Project";
+import { LocalStorage } from "../storage/LocalStorage";
 
 const AUTOSAVE_DELAY_MS = 3000;
 
