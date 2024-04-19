@@ -36,3 +36,15 @@
   outline: $size-widget-focus-outline solid $color;
   outline-offset: (-$size-widget-outline - $size-widget-focus-outline);
 }
+
+@mixin raised-button($color, $color-border, $pressed) {
+  @include raised-widget(
+    $color,
+    $color-widget-accent-inset,
+    $color-border,
+    $size-button-radius,
+    $size-button-height,
+    $pressed
+  );
+  @include raised-widget-bounds($size-button-height, $pressed);
+}

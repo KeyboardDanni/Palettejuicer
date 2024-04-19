@@ -57,7 +57,7 @@ export function App() {
   return (
     <>
       <div id="app-wrapper">
-        <AppHeader />
+        <AppHeader project={project} onProjectChange={dispatchProject} />
         <AppBody project={project} onProjectChange={dispatchProject} />
       </div>
     </>

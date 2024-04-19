@@ -50,6 +50,8 @@ $color-widget-accent-inset: rgba(255, 255, 255, 35%);
 $color-widget-accent-focus: rgba(255, 255, 255, 100%);
 $color-widget-accent-border: hsl($hue-accent, 75%, 15%);
 $color-widget-accent-border-hover: hsl($hue-accent, 75%, 25%);
+$color-background-widget: hsl($hue-section, 10%, 95%);
+$color-background-widget-hover: hsl($hue-accent, 75%, 85%);
 $color-field-background: hsl($hue-section, 10%, 98%);
 $color-slider: hsl($hue-background, 10%, 60%);
 $color-slider-hover: hsl($hue-background, 10%, 70%);

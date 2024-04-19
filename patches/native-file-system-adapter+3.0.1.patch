@@ -1,0 +1,62 @@
+diff --git a/node_modules/native-file-system-adapter/src/adapters/downloader.js b/node_modules/native-file-system-adapter/src/adapters/downloader.js
+index 9ce048c..9a2d394 100644
+--- a/node_modules/native-file-system-adapter/src/adapters/downloader.js
++++ b/node_modules/native-file-system-adapter/src/adapters/downloader.js
+@@ -13,7 +13,7 @@ const { GONE } = errors
+ const isOldSafari = /constructor/i.test(window.HTMLElement)
+ 
+ export class FileHandle {
+-  constructor (name = 'unkown') {
++  constructor (name = 'unknown') {
+     this.name = name
+     this.kind = 'file'
+   }
+diff --git a/node_modules/native-file-system-adapter/src/showDirectoryPicker.js b/node_modules/native-file-system-adapter/src/showDirectoryPicker.js
+index cd3faba..4b24aaf 100644
+--- a/node_modules/native-file-system-adapter/src/showDirectoryPicker.js
++++ b/node_modules/native-file-system-adapter/src/showDirectoryPicker.js
+@@ -27,10 +27,15 @@ async function showDirectoryPicker (options = {}) {
+   // Lazy load while the user is choosing the directory
+   const p = import('./util.js')
+ 
+-  await new Promise(resolve => {
+-    input.addEventListener('change', resolve)
+-    input.click()
+-  })
++  try {
++    await new Promise((resolve, reject) => {
++      input.addEventListener('change', resolve)
++      input.addEventListener('cancel', reject)
++      input.click()
++    })
++  } finally {
++    input.remove()
++  }
+ 
+   return p.then(mod => mod.getDirHandlesFromInput(input))
+ }
+diff --git a/node_modules/native-file-system-adapter/src/showOpenFilePicker.js b/node_modules/native-file-system-adapter/src/showOpenFilePicker.js
+index 7854fa4..8c8514c 100644
+--- a/node_modules/native-file-system-adapter/src/showOpenFilePicker.js
++++ b/node_modules/native-file-system-adapter/src/showOpenFilePicker.js
+@@ -41,11 +41,15 @@ async function showOpenFilePicker (options = {}) {
+   // Lazy load while the user is choosing the directory
+   const p = import('./util.js')
+ 
+-  await new Promise(resolve => {
+-    input.addEventListener('change', resolve, { once: true })
+-    input.click()
+-  })
+-  input.remove()
++  try {
++    await new Promise((resolve, reject) => {
++      input.addEventListener('change', resolve, { once: true })
++      input.addEventListener('cancel', reject, { once: true })
++      input.click()
++    })
++  } finally {
++    input.remove()
++  }
+ 
+   return p.then(m => m.getFileHandlesFromInput(input))
+ }

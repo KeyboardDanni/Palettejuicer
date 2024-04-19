@@ -2,6 +2,14 @@ import { useRef } from "react";
 import Popup from "reactjs-popup";
 import { PopupActions } from "reactjs-popup/dist/types";
 
+function PopupMenuSeparatorItem() {
+  return (
+    <>
+      <li className="menu-separator"></li>
+    </>
+  );
+}
+
 type PopupMenuItemProps = {
   index: number;
   name: string;
@@ -26,7 +34,14 @@ function PopupMenuItem(props: PopupMenuItemProps) {
 
   return (
     <>
-      <li title={props.description} data-id={props.index} tabIndex={0} onMouseUp={handleSelect} onKeyDown={handleKey}>
+      <li
+        className="menu-item"
+        title={props.description}
+        data-id={props.index}
+        tabIndex={0}
+        onMouseUp={handleSelect}
+        onKeyDown={handleKey}
+      >
         <div>{props.name}</div>
       </li>
     </>
@@ -36,6 +51,7 @@ function PopupMenuItem(props: PopupMenuItemProps) {
 export type PopupMenuItemData = {
   name: string;
   description: string;
+  beginGroup?: boolean;
 };
 
 export type PopupMenuProps = {
@@ -50,7 +66,7 @@ export function PopupMenu(props: PopupMenuProps) {
   const itemProps = [];
 
   for (const [id, item] of props.items.entries()) {
-    itemProps.push(
+    const menuItem = (
       <PopupMenuItem
         key={id}
         name={item.name}
@@ -60,6 +76,17 @@ export function PopupMenu(props: PopupMenuProps) {
         onItemSelect={props.onItemSelect}
       />
     );
+
+    if (item.beginGroup && id > 0) {
+      itemProps.push(
+        <>
+          <PopupMenuSeparatorItem key={`separator ${id}`} />
+          {menuItem}
+        </>
+      );
+    } else {
+      itemProps.push(menuItem);
+    }
   }
 
   function handleKey(event: React.KeyboardEvent) {
@@ -68,7 +95,7 @@ export function PopupMenu(props: PopupMenuProps) {
     }
 
     const currentId = parseInt((event.target as HTMLElement).dataset["id"] ?? "0");
-    const items = ref.current.children;
+    const items = ref.current.querySelectorAll(".menu-item");
 
     switch (event.key) {
       case "ArrowUp":

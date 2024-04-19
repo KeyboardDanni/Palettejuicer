@@ -129,6 +129,9 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
       draft.calculations[args.index] = args.calc;
       break;
     }
+
+    default:
+      throw new Error("Bad action type");
   }
 
   draft.computedColors = draft.computeColors();
