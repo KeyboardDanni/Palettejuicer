@@ -158,3 +158,23 @@
   align-items: center;
   justify-content: center;
 }
+
+#app-oops-container {
+  display: flex;
+  flex-direction: column;
+  flex: 1;
+  align-self: center;
+  justify-content: center;
+  max-width: 80rem;
+
+  #app-oops {
+    display: flex;
+    flex-direction: column;
+    align-items: start;
+    gap: 1.2rem;
+
+    .button-bar {
+      align-self: stretch;
+    }
+  }
+}

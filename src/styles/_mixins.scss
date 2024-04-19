@@ -18,7 +18,7 @@
     0.05s box-shadow ease-out,
     0.05s transform ease-out,
     0.2s color ease-in-out,
-    0.15s background-color ease-in-out;
+    0.15s background ease-in-out;
 }
 
 @mixin raised-widget-bounds($height, $pressed) {

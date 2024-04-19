@@ -156,6 +156,34 @@ button {
       border-top-color: currentColor;
     }
   }
+
+  &.danger {
+    background: repeating-linear-gradient(
+      -45deg,
+      $color-widget-danger,
+      $color-widget-danger 1rem,
+      $color-widget-danger-alt 1rem,
+      $color-widget-danger-alt 2rem
+    );
+    border-color: $color-widget-danger-border;
+    color: $color-text-selected;
+
+    &:hover,
+    &:focus-visible,
+    &:active,
+    &.selected {
+      background: repeating-linear-gradient(
+        -45deg,
+        $color-widget-danger-hover,
+        $color-widget-danger-hover 1rem,
+        $color-widget-danger-alt-hover 1rem,
+        $color-widget-danger-alt-hover 2rem
+      );
+      border-color: $color-widget-danger-border;
+      color: $color-text-selected;
+      outline-color: $color-text-selected;
+    }
+  }
 }
 
 .button-bar {

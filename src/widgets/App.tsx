@@ -3,9 +3,11 @@ import { useImmerReducer } from "use-immer";
 
 import { AppBody } from "./AppBody";
 import { AppHeader } from "./AppHeader";
-import { ProjectReducer } from "../reducers/ProjectReducer";
+import { ProjectFileAction, ProjectFileActionType, ProjectReducer } from "../reducers/ProjectReducer";
 import { Project } from "../model/Project";
 import { LocalStorage } from "../storage/LocalStorage";
+import { ErrorBoundary } from "react-error-boundary";
+import { OopsView } from "./OopsView";
 
 const AUTOSAVE_DELAY_MS = 3000;
 
@@ -49,10 +51,17 @@ export function App() {
 
   return (
     <>
-      <div id="app-wrapper">
-        <AppHeader project={project} onProjectChange={dispatchProject} />
-        <AppBody project={project} onProjectChange={dispatchProject} />
-      </div>
+      <ErrorBoundary
+        fallbackRender={OopsView}
+        onReset={() => {
+          dispatchProject(new ProjectFileAction({ actionType: ProjectFileActionType.Clear }));
+        }}
+      >
+        <div id="app-wrapper">
+          <AppHeader project={project} onProjectChange={dispatchProject} />
+          <AppBody project={project} onProjectChange={dispatchProject} />
+        </div>
+      </ErrorBoundary>
     </>
   );
 }

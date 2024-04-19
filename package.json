@@ -19,10 +19,11 @@
     "hex-rgb": "^5.0.0",
     "immer": "^10.0.4",
     "native-file-system-adapter": "^3.0.1",
-    "overlayscrollbars": "^2.7.1",
+    "overlayscrollbars": "^2.7.2",
     "overlayscrollbars-react": "^0.5.6",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
+    "react-error-boundary": "^4.0.13",
     "reactjs-popup": "^2.0.6",
     "reflect-metadata": "^0.2.2",
     "rgb-hex": "^4.1.0",
@@ -30,11 +31,11 @@
     "uuid": "^9.0.1"
   },
   "devDependencies": {
-    "@types/react": "^18.2.74",
-    "@types/react-dom": "^18.2.24",
+    "@types/react": "^18.2.79",
+    "@types/react-dom": "^18.2.25",
     "@types/uuid": "^9.0.8",
-    "@typescript-eslint/eslint-plugin": "^7.5.0",
-    "@typescript-eslint/parser": "^7.5.0",
+    "@typescript-eslint/eslint-plugin": "^7.7.0",
+    "@typescript-eslint/parser": "^7.7.0",
     "@vitejs/plugin-react": "^4.2.1",
     "eslint": "^8.57.0",
     "eslint-import-resolver-typescript": "^3.6.1",
@@ -45,9 +46,9 @@
     "modern-normalize": "^2.0.0",
     "patch-package": "^8.0.0",
     "prettier": "^3.2.5",
-    "sass": "^1.74.1",
-    "typescript": "^5.4.3",
-    "vite": "^5.2.8",
-    "vitest": "^1.4.0"
+    "sass": "^1.75.0",
+    "typescript": "^5.4.5",
+    "vite": "^5.2.9",
+    "vitest": "^1.5.0"
   }
 }
