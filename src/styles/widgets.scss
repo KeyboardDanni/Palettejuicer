@@ -108,6 +108,38 @@
   }
 }
 
+.modal-popup-overlay {
+  background-color: color.adjust($color-background, $alpha: -0.25);
+  animation: popup-fade-in 0.5s;
+
+  .section {
+    @include raised-box-shadow(
+      $color-section-inset,
+      $color-section-border,
+      calc($size-section-outline / 2),
+      $size-button-height
+    );
+
+    background-color: $color-section-background;
+    border: $size-section-outline solid $color-section-border;
+    border-radius: $size-section-radius;
+    margin-bottom: $size-button-height;
+    padding: $size-section-padding;
+  }
+}
+
+.popup-message-content {
+  display: flex;
+  flex-direction: column;
+  align-items: start;
+  gap: 1.2rem;
+  max-width: 80rem;
+
+  .button-bar {
+    align-self: stretch;
+  }
+}
+
 .section-gray-background {
   background-color: $color-section-gray;
   margin: calc($size-section-padding / -2);
@@ -119,9 +151,9 @@
 button {
   @include raised-button($color-widget, $color-widget-border, 0);
 
-  color: $color-text;
   margin: $size-widget-outline $size-widget-outline ($size-button-height + $size-widget-outline) $size-widget-outline;
   padding: 0.8rem;
+  text-wrap: nowrap;
 
   &:hover,
   &:focus-visible {
@@ -130,7 +162,6 @@ button {
 
   &:active,
   &.selected {
-    color: $color-text-selected;
     @include raised-button($color-widget-accent-hover, $color-widget-accent-border, 1);
   }
 
@@ -158,27 +189,27 @@ button {
   }
 
   &.danger {
-    background: repeating-linear-gradient(
-      -45deg,
-      $color-widget-danger,
-      $color-widget-danger 1rem,
-      $color-widget-danger-alt 1rem,
-      $color-widget-danger-alt 2rem
-    );
+    @include striped-background($color-widget-danger, $color-widget-danger-alt);
+
     border-color: $color-widget-danger-border;
     color: $color-text-selected;
+    font-weight: 600;
+    -webkit-text-stroke: 0.2rem $color-widget-danger-border;
+    paint-order: stroke;
 
     &:hover,
-    &:focus-visible,
+    &:focus-visible {
+      @include striped-background($color-widget-danger-hover, $color-widget-danger-alt-hover);
+
+      border-color: $color-widget-danger-border;
+      color: $color-text-selected;
+      outline-color: $color-text-selected;
+    }
+
     &:active,
     &.selected {
-      background: repeating-linear-gradient(
-        -45deg,
-        $color-widget-danger-hover,
-        $color-widget-danger-hover 1rem,
-        $color-widget-danger-alt-hover 1rem,
-        $color-widget-danger-alt-hover 2rem
-      );
+      @include striped-background($color-widget-danger-active, $color-widget-danger-alt-active);
+
       border-color: $color-widget-danger-border;
       color: $color-text-selected;
       outline-color: $color-text-selected;
@@ -458,13 +489,7 @@ input[type="range"] {
     position: relative;
 
     &.out-of-range {
-      background: repeating-linear-gradient(
-        -45deg,
-        $color-section-warning,
-        $color-section-warning 1rem,
-        $color-section-warning-alt 1rem,
-        $color-section-warning-alt 2rem
-      );
+      @include striped-background($color-section-warning, $color-section-warning-alt);
 
       &:after {
         content: "";

@@ -58,7 +58,6 @@
 
       &:active,
       &.selected {
-        color: $color-text-selected;
         @include raised-button($color-widget-accent-hover, $color-widget-accent-border, 1);
       }
 
@@ -165,16 +164,4 @@
   flex: 1;
   align-self: center;
   justify-content: center;
-  max-width: 80rem;
-
-  #app-oops {
-    display: flex;
-    flex-direction: column;
-    align-items: start;
-    gap: 1.2rem;
-
-    .button-bar {
-      align-self: stretch;
-    }
-  }
 }

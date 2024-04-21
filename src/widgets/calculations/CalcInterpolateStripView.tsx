@@ -11,7 +11,7 @@ import {
 import { CelIndex } from "../../model/Palette";
 import { CalcPropertiesViewProps } from "../PropertiesView";
 import { NumberSlider } from "../common/NumberSlider";
-import { DropdownButton } from "../common/DropdownButton";
+import { DropdownChoiceButton } from "../common/DropdownButton";
 
 export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
   if (!(props.calc instanceof CalcInterpolateStrip)) {
@@ -78,7 +78,7 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
           <span>Blend colorspace</span>
         </div>
         <div>
-          <DropdownButton
+          <DropdownChoiceButton
             label={colorspaceData.name}
             title={colorspaceData.description}
             items={lerpColorspaceData}
@@ -89,7 +89,7 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
           <span>Blend hue mode</span>
         </div>
         <div>
-          <DropdownButton
+          <DropdownChoiceButton
             label={hueModeData.name}
             title={hueModeData.description}
             items={lerpHueModeData}

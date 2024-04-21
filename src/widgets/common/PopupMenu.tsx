@@ -2,7 +2,7 @@ import { useRef } from "react";
 import Popup from "reactjs-popup";
 import { PopupActions } from "reactjs-popup/dist/types";
 
-function PopupMenuSeparatorItem() {
+export function PopupMenuSeparatorItem() {
   return (
     <>
       <li className="menu-separator"></li>
@@ -10,15 +10,15 @@ function PopupMenuSeparatorItem() {
   );
 }
 
-type PopupMenuItemProps = {
+export type PopupMenuItemProps = {
   index: number;
   name: string;
   description: string;
-  popupRef: React.RefObject<PopupActions>;
+  popupRef?: React.RefObject<PopupActions>;
   onItemSelect: (index: number) => void;
 };
 
-function PopupMenuItem(props: PopupMenuItemProps) {
+export function PopupMenuItem(props: PopupMenuItemProps) {
   function handleKey(event: React.KeyboardEvent) {
     switch (event.key) {
       case "Enter":
@@ -29,7 +29,7 @@ function PopupMenuItem(props: PopupMenuItemProps) {
 
   function handleSelect() {
     props.onItemSelect(props.index);
-    props.popupRef.current?.close();
+    props.popupRef?.current?.close();
   }
 
   return (
@@ -48,7 +48,7 @@ function PopupMenuItem(props: PopupMenuItemProps) {
   );
 }
 
-export type PopupMenuItemData = {
+export type PopupMenuChoiceData = {
   name: string;
   description: string;
   beginGroup?: boolean;
@@ -56,12 +56,54 @@ export type PopupMenuItemData = {
 
 export type PopupMenuProps = {
   button: (isOpen: boolean) => JSX.Element;
-  items: readonly PopupMenuItemData[];
+  children: React.ReactNode;
+  popupRef: React.RefObject<PopupActions>;
+  [key: string]: any;
+};
+
+export function PopupMenu({ button, children, popupRef }: PopupMenuProps) {
+  const ref = useRef<HTMLUListElement>(null);
+
+  function handleKey(event: React.KeyboardEvent) {
+    if (!ref.current) {
+      return;
+    }
+
+    const currentId = parseInt((event.target as HTMLElement).dataset["id"] ?? "0");
+    const items = ref.current.querySelectorAll(".menu-item");
+
+    switch (event.key) {
+      case "ArrowUp":
+        (items[Math.max(0, currentId - 1)] as HTMLElement).focus();
+        event.preventDefault();
+        break;
+      case "ArrowDown":
+        (items[Math.min(currentId + 1, items.length - 1)] as HTMLElement).focus();
+        event.preventDefault();
+        break;
+    }
+  }
+
+  return (
+    <>
+      <Popup trigger={button} ref={popupRef} position="bottom left" arrow={false} keepTooltipInside="#app-wrapper">
+        <div className="popup">
+          <div className="menu" onKeyDown={handleKey}>
+            <ul ref={ref}>{children}</ul>
+          </div>
+        </div>
+      </Popup>
+    </>
+  );
+}
+
+export type PopupChoiceMenuProps = {
+  button: (isOpen: boolean) => JSX.Element;
+  items: readonly PopupMenuChoiceData[];
   onItemSelect: (index: number) => void;
 };
 
-export function PopupMenu(props: PopupMenuProps) {
-  const ref = useRef<HTMLUListElement>(null);
+export function PopupChoiceMenu(props: PopupChoiceMenuProps) {
   const popupRef = useRef<PopupActions>(null);
   const itemProps = [];
 
@@ -89,41 +131,11 @@ export function PopupMenu(props: PopupMenuProps) {
     }
   }
 
-  function handleKey(event: React.KeyboardEvent) {
-    if (!ref.current) {
-      return;
-    }
-
-    const currentId = parseInt((event.target as HTMLElement).dataset["id"] ?? "0");
-    const items = ref.current.querySelectorAll(".menu-item");
-
-    switch (event.key) {
-      case "ArrowUp":
-        (items[Math.max(0, currentId - 1)] as HTMLElement).focus();
-        event.preventDefault();
-        break;
-      case "ArrowDown":
-        (items[Math.min(currentId + 1, items.length - 1)] as HTMLElement).focus();
-        event.preventDefault();
-        break;
-    }
-  }
-
   return (
     <>
-      <Popup
-        trigger={props.button}
-        ref={popupRef}
-        position="bottom left"
-        arrow={false}
-        keepTooltipInside="#app-wrapper"
-      >
-        <div className="popup">
-          <div className="menu" onKeyDown={handleKey}>
-            <ul ref={ref}>{itemProps}</ul>
-          </div>
-        </div>
-      </Popup>
+      <PopupMenu button={props.button} popupRef={popupRef}>
+        {itemProps}
+      </PopupMenu>
     </>
   );
 }

@@ -17,7 +17,6 @@
   transition:
     0.05s box-shadow ease-out,
     0.05s transform ease-out,
-    0.2s color ease-in-out,
     0.15s background ease-in-out;
 }
 
@@ -47,4 +46,8 @@
     $pressed
   );
   @include raised-widget-bounds($size-button-height, $pressed);
+}
+
+@mixin striped-background($color, $color-alt) {
+  background: repeating-linear-gradient(-45deg, $color, $color 1rem, $color-alt 1rem, $color-alt 2rem);
 }

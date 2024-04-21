@@ -22,7 +22,7 @@ export function OopsView(props: FallbackProps) {
           <div id="logo" />
         </div>
         <div id="app-oops-container">
-          <div id="app-oops" className="section">
+          <div className="section popup-message-content">
             <div className="section-header">Uh oh! Palettejuicer made a mess!</div>
             <p>
               Something went wrong and the app can't continue. You can try to fix this by clicking <b>Reload</b> below.

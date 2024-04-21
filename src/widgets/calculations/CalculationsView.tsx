@@ -3,9 +3,9 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { clamp } from "../../util/math";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
-import { PopupMenuItemData } from "../common/PopupMenu";
+import { PopupMenuChoiceData } from "../common/PopupMenu";
 
-import { DropdownButton } from "../common/DropdownButton";
+import { DropdownChoiceButton } from "../common/DropdownButton";
 import { Calculation } from "../../model/calculation/Calculation";
 import { availableCalcs } from "../../model/Palette";
 
@@ -19,7 +19,7 @@ export type CalculationsViewProps = {
 
 function AddCalculationButton(props: CalculationsViewProps) {
   const nextIndex = Math.min(props.activeCalcIndex + 1, props.calculations.length);
-  const items: PopupMenuItemData[] = [];
+  const items: PopupMenuChoiceData[] = [];
 
   for (const calcClass of availableCalcs) {
     items.push({
@@ -46,7 +46,7 @@ function AddCalculationButton(props: CalculationsViewProps) {
 
   return (
     <>
-      <DropdownButton label={"Add"} items={items} onItemSelect={handleAdd} />
+      <DropdownChoiceButton label={"Add"} items={items} onItemSelect={handleAdd} />
     </>
   );
 }
