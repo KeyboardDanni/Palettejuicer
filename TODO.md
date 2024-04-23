@@ -1,0 +1,7 @@
+- [ ] Additional interpolation settings
+- [ ] Palette file import/export
+- [ ] Copy and paste color cels
+- [ ] Click to pick cel
+- [ ] Button to bring color in-gamut
+- [ ] Adjust Color calculation
+- [ ] Extrapolate Strip calculation
