@@ -25,7 +25,7 @@ function PaletteCel(props: PaletteCelProps) {
   if (props.active) {
     className += " active-cel";
 
-    if (color.labch.lightness > 50) {
+    if (color.lab.lightness > 50) {
       className += " light-color";
     } else {
       className += " dark-color";

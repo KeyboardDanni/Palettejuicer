@@ -6,7 +6,7 @@ import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
 import { CalcInterpolateStripView } from "../../widgets/calculations/CalcInterpolateStripView";
 import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 import { Color } from "../color/Color";
-import { ColorRgb } from "../color/ColorRgb";
+import { ColorspaceRgb } from "../color/ColorspaceRgb";
 import { Transform } from "class-transformer";
 
 export enum LerpColorspace {
@@ -154,7 +154,7 @@ export class CalcInterpolateStrip extends Calculation {
     for (let i = 0; i < indexes.length; i++) {
       const step = steps[i + 1];
       const [red, green, blue] = step.srgb;
-      const color = Color.fromRgb(ColorRgb.fromRaw(red, green, blue));
+      const color = new Color(new ColorspaceRgb([red, green, blue]));
 
       cels.push({
         index: indexes[i],

@@ -1,11 +1,11 @@
 import "reflect-metadata";
 
 import { expect, test } from "vitest";
-import { immerable, produce } from "immer";
+import { immerable, produce, castDraft } from "immer";
 
 import { CelIndex, PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
 import { Color } from "../model/color/Color";
-import { ColorRgb } from "../model/color/ColorRgb";
+import { ColorspaceRgb } from "../model/color/ColorspaceRgb";
 import { Calculation, CalculationCel, CalculationResult } from "../model/calculation/Calculation";
 import { CalcPropertiesViewProps } from "../widgets/PropertiesView";
 
@@ -105,14 +105,14 @@ test("handles CelIndex out of bounds", () => {
 
 test("handles base and computed colors", () => {
   let palette = new Palette();
-  const red = Color.fromRgb(ColorRgb.fromHex(HEX_RED) as ColorRgb);
-  const green = Color.fromRgb(ColorRgb.fromHex(HEX_GREEN) as ColorRgb);
-  const blue = Color.fromRgb(ColorRgb.fromHex(HEX_BLUE) as ColorRgb);
+  const red = new Color(ColorspaceRgb.fromHex(HEX_RED) as ColorspaceRgb);
+  const green = new Color(ColorspaceRgb.fromHex(HEX_GREEN) as ColorspaceRgb);
+  const blue = new Color(ColorspaceRgb.fromHex(HEX_BLUE) as ColorspaceRgb);
 
   palette = produce(palette, (draft) => {
-    draft.baseColors[0] = red;
-    draft.baseColors[1] = green;
-    draft.computedColors[1] = blue;
+    draft.baseColors[0] = castDraft(red);
+    draft.baseColors[1] = castDraft(green);
+    draft.computedColors[1] = castDraft(blue);
   });
 
   expect(palette.color({ x: 0, y: 0 }).rgb.hex).toBe(HEX_RED);
@@ -128,8 +128,8 @@ test("handles base and computed colors", () => {
 
 test("computes new colors given a calculation", () => {
   let palette = new Palette();
-  const red = Color.fromRgb(ColorRgb.fromHex(HEX_RED) as ColorRgb);
-  const green = Color.fromRgb(ColorRgb.fromHex(HEX_GREEN) as ColorRgb);
+  const red = new Color(ColorspaceRgb.fromHex(HEX_RED) as ColorspaceRgb);
+  const green = new Color(ColorspaceRgb.fromHex(HEX_GREEN) as ColorspaceRgb);
 
   let calc = new TestCalculation();
 
@@ -143,10 +143,10 @@ test("computes new colors given a calculation", () => {
   });
 
   palette = produce(palette, (draft) => {
-    draft.baseColors[0] = red;
+    draft.baseColors[0] = castDraft(red);
 
     for (let i = 1; i < 6; i++) {
-      draft.baseColors[i] = green;
+      draft.baseColors[i] = castDraft(green);
     }
 
     draft.calculations.push(calc);
@@ -162,7 +162,7 @@ test("computes new colors given a calculation", () => {
   expect(results[5]).toBeNull();
 
   palette = produce(palette, (draft) => {
-    draft.computedColors = results;
+    draft.computedColors = castDraft(results);
   });
 
   expect(palette.color({ x: 0, y: 0 }).rgb.hex).toBe(HEX_RED);

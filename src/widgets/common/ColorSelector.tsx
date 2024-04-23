@@ -1,9 +1,11 @@
 import { ChangeEvent, useState } from "react";
+import { castDraft, produce } from "immer";
 
 import { Color } from "../../model/color/Color";
-import { ColorspaceInfo } from "../../model/color/Colorspace";
+import { ChannelInfo, Colorspace } from "../../model/color/Colorspace";
 import { ControlledTextInput } from "./ControlledTextInput";
 import { NumberSlider } from "./NumberSlider";
+import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
 
 enum ColorSelectorPage {
   Lch = "LCH",
@@ -65,29 +67,44 @@ function HexInput(props: HexInputProps) {
 }
 
 type ColorspaceSlidersProps = {
-  colorspace: ColorspaceInfo;
+  colorspace: string;
+  channels: ChannelInfo[];
   color: Color;
   onColorChange: (color: Color) => void;
   disabled: boolean;
 };
 
 function ColorspaceSliders(props: ColorspaceSlidersProps) {
-  const colorspace = props.colorspace.colorspace;
+  const converted = props.color.converted(props.colorspace).data;
+  const transformed = converted.transformed();
 
-  function handleChannelChange(channel: string, value: number) {
-    if (value !== props.color.channel(colorspace, channel)) {
-      props.onColorChange(props.color.adjustChannel(colorspace, channel, value));
+  function handleChannelChange(channel: number, value: number) {
+    if (value === transformed[channel]) {
+      return;
     }
+
+    const spaceClass = converted.constructor as typeof Colorspace;
+    transformed[channel] = value;
+
+    const color = produce(props.color, (draft) => {
+      const data = produce(converted, (dataDraft) => {
+        dataDraft.values = spaceClass.transformedToRaw(transformed);
+      });
+
+      draft.data = castDraft(data);
+    });
+
+    props.onColorChange(color);
   }
 
   const sliders = [];
 
-  for (const channel of props.colorspace.channels) {
+  for (const [i, channel] of props.channels.entries()) {
     sliders.push(
       <ChannelSlider
         key={channel.channel}
-        value={props.color.channel(colorspace, channel.channel)}
-        onChange={(value) => handleChannelChange(channel.channel, value)}
+        value={transformed[i]}
+        onChange={(value) => handleChannelChange(i, value)}
         label={channel.label}
         min={channel.range[0]}
         max={channel.range[1]}
@@ -135,35 +152,38 @@ type PageSlidersProps = {
 };
 
 function PageSliders(props: PageSlidersProps) {
-  let colorspace;
+  let colorspace = "";
 
   switch (props.page) {
     case ColorSelectorPage.Lch:
-      colorspace = Color.colorspaceInfo("lch");
+      colorspace = "lch";
       break;
     case ColorSelectorPage.Lab:
-      colorspace = Color.colorspaceInfo("lab");
+      colorspace = "lab";
       break;
     case ColorSelectorPage.Oklch:
-      colorspace = Color.colorspaceInfo("oklch");
+      colorspace = "oklch";
       break;
     case ColorSelectorPage.Oklab:
-      colorspace = Color.colorspaceInfo("oklab");
+      colorspace = "oklab";
       break;
     case ColorSelectorPage.Hsl:
-      colorspace = Color.colorspaceInfo("hsl");
+      colorspace = "hsl";
       break;
     case ColorSelectorPage.Hsv:
-      colorspace = Color.colorspaceInfo("hsv");
+      colorspace = "hsv";
       break;
     default:
       throw new Error("Bad enum");
   }
 
+  const channels = Color.channelInfo(colorspace);
+
   return (
     <>
       <ColorspaceSliders
         colorspace={colorspace}
+        channels={channels}
         color={props.color}
         onColorChange={props.onColorChange}
         disabled={props.computed}
@@ -193,7 +213,8 @@ export function ColorSelector(props: ColorSelectorProps) {
         <div className="color-sliders">
           <div>
             <ColorspaceSliders
-              colorspace={Color.colorspaceInfo("rgb")}
+              colorspace="rgb"
+              channels={ColorspaceRgb.channelInfo()}
               color={props.color}
               onColorChange={tryColorChange}
               disabled={props.computed}
@@ -212,7 +233,7 @@ export function ColorSelector(props: ColorSelectorProps) {
           </div>
         </div>
         <div className="color-preview-column">
-          <div className="color-preview" style={{ backgroundColor: props.color.rgb.hex }} />
+          <div className="color-preview" style={{ backgroundColor: props.color.hex }} />
           <div className="color-hex">
             <HexInput color={props.color} onColorChange={tryColorChange} disabled={props.computed} />
           </div>

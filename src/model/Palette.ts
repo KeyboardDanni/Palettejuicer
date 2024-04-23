@@ -2,7 +2,7 @@ import { immerable } from "immer";
 import { Type } from "class-transformer";
 
 import { Color } from "./color/Color";
-import { ColorRgb } from "./color/ColorRgb";
+import { ColorspaceRgb } from "./color/ColorspaceRgb";
 import { Calculation } from "./calculation/Calculation";
 import { throwOnNullIndex } from "../util/checks";
 
@@ -23,7 +23,7 @@ export const availableCalcs: AvailableCalcItem[] = [
 export const PALETTE_WIDTH = 16;
 export const PALETTE_HEIGHT = 16;
 
-const DEFAULT_COLOR = Color.fromRgb(ColorRgb.from(60, 60, 60));
+const DEFAULT_COLOR = new Color(new ColorspaceRgb().withTransformed(60, 60, 60));
 
 export interface CelIndex {
   x: number;
@@ -38,8 +38,7 @@ export class Palette {
   @Type(() => Calculation, {
     discriminator: {
       property: "calcType",
-      // @ts-expect-error Can't tell TS that this won't receive an abstract class
-      subTypes: availableCalcs,
+      subTypes: availableCalcs as any,
     },
   })
   readonly calculations: readonly Calculation[];

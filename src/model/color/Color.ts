@@ -1,166 +1,105 @@
-import { immerable, produce } from "immer";
-import { Expose, Type } from "class-transformer";
+import { castDraft, immerable, produce } from "immer";
+import { Type } from "class-transformer";
 
-import { ColorRgb } from "./ColorRgb";
-import { ColorHslv } from "./ColorHslv";
-import { ColorLabch } from "./ColorLabch";
-import { ColorOklabch } from "./ColorOklabch";
-import { ColorspaceInfo } from "./Colorspace";
+import { ChannelInfo, Colorspace } from "./Colorspace";
+import { ColorspaceRgb } from "./ColorspaceRgb";
+import { ColorspaceHsl } from "./ColorspaceHsl";
+import { ColorspaceHsv } from "./ColorspaceHsv";
+import { ColorspaceLch } from "./ColorspaceLch";
+import { ColorspaceLab } from "./ColorspaceLab";
+import { ColorspaceOklab } from "./ColorspaceOklab";
+import { ColorspaceOklch } from "./ColorspaceOklch";
 
-const DEFAULT_RGB = ColorRgb.fromRaw(0, 0, 0);
-const DEFAULT_HSLV = ColorHslv.fromHsl(0, 0, 0);
-const DEFAULT_LABCH = ColorLabch.fromLab(0, 0, 0);
-const DEFAULT_OKLABCH = ColorOklabch.fromOklab(0, 0, 0);
+type AvailableColorspaceItem = {
+  value: typeof Colorspace;
+  name: string;
+};
+
+export const availableSpaces: (typeof Colorspace)[] = [
+  ColorspaceRgb,
+  ColorspaceHsl,
+  ColorspaceHsv,
+  ColorspaceLab,
+  ColorspaceLch,
+  ColorspaceOklab,
+  ColorspaceOklch,
+];
+
+const availableSpaceClasses: { [key: string]: typeof Colorspace } = Object.fromEntries(
+  availableSpaces.map((space) => [space.colorspaceName(), space])
+);
+
+const availableSpaceTypes: AvailableColorspaceItem[] = availableSpaces.map((space) => {
+  return {
+    name: space.colorspaceName(),
+    value: space,
+  };
+});
 
 export class Color {
   [immerable] = true;
 
-  @Expose({ name: "rgb" })
-  @Type(() => ColorRgb)
-  private _rgb: ColorRgb = DEFAULT_RGB;
-  @Expose({ name: "hslv" })
-  @Type(() => ColorHslv)
-  private _hslv: ColorHslv = DEFAULT_HSLV;
-  @Expose({ name: "labch" })
-  @Type(() => ColorLabch)
-  private _labch: ColorLabch = DEFAULT_LABCH;
-  @Expose({ name: "oklabch" })
-  @Type(() => ColorOklabch)
-  private _oklabch: ColorOklabch = DEFAULT_OKLABCH;
+  @Type(() => Colorspace, {
+    discriminator: {
+      property: "space",
+      subTypes: availableSpaceTypes as any,
+    },
+  })
+  readonly data: Colorspace = new ColorspaceRgb();
 
-  get rgb() { return this._rgb; } // prettier-ignore
-  get hslv() { return this._hslv; } // prettier-ignore
-  get labch() { return this._labch; } // prettier-ignore
-  get oklabch() { return this._oklabch; } // prettier-ignore
-
-  static fromRgb(newRgb: ColorRgb): Color {
-    return new Color().withRgb(newRgb);
-  }
-
-  static fromHslv(newHslv: ColorHslv): Color {
-    return new Color().withHslv(newHslv);
-  }
-
-  static fromLabch(newLabch: ColorLabch): Color {
-    return new Color().withLabch(newLabch);
-  }
-
-  static fromOklabch(newOklabch: ColorOklabch): Color {
-    return new Color().withOklabch(newOklabch);
+  constructor(data?: Colorspace) {
+    if (data !== undefined) {
+      this.data = data;
+    }
   }
 
   static fromHex(hex: string): Color | null {
-    return new Color().withHex(hex);
-  }
+    const space = ColorspaceRgb.fromHex(hex);
 
-  withRgb(newRgb: ColorRgb): Color {
-    const converter = newRgb.converter();
-
-    return produce(this, (draft: this) => {
-      draft._rgb = newRgb;
-      draft._hslv = draft._hslv.compute(converter);
-      draft._labch = draft._labch.compute(converter);
-      draft._oklabch = draft._oklabch.compute(converter);
-    });
-  }
-
-  withHslv(newHslv: ColorHslv): Color {
-    const converter = newHslv.converter();
-
-    return produce(this, (draft: this) => {
-      draft._rgb = draft._rgb.compute(converter);
-      draft._hslv = newHslv;
-      draft._labch = draft._labch.compute(converter);
-      draft._oklabch = draft._oklabch.compute(converter);
-    });
-  }
-
-  withLabch(newLabch: ColorLabch): Color {
-    const converter = newLabch.converter();
-
-    return produce(this, (draft: this) => {
-      draft._rgb = draft._rgb.compute(converter);
-      draft._hslv = draft._hslv.compute(converter);
-      draft._labch = newLabch;
-      draft._oklabch = draft._oklabch.compute(converter);
-    });
-  }
-
-  withOklabch(newOklabch: ColorOklabch): Color {
-    const converter = newOklabch.converter();
-
-    return produce(this, (draft: this) => {
-      draft._rgb = draft._rgb.compute(converter);
-      draft._hslv = draft._hslv.compute(converter);
-      draft._labch = draft._labch.compute(converter);
-      draft._oklabch = newOklabch;
-    });
-  }
-
-  withHex(hex: string): Color | null {
-    const hexColor = ColorRgb.fromHex(hex);
-
-    if (hexColor !== null) {
-      return this.withRgb(hexColor);
+    if (space === null) {
+      return null;
     }
 
-    return null;
+    return new Color(space);
   }
 
-  channel(colorspace: string, channel: string): number {
-    switch (colorspace) {
-      case "rgb":
-        return this.rgb.channel(channel);
-      case "hslv":
-        return this.hslv.channel(channel);
-      case "labch":
-        return this.labch.channel(channel);
-      case "oklabch":
-        return this.oklabch.channel(channel);
-      default:
-        throw new Error("Bad colorspace");
-    }
+  get rgb() { return this.data.converted(ColorspaceRgb); } // prettier-ignore
+  get hsl() { return this.data.converted(ColorspaceHsl); } // prettier-ignore
+  get hsv() { return this.data.converted(ColorspaceHsv); } // prettier-ignore
+  get lab() { return this.data.converted(ColorspaceLab); } // prettier-ignore
+  get lch() { return this.data.converted(ColorspaceLch); } // prettier-ignore
+  get oklab() { return this.data.converted(ColorspaceOklab); } // prettier-ignore
+  get oklch() { return this.data.converted(ColorspaceOklch); } // prettier-ignore
+  get hex() { return this.rgb.hex; } // prettier-ignore
+
+  spaceName(): string {
+    const spaceClass = this.data.constructor as typeof Colorspace;
+
+    return spaceClass.colorspaceName();
   }
 
-  adjustChannel(colorspace: string, channel: string, value: number): Color {
-    let newColorspace;
+  with(space: Colorspace): Color {
+    const color = produce(this, (draft) => {
+      draft.data = castDraft(space);
+    });
 
-    switch (colorspace) {
-      case "rgb":
-        newColorspace = this.rgb.adjustChannel(channel, value);
-        return this.withRgb(newColorspace);
-      case "hslv":
-        newColorspace = this.hslv.adjustChannel(channel, value);
-        return this.withHslv(newColorspace);
-      case "labch":
-        newColorspace = this.labch.adjustChannel(channel, value);
-        return this.withLabch(newColorspace);
-      case "oklabch":
-        newColorspace = this.oklabch.adjustChannel(channel, value);
-        return this.withOklabch(newColorspace);
-      default:
-        throw new Error("Bad colorspace");
-    }
+    return color;
   }
 
-  static colorspaceInfo(variant: string): ColorspaceInfo {
-    switch (variant) {
-      case "rgb":
-        return ColorRgb.colorspaceInfo();
-      case "hsl":
-        return ColorHslv.colorspaceInfo("hsl");
-      case "hsv":
-        return ColorHslv.colorspaceInfo("hsv");
-      case "lab":
-        return ColorLabch.colorspaceInfo("lab");
-      case "lch":
-        return ColorLabch.colorspaceInfo("lch");
-      case "oklab":
-        return ColorOklabch.colorspaceInfo("oklab");
-      case "oklch":
-        return ColorOklabch.colorspaceInfo("oklch");
-      default:
-        throw new Error("Bad colorspace");
-    }
+  converted(spaceName: string): Color {
+    const color = produce(this, (draft) => {
+      const spaceClass = availableSpaceClasses[spaceName];
+      const space = this.data.converted(spaceClass as any);
+
+      draft.data = castDraft(space);
+    });
+
+    return color;
+  }
+
+  static channelInfo(spaceName: string): ChannelInfo[] {
+    const spaceClass = availableSpaceClasses[spaceName];
+
+    return spaceClass.channelInfo();
   }
 }

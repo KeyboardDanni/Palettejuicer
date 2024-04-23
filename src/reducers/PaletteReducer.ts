@@ -1,4 +1,4 @@
-import { Draft } from "immer";
+import { Draft, castDraft } from "immer";
 
 import { CelIndex, Palette } from "../model/Palette";
 import { Calculation } from "../model/calculation/Calculation";
@@ -76,7 +76,7 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
       const offset = draft.indexToOffset(args.index);
       if (offset === null) return;
 
-      draft.baseColors[offset] = args.color;
+      draft.baseColors[offset] = castDraft(args.color);
       break;
     }
 
@@ -90,8 +90,7 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
       const args = action.args as AddCalculationArgs;
       if (!checkCalcIndex(draft, args.index, true)) return;
 
-      // @ts-expect-error We're not passing abstract classes into here, and no way to tell TS otherwise
-      draft.calculations.splice(args.index, 0, new args.calcClass());
+      draft.calculations.splice(args.index, 0, new (args.calcClass as any)());
       break;
     }
 
@@ -134,5 +133,5 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
       throw new Error("Bad action type");
   }
 
-  draft.computedColors = draft.computeColors();
+  draft.computedColors = castDraft(draft.computeColors());
 }
