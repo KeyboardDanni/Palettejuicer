@@ -3,6 +3,7 @@
 - [ ] Multi-selection in palette
 - [ ] Custom palette size
 - [ ] Click to pick cel
+- [ ] Button to switch between base/computed color in picker
 - [ ] Button to bring color in-gamut
 - [ ] Adjust Color calculation
 - [ ] Extrapolate Strip calculation
