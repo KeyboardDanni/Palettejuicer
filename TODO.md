@@ -1,6 +1,8 @@
 - [ ] Additional interpolation settings
 - [ ] Palette file import/export
 - [ ] Copy and paste color cels
+- [ ] Multi-selection in palette
+- [ ] Custom palette size
 - [ ] Click to pick cel
 - [ ] Button to bring color in-gamut
 - [ ] Adjust Color calculation
