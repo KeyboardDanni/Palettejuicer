@@ -45,7 +45,7 @@ export function App() {
     window.addEventListener("beforeunload", handleBeforeUnload);
 
     return () => {
-      window.addEventListener("beforeunload", handleBeforeUnload);
+      window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [project]);
 
