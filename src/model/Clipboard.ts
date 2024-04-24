@@ -41,6 +41,11 @@ export class Clipboard {
         //  information.
         if (hex !== osColor.hex) {
           color = osColor;
+
+          // Make the user experience better for Firefox users by setting ourselves as the
+          //  clipboard owner - this prevents the user having to deal with multiple Paste
+          //  prompts when pasting the same external color a bunch of times.
+          await this.copy(osColor);
         }
       }
     } catch (error) {
