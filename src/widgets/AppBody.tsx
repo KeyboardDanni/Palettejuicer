@@ -133,7 +133,7 @@ function AppPalette(props: AppPaletteProps) {
     <>
       <div id="document-palette" className="section">
         <div id="palette-inner-bg" className="section-gray-background">
-          <PaletteView palette={props.palette} active={props.activeColorIndex} onIndexClick={handleClick} />
+          <PaletteView palette={props.palette} active={props.activeColorIndex} onIndexChange={handleClick} />
         </div>
       </div>
     </>

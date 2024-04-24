@@ -1,4 +1,4 @@
-import React, { memo, useEffect, useRef } from "react";
+import React, { memo, useCallback, useEffect, useRef, useState } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { clamp } from "../../util/math";
@@ -55,6 +55,7 @@ type CalculationItemProps = {
   calculations: readonly Calculation[];
   index: number;
   activeIndex: number;
+  scrubbing: boolean;
   onIndexChange: (index: number) => void;
 };
 
@@ -75,9 +76,8 @@ function CalculationItem(props: CalculationItemProps) {
       props.onIndexChange(props.index);
     }
   }
-
   function handleMouseEnter(event: React.MouseEvent) {
-    if (event.buttons === 1) {
+    if (props.scrubbing && event.buttons === 1) {
       props.onIndexChange(props.index);
     }
   }
@@ -96,6 +96,24 @@ function CalculationItem(props: CalculationItemProps) {
 }
 
 function CalculationsList(props: CalculationsViewProps) {
+  const [scrubbing, setScrubbing] = useState(false);
+  const handleClick = useCallback(
+    function () {
+      setScrubbing(true);
+    },
+    [setScrubbing]
+  );
+  useEffect(() => {
+    function unsetScrub() {
+      setScrubbing(false);
+    }
+
+    document.addEventListener("mouseup", unsetScrub);
+
+    return () => {
+      document.removeEventListener("mouseup", unsetScrub);
+    };
+  }, [setScrubbing]);
   const calcs = props.calculations;
   const items = [];
 
@@ -139,6 +157,7 @@ function CalculationsList(props: CalculationsViewProps) {
         calculations={props.calculations}
         index={i}
         activeIndex={activeIndex}
+        scrubbing={scrubbing}
         onIndexChange={props.onIndexChange}
       />
     );
@@ -147,7 +166,7 @@ function CalculationsList(props: CalculationsViewProps) {
   return (
     <>
       <div className="calculations-list">
-        <div className="calculations-scroll" onKeyDown={handleKey} tabIndex={0}>
+        <div className="calculations-scroll" onKeyDown={handleKey} onMouseDown={handleClick} tabIndex={0}>
           <OverlayScrollbarsComponent defer>
             <ul>{items}</ul>
           </OverlayScrollbarsComponent>

@@ -1,4 +1,5 @@
 @use "./_constants.scss" as *;
+@use "./_mixins.scss" as *;
 
 $size-palette-scrollbar: 1.6rem;
 $size-palette-scrollbar-spacing: 0.4rem;
@@ -27,6 +28,7 @@ $size-palette-color-minimum: 2rem;
   display: flex;
   flex-direction: column;
   flex: 1 1 0;
+  margin: -0.4rem;
   overflow: hidden;
 
   .palette-scroll {
@@ -39,20 +41,36 @@ $size-palette-color-minimum: 2rem;
     overflow-x: visible;
     overflow-y: hidden;
     position: relative;
-    padding: 0.1rem;
+    padding: 0.5rem;
+    outline: none;
 
     &:after {
       content: "";
       position: absolute;
-      top: 0;
-      bottom: 0;
-      left: 0;
-      right: ($size-palette-scrollbar + $size-palette-scrollbar-spacing);
+      top: 0.4rem;
+      bottom: 0.4rem;
+      left: 0.4rem;
+      right: 0.4rem + ($size-palette-scrollbar + $size-palette-scrollbar-spacing);
       pointer-events: none;
 
       border: $size-widget-outline solid $color-section-border;
       border-radius: $size-button-radius;
       outline: $color-section-gray $size-button-radius solid;
+    }
+
+    &:focus-visible:before {
+      content: "";
+      position: absolute;
+      top: 0.4rem;
+      bottom: 0.4rem;
+      left: 0.4rem;
+      right: 0.4rem;
+      pointer-events: none;
+      z-index: 2;
+
+      border-radius: $size-button-radius;
+      outline: $color-widget-accent 0.2rem solid;
+      outline-offset: 0.1rem;
     }
 
     .palette-row {
