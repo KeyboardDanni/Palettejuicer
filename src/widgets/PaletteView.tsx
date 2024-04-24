@@ -1,8 +1,10 @@
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { CelIndex, PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
-import { memo, useCallback, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { clamp } from "../util/math";
+import { ClipboardContext } from "../contexts/ClipboardContext";
+import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
 
 type PaletteCelProps = {
   palette: Palette;
@@ -105,11 +107,13 @@ function clampIndex(index: CelIndex): CelIndex {
 
 export type PaletteViewProps = {
   palette: Palette;
+  onPaletteChange: React.Dispatch<PaletteAction>;
   active: CelIndex;
   onIndexChange: (index: CelIndex) => void;
 };
 
 export const PaletteView = memo(function (props: PaletteViewProps) {
+  const clipboard = useContext(ClipboardContext);
   const [scrubbing, setScrubbing] = useState(false);
   const handleClick = useCallback(
     function () {
@@ -129,9 +133,9 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
     };
   }, [setScrubbing]);
 
-  const onIndexChange = props.onIndexChange;
+  const { onIndexChange, onPaletteChange } = props;
   const handleKey = useCallback(
-    function (event: React.KeyboardEvent) {
+    async function (event: React.KeyboardEvent) {
       switch (event.key) {
         case "ArrowLeft":
           onIndexChange(clampIndex({ x: props.active.x - 1, y: props.active.y }));
@@ -149,6 +153,28 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
           onIndexChange(clampIndex({ x: props.active.x, y: props.active.y - 1 }));
           event.preventDefault();
           break;
+        case "c":
+          if (event.ctrlKey) {
+            clipboard.copy(props.palette.color(props.active));
+            event.preventDefault();
+          }
+          break;
+        case "v":
+          if (event.ctrlKey) {
+            const color = await clipboard.paste();
+
+            if (color !== null) {
+              onPaletteChange(
+                new PaletteAction({
+                  actionType: PaletteActionType.SetBaseColor,
+                  args: { index: props.active, color },
+                })
+              );
+            }
+
+            event.preventDefault();
+          }
+          break;
         case "PageUp":
         case "PageDown":
         case "Home":
@@ -157,7 +183,7 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
           break;
       }
     },
-    [props.active, onIndexChange]
+    [clipboard, props.active, props.palette, onIndexChange, onPaletteChange]
   );
   const rows = [];
 

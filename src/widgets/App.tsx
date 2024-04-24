@@ -1,4 +1,4 @@
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import { useImmerReducer } from "use-immer";
 
 import { AppBody } from "./AppBody";
@@ -8,6 +8,8 @@ import { Project } from "../model/Project";
 import { LocalStorage } from "../storage/LocalStorage";
 import { ErrorBoundary } from "react-error-boundary";
 import { OopsView } from "./OopsView";
+import { ClipboardContext } from "../contexts/ClipboardContext";
+import { Clipboard } from "../model/Clipboard";
 
 const AUTOSAVE_DELAY_MS = 3000;
 
@@ -33,6 +35,7 @@ const initialProject = LocalStorage.load("Project", Project);
 
 export function App() {
   const [project, dispatchProject] = useImmerReducer(ProjectReducer, initialProject);
+  const [clipboard] = useState(new Clipboard());
 
   useEffect(() => {
     Autosaver.waitAndAutosave(project);
@@ -57,10 +60,12 @@ export function App() {
           dispatchProject(new ProjectFileAction({ actionType: ProjectFileActionType.Clear }));
         }}
       >
-        <div id="app-wrapper">
-          <AppHeader project={project} onProjectChange={dispatchProject} />
-          <AppBody project={project} onProjectChange={dispatchProject} />
-        </div>
+        <ClipboardContext.Provider value={clipboard}>
+          <div id="app-wrapper">
+            <AppHeader project={project} onProjectChange={dispatchProject} />
+            <AppBody project={project} onProjectChange={dispatchProject} />
+          </div>
+        </ClipboardContext.Provider>
       </ErrorBoundary>
     </>
   );

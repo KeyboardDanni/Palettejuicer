@@ -6,6 +6,8 @@ import rgbHex from "rgb-hex";
 import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
 import { clamp, fixArraySize } from "../../util/math";
 
+const MAX_HEX_LENGTH = 16;
+
 const CHANNEL_INFO: ChannelInfo[] = [
   { channel: "red", label: "R", channelType: ChannelType.None, range: [0, 255], step: 5 },
   { channel: "green", label: "G", channelType: ChannelType.None, range: [0, 255], step: 5 },
@@ -39,6 +41,9 @@ export class ColorspaceRgb extends Colorspace {
   }
 
   static fromHex(hex: string) {
+    // Prevent huge input strings from causing stalls
+    if (hex.length > MAX_HEX_LENGTH) return null;
+
     let rgb;
 
     try {

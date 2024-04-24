@@ -116,6 +116,7 @@ function AppProperties(props: PropertiesViewProps) {
 
 type AppPaletteProps = {
   palette: Palette;
+  onPaletteChange: React.Dispatch<PaletteAction>;
   activeColorIndex: CelIndex;
   onIndexChange: (index: CelIndex) => void;
 };
@@ -133,7 +134,12 @@ function AppPalette(props: AppPaletteProps) {
     <>
       <div id="document-palette" className="section">
         <div id="palette-inner-bg" className="section-gray-background">
-          <PaletteView palette={props.palette} active={props.activeColorIndex} onIndexChange={handleClick} />
+          <PaletteView
+            palette={props.palette}
+            onPaletteChange={props.onPaletteChange}
+            active={props.activeColorIndex}
+            onIndexChange={handleClick}
+          />
         </div>
       </div>
     </>
@@ -193,6 +199,7 @@ export function AppBody(props: AppBodyProps) {
           </div>
           <AppPalette
             palette={props.project.palette}
+            onPaletteChange={props.onProjectChange}
             activeColorIndex={viewState.activeColorIndex}
             onIndexChange={setActiveColorIndex}
           />
