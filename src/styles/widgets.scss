@@ -365,6 +365,12 @@ input[type="text"] {
   border: $size-widget-outline solid $color-section-border;
   box-shadow: inset 0 0.2rem $color-section-border;
   border-radius: $size-button-radius;
+
+  &:disabled,
+  &:read-only {
+    color: $color-text-disabled;
+    background-color: $color-field-background-disabled;
+  }
 }
 
 @mixin range-thumb {
@@ -395,7 +401,17 @@ input[type="text"] {
     $size-button-height,
     0
   );
-  @include range-thumb;
+}
+
+@mixin range-thumb-disabled {
+  @include raised-widget(
+    $color-widget-disabled,
+    $color-widget-accent-inset,
+    $color-widget-disabled-border,
+    $size-button-radius,
+    $size-button-height,
+    0
+  );
 }
 
 @mixin range-track {
@@ -408,6 +424,10 @@ input[type="text"] {
   border: $size-widget-outline solid $color-section-border;
   box-shadow: inset 0 0.2rem $color-section-border;
   border-radius: $size-button-radius;
+}
+
+@mixin range-track-disabled {
+  background-color: $color-widget-disabled;
 }
 
 input[type="range"] {
@@ -443,7 +463,7 @@ input[type="range"] {
     @include range-track;
   }
 
-  &:hover {
+  &:hover:not(:disabled) {
     &::-webkit-slider-thumb {
       @include range-thumb-hover;
     }
@@ -454,6 +474,32 @@ input[type="range"] {
 
     &::-ms-thumb {
       @include range-thumb-hover;
+    }
+  }
+
+  &:disabled {
+    &::-webkit-slider-runnable-track {
+      @include range-track-disabled;
+    }
+
+    &::-moz-range-track {
+      @include range-track-disabled;
+    }
+
+    &::-ms-track {
+      @include range-track-disabled;
+    }
+
+    &::-webkit-slider-thumb {
+      @include range-thumb-disabled;
+    }
+
+    &::-moz-range-thumb {
+      @include range-thumb-disabled;
+    }
+
+    &::-ms-thumb {
+      @include range-thumb-disabled;
     }
   }
 

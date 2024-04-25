@@ -1,4 +1,4 @@
-import { ChangeEvent, useCallback } from "react";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { immerable } from "immer";
 import { useImmer } from "use-immer";
 
@@ -27,6 +27,18 @@ type AppColorSelectorProps = {
 };
 
 function AppColorSelector(props: AppColorSelectorProps) {
+  const [showBase, setShowBase] = useState(false);
+
+  useEffect(
+    function () {
+      if (showBase) {
+        setShowBase(false);
+      }
+    },
+    // eslint-disable-next-line react-hooks/exhaustive-deps -- Intentionally avoiding updates on showBase change
+    [setShowBase, props.activeColorIndex]
+  );
+
   function handleColorChange(color: Color) {
     props.onPaletteChange(
       new PaletteAction({
@@ -36,19 +48,41 @@ function AppColorSelector(props: AppColorSelectorProps) {
     );
   }
 
-  const color = props.palette.color(props.activeColorIndex);
-  const computed = props.palette.isComputed(props.activeColorIndex);
-  const colorTypeName = computed ? "Computed Color" : "Base Color";
+  function handleShowBaseClick() {
+    setShowBase(!showBase);
+  }
+
+  const hasComputed = props.palette.isComputed(props.activeColorIndex);
+  const computed = hasComputed && !showBase;
+  const colorTypeName = computed ? "Computed" : "Base Color";
+  let baseSwitchButton;
+
+  if (hasComputed) {
+    baseSwitchButton = (
+      <>
+        <label>
+          <input type="checkbox" checked={showBase} onChange={handleShowBaseClick} />
+          Edit Base
+        </label>
+      </>
+    );
+  }
+
+  const color = computed
+    ? props.palette.color(props.activeColorIndex)
+    : props.palette.baseColor(props.activeColorIndex);
 
   return (
     <>
       <div id="sidebar-color-selector" className="section">
         <div className="header-bar">
-          <span className="section-header">Color Picker</span>
+          <span className="section-header">Color</span>
           <span className="section-subheader">∙</span>
           <span className="section-subheader">
             {colorTypeName} [{props.activeColorIndex.x}, {props.activeColorIndex.y}]
           </span>
+          <div className="header-bar-spacer" />
+          {baseSwitchButton}
         </div>
         <ColorSelector color={color} onColorChange={handleColorChange} computed={computed} />
       </div>

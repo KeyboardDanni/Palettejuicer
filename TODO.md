@@ -4,7 +4,6 @@
 - [ ] Custom palette size
 - [ ] Click to pick cel
 - [ ] Undo/redo
-- [ ] Button to switch between base/computed color in picker
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
 - [ ] Enable/disable individual calculations
@@ -12,3 +11,4 @@
 - [ ] Extrapolate Strip calculation
 
 - [x] Copy and paste color cels
+- [x] Button to switch between base/computed color in picker
