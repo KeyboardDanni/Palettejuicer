@@ -22,6 +22,7 @@
 - [ ] Click to pick cel
 - [ ] Multi-selection in palette
 - [ ] Allow properties box to scroll
+- [ ] Keyboard shortcut for undo/redo
 - [ ] Restore view selections on undo/redo
 
 # Done
