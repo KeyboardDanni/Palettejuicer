@@ -16,6 +16,7 @@
 - [ ] Adjust Color calculation
 - [ ] Extrapolate Strip calculation
 - [ ] Enable/disable individual calculations
+- [ ] Bake calculation
 
 ### UI papercuts
 
