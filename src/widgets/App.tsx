@@ -3,13 +3,20 @@ import { useImmerReducer } from "use-immer";
 
 import { AppBody } from "./AppBody";
 import { AppHeader } from "./AppHeader";
-import { ProjectFileAction, ProjectFileActionType, ProjectReducer } from "../reducers/ProjectReducer";
+import {
+  ProjectReducer,
+  ProjectConsolidator,
+  ProjectFileAction,
+  ProjectFileActionType,
+} from "../reducers/ProjectReducer";
 import { Project } from "../model/Project";
 import { LocalStorage } from "../storage/LocalStorage";
 import { ErrorBoundary } from "react-error-boundary";
 import { OopsView } from "./OopsView";
 import { ClipboardContext } from "../contexts/ClipboardContext";
 import { Clipboard } from "../model/Clipboard";
+import { createHistoryReducer } from "../reducers/HistoryReducer";
+import { UndoHistory } from "../model/UndoHistory";
 
 const AUTOSAVE_DELAY_MS = 3000;
 
@@ -32,17 +39,19 @@ class Autosaver {
 }
 
 const initialProject = LocalStorage.load("Project", Project);
+const initialHistory = new UndoHistory(initialProject);
+const historyReducer = createHistoryReducer(Project, ProjectReducer, ProjectConsolidator);
 
 export function App() {
-  const [project, dispatchProject] = useImmerReducer(ProjectReducer, initialProject);
+  const [history, dispatchHistory] = useImmerReducer(historyReducer, initialHistory);
   const [clipboard] = useState(new Clipboard());
 
   useEffect(() => {
-    Autosaver.waitAndAutosave(project);
-  }, [project]);
+    Autosaver.waitAndAutosave(history.current());
+  }, [history]);
   useEffect(() => {
     function handleBeforeUnload() {
-      Autosaver.autosaveNow(project);
+      Autosaver.autosaveNow(history.current());
     }
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -50,20 +59,20 @@ export function App() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [project]);
+  }, [history]);
 
   return (
     <>
       <ErrorBoundary
         fallbackRender={OopsView}
         onReset={() => {
-          dispatchProject(new ProjectFileAction({ actionType: ProjectFileActionType.Clear }));
+          dispatchHistory(new ProjectFileAction({ actionType: ProjectFileActionType.Clear }));
         }}
       >
         <ClipboardContext.Provider value={clipboard}>
           <div id="app-wrapper">
-            <AppHeader project={project} onProjectChange={dispatchProject} />
-            <AppBody project={project} onProjectChange={dispatchProject} />
+            <AppHeader history={history} onHistoryChange={dispatchHistory} />
+            <AppBody project={history.current()} onProjectChange={dispatchHistory} />
           </div>
         </ClipboardContext.Provider>
       </ErrorBoundary>

@@ -7,6 +7,8 @@ import { ProjectAction, ProjectFileAction, ProjectFileActionType } from "../redu
 import { FilePicker } from "../storage/FilePicker";
 import { Project } from "../model/Project";
 import { PopupMenuItem, PopupMenuSeparatorItem } from "./common/PopupMenu";
+import { HistoryAction, HistoryActionType } from "../reducers/HistoryReducer";
+import { UndoHistory } from "../model/UndoHistory";
 
 type ConfirmPopupProps = {
   confirmOpen: boolean;
@@ -48,12 +50,12 @@ function ConfirmPopup(props: ConfirmPopupProps) {
   );
 }
 
-export type AppHeaderProps = {
+export type FileMenuProps = {
   project: Project;
   onProjectChange: React.Dispatch<ProjectAction>;
 };
 
-export function AppHeader(props: AppHeaderProps) {
+export function FileMenu(props: FileMenuProps) {
   const popupRef = useRef<PopupActions>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
@@ -93,36 +95,69 @@ export function AppHeader(props: AppHeaderProps) {
 
   return (
     <>
+      <DropdownButton popupRef={popupRef} label="File">
+        <PopupMenuItem
+          key={0}
+          index={0}
+          name="Clear"
+          description="Start over with a new project."
+          onItemSelect={handleClear}
+        />
+        <PopupMenuSeparatorItem />
+        <PopupMenuItem
+          key={1}
+          index={1}
+          name="Load from JSON"
+          description="Load a Palettejuicer project from JSON stored on your local drive."
+          onItemSelect={handleLoad}
+        />
+        <PopupMenuItem
+          key={2}
+          index={2}
+          name="Save to JSON"
+          description="Save a Palettejuicer project to JSON stored on your local drive."
+          onItemSelect={handleSave}
+        />
+      </DropdownButton>
+      <ConfirmPopup confirmOpen={confirmOpen} setConfirmOpen={setConfirmOpen} onConfirm={handleReallyClear} />
+    </>
+  );
+}
+
+export type AppHeaderProps = {
+  history: UndoHistory<Project>;
+  onHistoryChange: React.Dispatch<HistoryAction | ProjectAction>;
+};
+
+export function AppHeader(props: AppHeaderProps) {
+  const onHistoryChange = props.onHistoryChange;
+
+  const handleUndo = useCallback(
+    function () {
+      onHistoryChange(new HistoryAction({ actionType: HistoryActionType.Undo }));
+    },
+    [onHistoryChange]
+  );
+
+  const handleRedo = useCallback(
+    function () {
+      onHistoryChange(new HistoryAction({ actionType: HistoryActionType.Redo }));
+    },
+    [onHistoryChange]
+  );
+
+  return (
+    <>
       <div id="app-header">
         <div id="logo" />
         <div id="menubar">
-          <DropdownButton popupRef={popupRef} label="File">
-            <PopupMenuItem
-              key={0}
-              index={0}
-              name="Clear"
-              description="Start over with a new project."
-              onItemSelect={handleClear}
-            />
-            <PopupMenuSeparatorItem />
-            <PopupMenuItem
-              key={1}
-              index={1}
-              name="Load from JSON"
-              description="Load a Palettejuicer project from JSON stored on your local drive."
-              onItemSelect={handleLoad}
-            />
-            <PopupMenuItem
-              key={2}
-              index={2}
-              name="Save to JSON"
-              description="Save a Palettejuicer project to JSON stored on your local drive."
-              onItemSelect={handleSave}
-            />
-          </DropdownButton>
+          <FileMenu project={props.history.current()} onProjectChange={props.onHistoryChange} />
+          <div id="undo-redo-group">
+            <button onClick={handleUndo}>Undo</button>
+            <button onClick={handleRedo}>Redo</button>
+          </div>
         </div>
       </div>
-      <ConfirmPopup confirmOpen={confirmOpen} setConfirmOpen={setConfirmOpen} onConfirm={handleReallyClear} />
     </>
   );
 }

@@ -1,14 +1,31 @@
-- [ ] Additional interpolation settings
+# Palettejuicer TODOs
+
+### I/O
+
 - [ ] Palette file import/export
-- [ ] Multi-selection in palette
+
+### Color Selection
+
 - [ ] Custom palette size
-- [ ] Click to pick cel
-- [ ] Undo/redo
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
-- [ ] Enable/disable individual calculations
+
+### Calculations
+
+- [ ] Additional interpolation settings
 - [ ] Adjust Color calculation
 - [ ] Extrapolate Strip calculation
+- [ ] Enable/disable individual calculations
+
+### UI papercuts
+
+- [ ] Click to pick cel
+- [ ] Multi-selection in palette
+- [ ] Allow properties box to scroll
+- [ ] Restore view selections on undo/redo
+
+# Done
 
 - [x] Copy and paste color cels
 - [x] Button to switch between base/computed color in picker
+- [x] Undo/redo
