@@ -48,7 +48,7 @@
     button {
       @include raised-button($color-background-widget, $color-widget-border, 0);
 
-      font-size: 2rem;
+      font-size: 1.8rem;
       padding: 1rem;
 
       &:hover,
@@ -101,7 +101,7 @@
 #sidebar-properties {
   display: flex;
   flex-direction: column;
-  min-height: 16rem;
+  min-height: 20rem;
 }
 
 #sidebar-color-selector {
@@ -122,13 +122,13 @@
 }
 
 .section-header {
-  font-size: 2.4rem;
+  font-size: 2.2rem;
   font-weight: $font-weight-heading;
   margin-bottom: 1rem;
 }
 
 .section-subheader {
-  font-size: 1.9rem;
+  font-size: 1.8rem;
   font-weight: $font-weight-heading;
   margin-bottom: 1rem;
 }

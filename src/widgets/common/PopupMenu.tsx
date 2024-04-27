@@ -58,7 +58,6 @@ export type PopupMenuProps = {
   button: (isOpen: boolean) => JSX.Element;
   children: React.ReactNode;
   popupRef: React.RefObject<PopupActions>;
-  [key: string]: any;
 };
 
 export function PopupMenu({ button, children, popupRef }: PopupMenuProps) {
