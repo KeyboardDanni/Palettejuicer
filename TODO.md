@@ -17,12 +17,14 @@
 - [ ] Adjust Color calculation
 - [ ] Enable/disable individual calculations
 - [ ] Bake calculation
+- [ ] Cache color calculations
 
 ### UI papercuts
 
 - [ ] Allow properties box to scroll
 - [ ] Inform user if start/end cels don't form a strip
 - [ ] Keyboard shortcut for undo/redo
+- [ ] Consolidate undo steps for calculation properties
 - [ ] Click to pick cel
 - [ ] Multi-selection in palette
 - [ ] Restore view selections on undo/redo
