@@ -3,12 +3,7 @@ import { useImmerReducer } from "use-immer";
 
 import { AppBody } from "./AppBody";
 import { AppHeader } from "./AppHeader";
-import {
-  ProjectReducer,
-  ProjectConsolidator,
-  ProjectFileAction,
-  ProjectFileActionType,
-} from "../reducers/ProjectReducer";
+import { ProjectReducer, ProjectConsolidator } from "../reducers/ProjectReducer";
 import { Project } from "../model/Project";
 import { LocalStorage } from "../storage/LocalStorage";
 import { ErrorBoundary } from "react-error-boundary";
@@ -42,7 +37,7 @@ const initialProject = LocalStorage.load("Project", Project);
 const initialHistory = new UndoHistory(initialProject);
 const historyReducer = createHistoryReducer(Project, ProjectReducer, ProjectConsolidator);
 
-export function App() {
+export function AppBoundary() {
   const [history, dispatchHistory] = useImmerReducer(historyReducer, initialHistory);
   const [clipboard] = useState(new Clipboard());
 
@@ -63,18 +58,21 @@ export function App() {
 
   return (
     <>
-      <ErrorBoundary
-        fallbackRender={OopsView}
-        onReset={() => {
-          dispatchHistory(new ProjectFileAction({ actionType: ProjectFileActionType.Clear }));
-        }}
-      >
-        <ClipboardContext.Provider value={clipboard}>
-          <div id="app-wrapper">
-            <AppHeader history={history} onHistoryChange={dispatchHistory} />
-            <AppBody project={history.current()} onProjectChange={dispatchHistory} />
-          </div>
-        </ClipboardContext.Provider>
+      <ClipboardContext.Provider value={clipboard}>
+        <div id="app-wrapper">
+          <AppHeader history={history} onHistoryChange={dispatchHistory} />
+          <AppBody project={history.current()} onProjectChange={dispatchHistory} />
+        </div>
+      </ClipboardContext.Provider>
+    </>
+  );
+}
+
+export function App() {
+  return (
+    <>
+      <ErrorBoundary fallbackRender={OopsView}>
+        <AppBoundary />
       </ErrorBoundary>
     </>
   );

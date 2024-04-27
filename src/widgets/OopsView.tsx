@@ -1,10 +1,22 @@
-import { FallbackProps } from "react-error-boundary";
-
 import { LocalStorage } from "../storage/LocalStorage";
 import { Project } from "../model/Project";
 import { FilePicker } from "../storage/FilePicker";
 
 function onReload() {
+  window.location.reload();
+}
+
+async function onReset() {
+  const project = LocalStorage.load("Project", Project);
+
+  try {
+    await FilePicker.save(project);
+  } catch (error) {
+    console.log(error);
+  }
+
+  LocalStorage.save("Project", new Project());
+
   window.location.reload();
 }
 
@@ -14,7 +26,7 @@ async function onMakeBackup() {
   await FilePicker.save(project);
 }
 
-export function OopsView(props: FallbackProps) {
+export function OopsView() {
   return (
     <>
       <div id="app-wrapper">
@@ -37,7 +49,7 @@ export function OopsView(props: FallbackProps) {
               <div className="button-bar-spacer" />
               <button onClick={onReload}>Reload</button>
               <button onClick={onMakeBackup}>Save Backup</button>
-              <button className="danger" onClick={props.resetErrorBoundary}>
+              <button className="danger" onClick={onReset}>
                 Start Over
               </button>
             </div>
