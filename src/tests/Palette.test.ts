@@ -3,7 +3,8 @@ import "reflect-metadata";
 import { expect, test } from "vitest";
 import { immerable, produce, castDraft } from "immer";
 
-import { CelIndex, PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
+import { PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
+import { CelIndex } from "../util/cel";
 import { Color } from "../model/color/Color";
 import { ColorspaceRgb } from "../model/color/ColorspaceRgb";
 import { Calculation, CalculationCel, CalculationResult } from "../model/calculation/Calculation";

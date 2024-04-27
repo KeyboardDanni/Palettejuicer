@@ -120,15 +120,10 @@ export function PopupChoiceMenu(props: PopupChoiceMenuProps) {
     );
 
     if (item.beginGroup && id > 0) {
-      itemProps.push(
-        <>
-          <PopupMenuSeparatorItem key={`separator ${id}`} />
-          {menuItem}
-        </>
-      );
-    } else {
-      itemProps.push(menuItem);
+      itemProps.push(<PopupMenuSeparatorItem key={`separator ${id}`} />);
     }
+
+    itemProps.push(menuItem);
   }
 
   return (

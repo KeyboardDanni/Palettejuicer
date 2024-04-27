@@ -1,6 +1,7 @@
 import { Draft, castDraft } from "immer";
 
-import { CelIndex, Palette } from "../model/Palette";
+import { Palette } from "../model/Palette";
+import { CelIndex } from "../util/cel";
 import { Calculation } from "../model/calculation/Calculation";
 import { Color } from "../model/color/Color";
 

@@ -3,7 +3,8 @@ import { immerable } from "immer";
 import { useImmer } from "use-immer";
 
 import { Color } from "../model/color/Color";
-import { CelIndex, Palette } from "../model/Palette";
+import { Palette } from "../model/Palette";
+import { CelIndex } from "../util/cel";
 import { ColorSelector } from "./common/ColorSelector";
 import { PaletteView } from "./PaletteView";
 import { CalculationsView, CalculationsViewProps } from "./calculations/CalculationsView";

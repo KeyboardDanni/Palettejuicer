@@ -8,7 +8,7 @@ import {
   lerpColorspaceData,
   lerpHueModeData,
 } from "../../model/calculation/CalcInterpolateStrip";
-import { CelIndex } from "../../model/Palette";
+import { CelIndex } from "../../util/cel";
 import { CalcPropertiesViewProps } from "../PropertiesView";
 import { NumberSlider } from "../common/NumberSlider";
 import { DropdownChoiceButton } from "../common/DropdownButton";
@@ -97,7 +97,7 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
           />
         </div>
         <div className="grid-label">
-          <span>Curve</span>
+          <span>Power curve</span>
         </div>
         <div>
           <NumberSlider value={calc.curve} onChange={handleCurveChange} disabled={false} min={0.1} max={3} step={0.1} />

@@ -1,6 +1,7 @@
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
-import { CelIndex, PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
+import { PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
+import { CelIndex } from "../util/cel";
 import { memo, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { clamp } from "../util/math";
 import { ClipboardContext } from "../contexts/ClipboardContext";

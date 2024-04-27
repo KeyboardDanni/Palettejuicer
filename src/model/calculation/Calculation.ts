@@ -1,13 +1,13 @@
 import { v4 as uuidv4 } from "uuid";
 import { immerable, produce } from "immer";
 
-import { CelIndex } from "../Palette";
+import { CelIndex } from "../../util/cel";
 import { Color } from "../color/Color";
 import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 
 export interface CalculationCel {
   index: CelIndex;
-  color: Color;
+  color: Color | null;
 }
 
 export interface CalculationResult {

@@ -1,6 +1,6 @@
 import { produce } from "immer";
 
-import { CelIndex } from "../../model/Palette";
+import { CelIndex } from "../../util/cel";
 import { CalcCopyColors, MAX_COPIES } from "../../model/calculation/CalcCopyColors";
 import { CalcPropertiesViewProps } from "../PropertiesView";
 import { CelSelector } from "../common/CelSelector";

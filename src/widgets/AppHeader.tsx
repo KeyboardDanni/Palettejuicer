@@ -103,7 +103,7 @@ export function FileMenu(props: FileMenuProps) {
           description="Start over with a new project."
           onItemSelect={handleClear}
         />
-        <PopupMenuSeparatorItem />
+        <PopupMenuSeparatorItem key="separator 1" />
         <PopupMenuItem
           key={1}
           index={1}

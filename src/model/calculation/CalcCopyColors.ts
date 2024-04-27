@@ -1,6 +1,7 @@
 import { immerable } from "immer";
+
 import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
-import { CelIndex } from "../Palette";
+import { CelIndex } from "../../util/cel";
 import { Color } from "../color/Color";
 import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
 import { CalcCopyColorsView } from "../../widgets/calculations/CalcCopyColorsView";

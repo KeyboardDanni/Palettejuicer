@@ -1,7 +1,7 @@
 import { immerable } from "immer";
 import Colorjs from "colorjs.io";
 
-import { CelIndex } from "../Palette";
+import { CelIndex, celStrip } from "../../util/cel";
 import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
 import { CalcInterpolateStripView } from "../../widgets/calculations/CalcInterpolateStripView";
 import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
@@ -114,25 +114,9 @@ export class CalcInterpolateStrip extends Calculation {
   }
 
   outputCels(): CelIndex[] {
-    const cels: CelIndex[] = [];
-    let x = Math.round(this.startCel.x);
-    let y = Math.round(this.startCel.y);
-    const diffX = Math.round(this.endCel.x) - x;
-    const diffY = Math.round(this.endCel.y) - y;
-    const diff = Math.abs(diffX) + Math.abs(diffY);
-    const signX = Math.sign(diffX);
-    const signY = Math.sign(diffY);
+    const fullStrip = celStrip(this.startCel, this.endCel);
 
-    // Check for row or column
-    if (diff > 0 && (diffX === 0 || diffY === 0)) {
-      for (let i = 1; i <= diff - 1; i++) {
-        x += signX;
-        y += signY;
-        cels.push({ x, y });
-      }
-    }
-
-    return cels;
+    return fullStrip.slice(1, -1);
   }
 
   computeColors(colors: Color[]): CalculationResult {

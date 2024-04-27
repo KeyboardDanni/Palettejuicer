@@ -6,17 +6,23 @@ import { ColorspaceRgb } from "./color/ColorspaceRgb";
 import { Calculation } from "./calculation/Calculation";
 import { throwOnNullIndex } from "../util/checks";
 
+import { CelIndex } from "../util/cel";
 import { CalcCopyColors } from "./calculation/CalcCopyColors";
 import { CalcInterpolateStrip } from "./calculation/CalcInterpolateStrip";
+import { CalcExtrapolateStrip } from "./calculation/CalcExtrapolateStrip";
+import { CalcGamutMap } from "./calculation/CalcGamutMap";
 
 type AvailableCalcItem = {
   value: typeof Calculation;
   name: string;
+  beginGroup?: boolean;
 };
 
 export const availableCalcs: AvailableCalcItem[] = [
   { value: CalcCopyColors, name: "CalcCopyColors" },
-  { value: CalcInterpolateStrip, name: "CalcInterpolateStrip" },
+  { value: CalcGamutMap, name: "CalcGamutMap" },
+  { value: CalcInterpolateStrip, name: "CalcInterpolateStrip", beginGroup: true },
+  { value: CalcExtrapolateStrip, name: "CalcExtrapolateStrip" },
 ];
 
 // Fixed at 16x16 for now
@@ -24,11 +30,6 @@ export const PALETTE_WIDTH = 16;
 export const PALETTE_HEIGHT = 16;
 
 const DEFAULT_COLOR = new Color(new ColorspaceRgb().withTransformed(60, 60, 60));
-
-export interface CelIndex {
-  x: number;
-  y: number;
-}
 
 type NullableColor = Color | null;
 
@@ -114,7 +115,7 @@ export class Palette {
         for (const cel of result.cels) {
           const offset = this.indexToOffset(cel.index);
 
-          if (offset !== null) {
+          if (offset !== null && cel.color !== null) {
             computedColors[offset] = cel.color;
           }
         }

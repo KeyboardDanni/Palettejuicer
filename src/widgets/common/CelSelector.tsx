@@ -1,5 +1,5 @@
 import { ChangeEvent } from "react";
-import { CelIndex } from "../../model/Palette";
+import { CelIndex } from "../../util/cel";
 import { ControlledTextInput } from "./ControlledTextInput";
 import { clamp } from "../../util/math";
 

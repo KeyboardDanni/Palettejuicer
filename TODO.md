@@ -9,25 +9,30 @@
 - [ ] Custom palette size
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
+- [ ] Palette indicator on colors outside sRGB gamut
 
 ### Calculations
 
+- [ ] Use null for hue on hue-less colors
 - [ ] Additional interpolation settings
 - [ ] Adjust Color calculation
-- [ ] Extrapolate Strip calculation
 - [ ] Enable/disable individual calculations
 - [ ] Bake calculation
 
 ### UI papercuts
 
+- [ ] Allow properties box to scroll
+- [ ] Inform user if start/end cels don't form a strip
+- [ ] Keyboard shortcut for undo/redo
 - [ ] Click to pick cel
 - [ ] Multi-selection in palette
-- [ ] Allow properties box to scroll
-- [ ] Keyboard shortcut for undo/redo
 - [ ] Restore view selections on undo/redo
+- [ ] Indicate which cels are affected by a calculation on selection
 
 # Done
 
 - [x] Copy and paste color cels
 - [x] Button to switch between base/computed color in picker
 - [x] Undo/redo
+- [x] Extrapolate Strip calculation
+- [x] Map Gamut calculation

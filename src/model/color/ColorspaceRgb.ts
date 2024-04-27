@@ -84,6 +84,10 @@ export class ColorspaceRgb extends Colorspace {
     return new Colorjs("srgb", [this.values[0], this.values[1], this.values[2]]);
   }
 
+  inGamut(): boolean {
+    return new Colorjs("srgb", [this.values[0], this.values[1], this.values[2]]).inGamut("srgb");
+  }
+
   intNormalized() {
     const red = clamp(Math.round(this.red * 255), 0, 255);
     const green = clamp(Math.round(this.green * 255), 0, 255);

@@ -6,6 +6,7 @@ import { ChannelInfo, Colorspace } from "../../model/color/Colorspace";
 import { ControlledTextInput } from "./ControlledTextInput";
 import { NumberSlider } from "./NumberSlider";
 import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
+import { PageTab } from "./PageTab";
 
 enum ColorSelectorPage {
   Lch = "LCH",
@@ -117,33 +118,6 @@ function ColorspaceSliders(props: ColorspaceSlidersProps) {
   return sliders;
 }
 
-type PageTabProps = {
-  pageName: string;
-  onPageChange: (value: string) => void;
-  activePage: string;
-};
-
-function PageTab(props: PageTabProps) {
-  function handlePageChange(event: ChangeEvent<HTMLInputElement>) {
-    props.onPageChange(event.target.value);
-  }
-
-  return (
-    <>
-      <label className="tabbar-tab">
-        <input
-          type="radio"
-          name="colorspace"
-          value={props.pageName}
-          onChange={handlePageChange}
-          checked={props.pageName === props.activePage}
-        />
-        <span>{props.pageName}</span>
-      </label>
-    </>
-  );
-}
-
 type PageSlidersProps = {
   page: string;
   color: Color;
@@ -222,12 +196,42 @@ export function ColorSelector(props: ColorSelectorProps) {
           </div>
           <div>
             <div className="tabbar">
-              <PageTab pageName={ColorSelectorPage.Lch} onPageChange={setPage} activePage={page} />
-              <PageTab pageName={ColorSelectorPage.Lab} onPageChange={setPage} activePage={page} />
-              <PageTab pageName={ColorSelectorPage.Oklch} onPageChange={setPage} activePage={page} />
-              <PageTab pageName={ColorSelectorPage.Oklab} onPageChange={setPage} activePage={page} />
-              <PageTab pageName={ColorSelectorPage.Hsl} onPageChange={setPage} activePage={page} />
-              <PageTab pageName={ColorSelectorPage.Hsv} onPageChange={setPage} activePage={page} />
+              <PageTab
+                groupName="colorspace"
+                pageName={ColorSelectorPage.Lch}
+                onPageChange={setPage}
+                activePage={page}
+              />
+              <PageTab
+                groupName="colorspace"
+                pageName={ColorSelectorPage.Lab}
+                onPageChange={setPage}
+                activePage={page}
+              />
+              <PageTab
+                groupName="colorspace"
+                pageName={ColorSelectorPage.Oklch}
+                onPageChange={setPage}
+                activePage={page}
+              />
+              <PageTab
+                groupName="colorspace"
+                pageName={ColorSelectorPage.Oklab}
+                onPageChange={setPage}
+                activePage={page}
+              />
+              <PageTab
+                groupName="colorspace"
+                pageName={ColorSelectorPage.Hsl}
+                onPageChange={setPage}
+                activePage={page}
+              />
+              <PageTab
+                groupName="colorspace"
+                pageName={ColorSelectorPage.Hsv}
+                onPageChange={setPage}
+                activePage={page}
+              />
             </div>
             <PageSliders page={page} color={props.color} computed={props.computed} onColorChange={tryColorChange} />
           </div>

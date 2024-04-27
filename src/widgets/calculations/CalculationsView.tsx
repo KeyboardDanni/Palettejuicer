@@ -25,6 +25,7 @@ function AddCalculationButton(props: CalculationsViewProps) {
     items.push({
       name: calcClass.value.calcName(),
       description: calcClass.value.description(),
+      beginGroup: calcClass.beginGroup === true,
     });
   }
 

@@ -262,7 +262,11 @@ button {
 }
 
 .tabbar {
+  display: flex;
+  flex-direction: row;
+  align-items: baseline;
   margin: 0.8rem 0.1rem 0.8rem 0.1rem;
+  padding: 0 0.1rem 0 0;
   border-bottom: 0.1rem solid $color-tab-border;
 }
 
