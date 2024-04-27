@@ -67,13 +67,8 @@
 
   &:before {
     @include popup-shadow(1);
+    @include layered-pseudo-element(0, 0, 0, 0);
 
-    content: "";
-    position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
     pointer-events: none;
     animation: popup-shadow-fade-in 0.15s;
 
@@ -542,12 +537,8 @@ input[type="range"] {
       @include striped-background($color-section-warning, $color-section-warning-alt);
 
       &:after {
-        content: "";
-        position: absolute;
-        top: 0;
-        bottom: 0;
-        left: 0;
-        right: 0;
+        @include layered-pseudo-element(0, 0, 0, 0);
+
         z-index: 100;
         border-radius: $size-button-radius;
         outline: $color-section-warning-outline solid 0;

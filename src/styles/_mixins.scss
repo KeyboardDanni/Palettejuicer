@@ -22,12 +22,10 @@
 
 @mixin raised-widget-bounds($height, $pressed) {
   &:before {
-    content: "";
-    position: absolute;
-    top: (-$height - $size-widget-outline) * $pressed;
-    bottom: (-$height - $size-widget-outline) * (1 - $pressed);
-    left: 0;
-    right: 0;
+    $top-offset: (-$height - $size-widget-outline) * $pressed;
+    $bottom-offset: (-$height - $size-widget-outline) * (1 - $pressed);
+
+    @include layered-pseudo-element($top-offset, 0, $bottom-offset, 0);
   }
 }
 
@@ -50,4 +48,13 @@
 
 @mixin striped-background($color, $color-alt) {
   background: repeating-linear-gradient(-45deg, $color, $color 1rem, $color-alt 1rem, $color-alt 2rem);
+}
+
+@mixin layered-pseudo-element($top, $right, $bottom, $left) {
+  content: "";
+  position: absolute;
+  top: $top;
+  bottom: $bottom;
+  left: $left;
+  right: $right;
 }

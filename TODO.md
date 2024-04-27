@@ -9,7 +9,6 @@
 - [ ] Custom palette size
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
-- [ ] Palette indicator on colors outside sRGB gamut
 
 ### Calculations
 
@@ -36,3 +35,4 @@
 - [x] Undo/redo
 - [x] Extrapolate Strip calculation
 - [x] Map Gamut calculation
+- [x] Palette indicator on colors outside sRGB gamut

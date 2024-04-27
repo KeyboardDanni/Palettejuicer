@@ -36,15 +36,22 @@ function PaletteCel(props: PaletteCelProps) {
   );
 
   let className = "palette-cel";
+  const inGamut = color.rgb.inGamut() ? true : false;
 
-  if (props.active) {
-    className += " active-cel";
-
+  if (props.active || !inGamut) {
     if (color.lab.lightness > 50) {
       className += " light-color";
     } else {
       className += " dark-color";
     }
+  }
+
+  if (props.active) {
+    className += " active-cel";
+  }
+
+  if (!inGamut) {
+    className += " out-of-gamut";
   }
 
   return (
