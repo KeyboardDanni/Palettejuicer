@@ -1,4 +1,4 @@
-import React, { memo, useCallback, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, memo, useCallback, useEffect, useRef, useState } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { clamp } from "../../util/math";
@@ -8,14 +8,7 @@ import { PopupMenuChoiceData } from "../common/PopupMenu";
 import { DropdownChoiceButton } from "../common/DropdownButton";
 import { Calculation } from "../../model/calculation/Calculation";
 import { availableCalcs } from "../../model/Palette";
-
-export type CalculationsViewProps = {
-  useCalculations: boolean;
-  calculations: readonly Calculation[];
-  activeCalcIndex: number;
-  onPaletteChange: React.Dispatch<PaletteAction>;
-  onIndexChange: (index: number) => void;
-};
+import { produce } from "immer";
 
 function AddCalculationButton(props: CalculationsViewProps) {
   const nextIndex = Math.min(props.activeCalcIndex + 1, props.calculations.length);
@@ -58,6 +51,7 @@ type CalculationItemProps = {
   activeIndex: number;
   scrubbing: boolean;
   onIndexChange: (index: number) => void;
+  onPaletteChange: React.Dispatch<PaletteAction>;
 };
 
 function CalculationItem(props: CalculationItemProps) {
@@ -77,10 +71,24 @@ function CalculationItem(props: CalculationItemProps) {
       props.onIndexChange(props.index);
     }
   }
+
   function handleMouseEnter(event: React.MouseEvent) {
     if (props.scrubbing && event.buttons === 1) {
       props.onIndexChange(props.index);
     }
+  }
+
+  function handleToggleEnabled(event: ChangeEvent<HTMLInputElement>) {
+    const newCalc = produce(calculation, (draft) => {
+      draft.enabled = event.target.checked;
+    });
+
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.SetCalculation,
+        args: { index: props.index, calc: newCalc },
+      })
+    );
   }
 
   const description = calculation.listDescription();
@@ -89,6 +97,9 @@ function CalculationItem(props: CalculationItemProps) {
     <>
       <li ref={ref} className={className} onMouseDown={handleMouseDown} onMouseEnter={handleMouseEnter}>
         <div className="calc-label" title={description}>
+          <label className="flat-checkbox">
+            <input type="checkbox" checked={calculation.enabled} onChange={handleToggleEnabled} tabIndex={-1} />
+          </label>
           {description}
         </div>
       </li>
@@ -129,6 +140,8 @@ function CalculationsList(props: CalculationsViewProps) {
   }
 
   function handleKey(event: React.KeyboardEvent) {
+    let newCalc;
+
     switch (event.key) {
       case "ArrowDown":
         props.onIndexChange(Math.min(props.activeCalcIndex + 1, calcs.length - 1));
@@ -136,6 +149,20 @@ function CalculationsList(props: CalculationsViewProps) {
         break;
       case "ArrowUp":
         props.onIndexChange(Math.max(0, props.activeCalcIndex - 1));
+        event.preventDefault();
+        break;
+      case " ":
+      case "Enter":
+        newCalc = produce(props.calculations[props.activeCalcIndex], (draft) => {
+          draft.enabled = !draft.enabled;
+        });
+
+        props.onPaletteChange(
+          new PaletteAction({
+            actionType: PaletteActionType.SetCalculation,
+            args: { index: props.activeCalcIndex, calc: newCalc },
+          })
+        );
         event.preventDefault();
         break;
       case "PageUp":
@@ -160,6 +187,7 @@ function CalculationsList(props: CalculationsViewProps) {
         activeIndex={activeIndex}
         scrubbing={scrubbing}
         onIndexChange={props.onIndexChange}
+        onPaletteChange={props.onPaletteChange}
       />
     );
   }
@@ -176,6 +204,14 @@ function CalculationsList(props: CalculationsViewProps) {
     </>
   );
 }
+
+export type CalculationsViewProps = {
+  useCalculations: boolean;
+  calculations: readonly Calculation[];
+  activeCalcIndex: number;
+  onPaletteChange: React.Dispatch<PaletteAction>;
+  onIndexChange: (index: number) => void;
+};
 
 export const CalculationsView = memo(function (props: CalculationsViewProps) {
   const nextIndex = Math.min(props.activeCalcIndex + 1, props.calculations.length);

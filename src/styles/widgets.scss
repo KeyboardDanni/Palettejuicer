@@ -304,7 +304,7 @@ label.tabbar-tab {
   }
 }
 
-label {
+label:not(.flat-checkbox) {
   &:has(input[type="checkbox"]) {
     text-wrap: nowrap;
     margin-right: 0.4rem;
@@ -338,7 +338,7 @@ label {
     &:checked {
       @include raised-button($color-widget-accent, $color-widget-accent-border, 0);
 
-      background-image: url('data:image/svg+xml,<svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4,12 l5,5 l11,-11" stroke="white" stroke-width="0.2rem" fill="none"/></svg>');
+      background-image: url("assets/checkmark.svg");
 
       &:hover,
       &:focus-visible {
@@ -347,6 +347,56 @@ label {
 
       &:active {
         @include raised-button($color-widget-accent-hover, $color-widget-accent-border-hover, 1);
+      }
+
+      &:focus-visible {
+        @include widget-focus($color-text-selected);
+      }
+    }
+  }
+}
+
+label.flat-checkbox {
+  &:has(input[type="checkbox"]) {
+    text-wrap: nowrap;
+    margin-right: 0.4rem;
+  }
+
+  input[type="checkbox"] {
+    appearance: none;
+    width: $size-checkbox;
+    height: $size-checkbox;
+    margin-right: 0.4rem;
+    vertical-align: middle;
+
+    background-color: $color-widget-hover;
+    border: $size-widget-outline solid $color-widget-border;
+    border-radius: $size-button-radius;
+
+    &:not(:checked) {
+      &:hover,
+      &:focus-visible,
+      &:active {
+        background-color: $color-field-background;
+        border-color: $color-widget-border-hover;
+      }
+
+      &:focus-visible {
+        @include widget-focus($color-widget-accent);
+      }
+    }
+
+    &:checked {
+      background-color: $color-widget-accent;
+      border-color: $color-widget-accent-border;
+
+      background-image: url("assets/checkmark.svg");
+
+      &:hover,
+      &:focus-visible,
+      &:active {
+        background-color: $color-widget-accent-hover;
+        border-color: $color-widget-accent-border-hover;
       }
 
       &:focus-visible {

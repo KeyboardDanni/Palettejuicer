@@ -15,7 +15,6 @@
 - [ ] Use null for hue on hue-less colors
 - [ ] Additional interpolation settings
 - [ ] Adjust Color calculation
-- [ ] Enable/disable individual calculations
 - [ ] Bake calculation
 - [ ] Cache color calculations
 
@@ -38,3 +37,4 @@
 - [x] Extrapolate Strip calculation
 - [x] Map Gamut calculation
 - [x] Palette indicator on colors outside sRGB gamut
+- [x] Enable/disable individual calculations

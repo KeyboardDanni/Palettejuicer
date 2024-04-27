@@ -106,6 +106,8 @@ export class Palette {
     };
 
     for (const calc of this.calculations) {
+      if (!calc.enabled) continue;
+
       try {
         const inputIndexes = calc.inputCels();
         const colors = inputIndexes.map((index) => getTempColor(index));

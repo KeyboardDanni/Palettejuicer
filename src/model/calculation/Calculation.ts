@@ -18,6 +18,7 @@ export abstract class Calculation {
   [immerable] = true;
 
   readonly uid: string;
+  readonly enabled: boolean = true;
 
   constructor() {
     this.uid = uuidv4();
