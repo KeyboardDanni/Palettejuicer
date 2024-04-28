@@ -629,6 +629,8 @@ input[type="range"] {
   --os-handle-interactive-area-offset: 0;
 
   .os-scrollbar-handle {
+    transition: none;
+
     @include raised-box-shadow(
       $color-widget-accent-inset,
       $color-slider-border,

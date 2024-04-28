@@ -101,7 +101,8 @@
 #sidebar-properties {
   display: flex;
   flex-direction: column;
-  min-height: 20rem;
+  min-height: 16rem;
+  flex: 1;
 }
 
 #sidebar-color-selector {

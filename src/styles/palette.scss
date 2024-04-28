@@ -1,8 +1,6 @@
 @use "./_constants.scss" as *;
 @use "./_mixins.scss" as *;
 
-$size-palette-scrollbar: 1.6rem;
-$size-palette-scrollbar-spacing: 0.4rem;
 $size-palette-color-minimum: 2rem;
 
 @mixin box-corners($color, $thickness) {
@@ -33,8 +31,8 @@ $size-palette-color-minimum: 2rem;
 
   .palette-scroll {
     min-width: (
-      ($size-palette-color-minimum * 16) + $size-widget-outline * 2 + $size-palette-scrollbar +
-        $size-palette-scrollbar-spacing
+      ($size-palette-color-minimum * 16) + $size-widget-outline * 2 + $size-scrollbar-recess +
+        $size-scrollbar-recess-spacing
     );
     display: flex;
     flex-direction: column;
@@ -45,7 +43,7 @@ $size-palette-color-minimum: 2rem;
     outline: none;
 
     &:after {
-      $right-offset: 0.4rem + ($size-palette-scrollbar + $size-palette-scrollbar-spacing);
+      $right-offset: 0.4rem + ($size-scrollbar-recess + $size-scrollbar-recess-spacing);
 
       @include layered-pseudo-element(0.4rem, $right-offset, 0.4rem, 0.4rem);
       pointer-events: none;
@@ -66,7 +64,7 @@ $size-palette-color-minimum: 2rem;
     }
 
     .palette-row {
-      padding-right: ($size-palette-scrollbar + $size-palette-scrollbar-spacing);
+      padding-right: ($size-scrollbar-recess + $size-scrollbar-recess-spacing);
       display: flex;
       flex-direction: row;
       flex: 1;
@@ -124,27 +122,6 @@ $size-palette-color-minimum: 2rem;
       }
     }
 
-    .os-scrollbar-vertical {
-      width: $size-palette-scrollbar;
-      padding: 0;
-      transition: none;
-      z-index: 2;
-
-      .os-scrollbar-track {
-        margin: 0;
-        overflow: hidden;
-        transition: none;
-
-        background-color: $color-slider-recess;
-        box-shadow:
-          inset 0 0 0 $size-widget-outline $color-section-border,
-          inset 0 $size-button-height $color-section-border;
-        border-radius: $size-button-radius;
-
-        .os-scrollbar-handle {
-          transition: none;
-        }
-      }
-    }
+    @include scrollbar-with-recess();
   }
 }

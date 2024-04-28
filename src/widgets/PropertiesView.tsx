@@ -1,3 +1,4 @@
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { Palette } from "../model/Palette";
 import { Calculation } from "../model/calculation/Calculation";
 import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
@@ -37,7 +38,13 @@ export function PropertiesView(props: PropertiesViewProps) {
 
   return (
     <>
-      <CalcPropertiesView calc={calc} onCalcChange={onCalcChange} />
+      <div className="properties">
+        <div className="properties-scroll">
+          <OverlayScrollbarsComponent defer>
+            <CalcPropertiesView calc={calc} onCalcChange={onCalcChange} />
+          </OverlayScrollbarsComponent>
+        </div>
+      </div>
     </>
   );
 }

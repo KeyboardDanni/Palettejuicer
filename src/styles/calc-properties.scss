@@ -1,4 +1,28 @@
 @use "./_constants.scss" as *;
+@use "./_mixins.scss" as *;
+
+.properties {
+  display: flex;
+  flex-direction: column;
+  flex: 1 1 0;
+  overflow: hidden;
+
+  .properties-scroll {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    overflow-x: clip;
+    overflow-y: hidden;
+
+    @include scrollbar-with-recess();
+
+    // Hack for scrollbar sometimes appearing when it doesn't need to
+    [data-overlayscrollbars~="host"],
+    [data-overlayscrollbars~="viewport"] {
+      height: 100%;
+    }
+  }
+}
 
 .calc-grid {
   display: grid;
@@ -6,6 +30,7 @@
   align-items: baseline;
   row-gap: 0.1rem;
   column-gap: 0.4rem;
+  margin-right: 0.3rem + $size-scrollbar-width;
 
   .grid-label {
     font-weight: $font-weight-heading;

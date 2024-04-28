@@ -20,7 +20,6 @@
 
 ### UI papercuts
 
-- [ ] Allow properties box to scroll
 - [ ] Inform user if start/end cels don't form a strip
 - [ ] Keyboard shortcut for undo/redo
 - [ ] Consolidate undo steps for calculation properties
@@ -38,3 +37,4 @@
 - [x] Map Gamut calculation
 - [x] Palette indicator on colors outside sRGB gamut
 - [x] Enable/disable individual calculations
+- [x] Allow properties box to scroll
