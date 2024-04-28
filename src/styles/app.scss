@@ -92,6 +92,11 @@
   gap: $size-section-padding;
 }
 
+#sidebar-color-selector {
+  display: flex;
+  flex-direction: column;
+}
+
 #sidebar-calculations {
   display: flex;
   flex-direction: column;
@@ -102,12 +107,8 @@
   display: flex;
   flex-direction: column;
   min-height: 16rem;
-  flex: 1;
-}
-
-#sidebar-color-selector {
-  display: flex;
-  flex-direction: column;
+  max-height: 24rem;
+  flex: 2;
 }
 
 #document-palette {

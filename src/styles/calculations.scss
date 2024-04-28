@@ -26,7 +26,7 @@
     li {
       display: flex;
       flex-direction: row;
-      padding: 0.3rem (0.3rem + $size-scrollbar-width) 0.3rem 0.3rem;
+      padding: 0.4rem (0.4rem + $size-scrollbar-width) 0.4rem 0.4rem;
 
       &.active-calc {
         background-color: $color-selected;
