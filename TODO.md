@@ -6,6 +6,7 @@
 
 ### Color Selection
 
+- [ ] Add OkHSL/OkHSV
 - [ ] Custom palette size
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
@@ -20,6 +21,7 @@
 
 ### UI papercuts
 
+- [ ] Show color preview of calculations in list to make them easy to find
 - [ ] Inform user if start/end cels don't form a strip
 - [ ] Keyboard shortcut for undo/redo
 - [ ] Consolidate undo steps for calculation properties
