@@ -10,6 +10,7 @@
 - [ ] Custom palette size
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
+- [ ] Options to see LCH/delta color differences across cels
 
 ### Calculations
 

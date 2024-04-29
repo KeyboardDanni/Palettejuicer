@@ -2,6 +2,13 @@ export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(value, max));
 }
 
+export function outOfRange(value: number, min: number, max: number): number {
+  if (value < min) return min - value;
+  if (value > max) return value - max;
+
+  return 0;
+}
+
 export function positiveMod(a: number, b: number) {
   return ((a % b) + b) % b;
 }

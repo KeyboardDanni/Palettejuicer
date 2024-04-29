@@ -118,6 +118,10 @@ $size-palette-color-minimum: 2rem;
 
             font-weight: $font-weight-heading;
           }
+
+          &.really-out-of-gamut:before {
+            content: "!!";
+          }
         }
       }
     }

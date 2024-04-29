@@ -7,6 +7,8 @@ import { clamp } from "../util/math";
 import { ClipboardContext } from "../contexts/ClipboardContext";
 import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
 
+const GAMUT_DISTANCE_ROUNDING_ERROR = 0.00001;
+
 type PaletteCelProps = {
   palette: Palette;
   index: CelIndex;
@@ -36,9 +38,9 @@ function PaletteCel(props: PaletteCelProps) {
   );
 
   let className = "palette-cel";
-  const inGamut = color.rgb.inGamut() ? true : false;
+  const gamutDistance = color.rgb.outOfGamutDistance();
 
-  if (props.active || !inGamut) {
+  if (props.active || gamutDistance > GAMUT_DISTANCE_ROUNDING_ERROR) {
     if (color.lab.lightness > 50) {
       className += " light-color";
     } else {
@@ -50,8 +52,12 @@ function PaletteCel(props: PaletteCelProps) {
     className += " active-cel";
   }
 
-  if (!inGamut) {
+  if (gamutDistance > GAMUT_DISTANCE_ROUNDING_ERROR) {
     className += " out-of-gamut";
+
+    if (gamutDistance > 0.2) {
+      className += " really-out-of-gamut";
+    }
   }
 
   return (
