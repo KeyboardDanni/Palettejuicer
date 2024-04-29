@@ -16,7 +16,6 @@ export enum LerpColorspace {
   Lab,
   Hsl,
   Hsv,
-  RgbLinear,
   Srgb,
 }
 
@@ -52,11 +51,6 @@ export const lerpColorspaceData: readonly LerpColorspaceItem[] = [
     name: "HSV",
     colorspace: "hsv",
     description: "Blends nicely over hue, but perceptual lightness will be inconsistent.",
-  },
-  {
-    name: "Linear sRGB",
-    colorspace: "srgb-linear",
-    description: "Blends over the linear RGB colorspace. Not recommended.",
   },
   { name: "sRGB", colorspace: "srgb", description: "Blends over the standard RGB colorspace. Not recommended." },
 ];
