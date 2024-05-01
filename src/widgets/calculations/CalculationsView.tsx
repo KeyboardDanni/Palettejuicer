@@ -1,4 +1,4 @@
-import React, { ChangeEvent, memo, useCallback, useEffect, useRef, useState } from "react";
+import React, { ChangeEvent, memo, useCallback, useEffect, useRef } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { clamp } from "../../util/math";
@@ -9,6 +9,10 @@ import { DropdownChoiceButton } from "../common/DropdownButton";
 import { Calculation } from "../../model/calculation/Calculation";
 import { availableCalcs } from "../../model/Palette";
 import { produce } from "immer";
+
+class CalculationsListRefState {
+  scrubbing: boolean = false;
+}
 
 function AddCalculationButton(props: CalculationsViewProps) {
   const nextIndex = Math.min(props.activeCalcIndex + 1, props.calculations.length);
@@ -49,7 +53,7 @@ type CalculationItemProps = {
   calculations: readonly Calculation[];
   index: number;
   activeIndex: number;
-  scrubbing: boolean;
+  refState: React.MutableRefObject<CalculationsListRefState>;
   onIndexChange: (index: number) => void;
   onPaletteChange: React.Dispatch<PaletteAction>;
 };
@@ -73,7 +77,7 @@ function CalculationItem(props: CalculationItemProps) {
   }
 
   function handleMouseEnter(event: React.MouseEvent) {
-    if (props.scrubbing && event.buttons === 1) {
+    if (props.refState.current.scrubbing && event.buttons === 1) {
       props.onIndexChange(props.index);
     }
   }
@@ -108,16 +112,16 @@ function CalculationItem(props: CalculationItemProps) {
 }
 
 function CalculationsList(props: CalculationsViewProps) {
-  const [scrubbing, setScrubbing] = useState(false);
+  const refState = useRef(new CalculationsListRefState());
   const handleClick = useCallback(
     function () {
-      setScrubbing(true);
+      refState.current.scrubbing = true;
     },
-    [setScrubbing]
+    [refState]
   );
   useEffect(() => {
     function unsetScrub() {
-      setScrubbing(false);
+      refState.current.scrubbing = false;
     }
 
     document.addEventListener("mouseup", unsetScrub);
@@ -125,7 +129,7 @@ function CalculationsList(props: CalculationsViewProps) {
     return () => {
       document.removeEventListener("mouseup", unsetScrub);
     };
-  }, [setScrubbing]);
+  }, [refState]);
   const calcs = props.calculations;
   const items = [];
 
@@ -185,7 +189,7 @@ function CalculationsList(props: CalculationsViewProps) {
         calculations={props.calculations}
         index={i}
         activeIndex={activeIndex}
-        scrubbing={scrubbing}
+        refState={refState}
         onIndexChange={props.onIndexChange}
         onPaletteChange={props.onPaletteChange}
       />
