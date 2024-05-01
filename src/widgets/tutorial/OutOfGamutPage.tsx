@@ -70,9 +70,9 @@ export function OutOfGamutPage() {
         </div>
         <p>
           If a color is out-of-gamut, it's marked with an <b>(!)</b> exclamation point. If any individual <b>RGB</b>{" "}
-          component is out of range by more than 20%, the color is considered to be <b>really</b> out-of-gamut and is
-          given two <b>(!!)</b> exclamation points. Such colors are more likely to have significant differences when
-          brought in-gamut.
+          component is out of range by more than 20%, the color is considered <b>really</b> out-of-gamut and is given
+          two <b>(!!)</b> exclamation points. Such colors are more likely to have significant differences when brought
+          in-gamut.
         </p>
         <p>
           Sometimes you may end up with lots of out-of-gamut colors, especially as the result of calculations over
@@ -87,7 +87,7 @@ export function OutOfGamutPage() {
         </div>
         <p>
           Don't rely on this too much. It's an algorithm, so it's not perfect. Try to bring your colors in-gamut through
-          manual adjustment first before resorting to this. In particular, it helps to raise <b>chroma</b> in your
+          manual adjustment first before resorting to this. In particular, it helps if you raise <b>chroma</b> in your
           midtones, and lower it in your highlights and shadows. If you're using <b>Extrapolate Strip</b>, the{" "}
           <b>Midrange boost</b> can help you accomplish this.
         </p>

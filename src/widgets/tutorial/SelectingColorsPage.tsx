@@ -127,8 +127,8 @@ export function SelectingColorsPage() {
           <a target="_blank" rel="noopener noreferrer" href="https://bottosson.github.io/posts/oklab/">
             Björn Ottosson
           </a>{" "}
-          to address some of the shortcomings of the LAB/LCH spaces. It works similarly to those spaces, but often
-          produces better results:
+          to address some of the shortcomings of the LAB/LCH spaces. It works similarly, but often produces better
+          results:
         </p>
         <div className="color-container">
           <div className="palette-row">{oklchColors}</div>

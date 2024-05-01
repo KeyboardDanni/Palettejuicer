@@ -7,7 +7,7 @@ export function SavingWorkPage() {
           your work to your browser's local storage when you make changes, or when you close the app.
         </p>
         <p>
-          Don't rely on local storage forever. The contents of this storage may get erased, causing you to lose your
+          Don't rely on browser storage forever. The contents of this storage may get erased, causing you to lose your
           work. You should save your changes to your local drive from time to time by clicking <b>File</b>, then{" "}
           <b>Save to JSON</b>. This will save the project file, which contains your precise colors and calculations,
           into a folder of your choosing for safekeeping. You can load it again later with <b>Load from JSON</b>.

@@ -140,8 +140,8 @@ export function GeneratingColorsPage() {
         <div className="color-container">{chained}</div>
         <p>
           The order of your calculations matters! Calculations higher up in the list are processed first, meaning their
-          results are available to calculations below them. If the vertical strip were calculated first, it would be
-          taking the background color instead of the calculated orange, and you would get this instead:
+          results are available only to calculations below them. If the vertical strip were calculated first, it would
+          be taking the background color instead of the calculated orange, and you would get this instead:
         </p>
         <div className="color-container">{chainedBadOrder}</div>
         <p>
