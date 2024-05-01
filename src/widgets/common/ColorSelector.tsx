@@ -9,10 +9,10 @@ import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
 import { PageTab } from "./PageTab";
 
 enum ColorSelectorPage {
-  Lch = "LCH",
-  Lab = "LAB",
   Oklch = "OkLCH",
   Oklab = "OkLAB",
+  Lch = "LCH",
+  Lab = "LAB",
   Hsl = "HSL",
   Hsv = "HSV",
 }
@@ -129,17 +129,17 @@ function PageSliders(props: PageSlidersProps) {
   let colorspace = "";
 
   switch (props.page) {
-    case ColorSelectorPage.Lch:
-      colorspace = "lch";
-      break;
-    case ColorSelectorPage.Lab:
-      colorspace = "lab";
-      break;
     case ColorSelectorPage.Oklch:
       colorspace = "oklch";
       break;
     case ColorSelectorPage.Oklab:
       colorspace = "oklab";
+      break;
+    case ColorSelectorPage.Lch:
+      colorspace = "lch";
+      break;
+    case ColorSelectorPage.Lab:
+      colorspace = "lab";
       break;
     case ColorSelectorPage.Hsl:
       colorspace = "hsl";
@@ -173,7 +173,7 @@ export type ColorSelectorProps = {
 };
 
 export function ColorSelector(props: ColorSelectorProps) {
-  const [page, setPage] = useState<string>(ColorSelectorPage.Lch);
+  const [page, setPage] = useState<string>(ColorSelectorPage.Oklch);
 
   function tryColorChange(color: Color) {
     if (!props.computed) {
@@ -196,10 +196,10 @@ export function ColorSelector(props: ColorSelectorProps) {
           </div>
           <div>
             <div className="tabbar">
-              <PageTab pageName={ColorSelectorPage.Lch} onPageChange={setPage} activePage={page} />
-              <PageTab pageName={ColorSelectorPage.Lab} onPageChange={setPage} activePage={page} />
               <PageTab pageName={ColorSelectorPage.Oklch} onPageChange={setPage} activePage={page} />
               <PageTab pageName={ColorSelectorPage.Oklab} onPageChange={setPage} activePage={page} />
+              <PageTab pageName={ColorSelectorPage.Lch} onPageChange={setPage} activePage={page} />
+              <PageTab pageName={ColorSelectorPage.Lab} onPageChange={setPage} activePage={page} />
               <PageTab pageName={ColorSelectorPage.Hsl} onPageChange={setPage} activePage={page} />
               <PageTab pageName={ColorSelectorPage.Hsv} onPageChange={setPage} activePage={page} />
             </div>
