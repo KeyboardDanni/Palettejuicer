@@ -80,4 +80,8 @@
       border-radius: $size-button-radius;
     }
   }
+
+  [data-overlayscrollbars-contents] {
+    margin-right: $size-scrollbar-recess + $size-scrollbar-recess-spacing - $size-widget-outline !important;
+  }
 }

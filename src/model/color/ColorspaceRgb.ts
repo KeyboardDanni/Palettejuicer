@@ -6,6 +6,8 @@ import rgbHex from "rgb-hex";
 import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
 import { clamp, fixArraySize, outOfRange } from "../../util/math";
 
+export const GAMUT_ROUNDING_ERROR = 0.00001;
+
 const MAX_HEX_LENGTH = 16;
 
 const CHANNEL_INFO: ChannelInfo[] = [
@@ -85,14 +87,14 @@ export class ColorspaceRgb extends Colorspace {
   }
 
   inGamut(): boolean {
-    return new Colorjs("srgb", [this.values[0], this.values[1], this.values[2]]).inGamut("srgb");
+    return this.outOfGamutDistance() <= GAMUT_ROUNDING_ERROR;
   }
 
   outOfGamutDistance(): number {
     let distance = 0;
 
     for (let i = 0; i < 3; i++) {
-      distance += outOfRange(this.values[i], 0, 1);
+      distance = Math.max(distance, outOfRange(this.values[i], 0, 1));
     }
 
     return distance;

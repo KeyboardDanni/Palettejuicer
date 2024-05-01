@@ -29,9 +29,11 @@ export abstract class Colorspace {
   static colorspaceName(): string {
     throw new Error("Method not implemented.");
   }
+
   static rawToTransformed(raw: readonly number[]): number[] {
     return [...raw];
   }
+
   static transformedToRaw(transformed: readonly number[]): number[] {
     return [...transformed];
   }
@@ -57,6 +59,16 @@ export abstract class Colorspace {
 
     return converted as T;
   }
+
+  describe(): string {
+    const colorspaceClass = this.constructor as typeof Colorspace;
+    const name = colorspaceClass.colorspaceName();
+    const values = colorspaceClass.rawToTransformed(this.values).map((value) => parseFloat(value.toPrecision(4)));
+    const valuesString = values.join(", ");
+
+    return `${name}(${valuesString})`;
+  }
+
   abstract compute(converter: Colorjs): ThisType<this>;
   abstract converter(): Colorjs;
   static channelInfo(): ChannelInfo[] {

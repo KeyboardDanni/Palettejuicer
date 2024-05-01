@@ -41,3 +41,4 @@
 - [x] Palette indicator on colors outside sRGB gamut
 - [x] Enable/disable individual calculations
 - [x] Allow properties box to scroll
+- [x] Tutorial

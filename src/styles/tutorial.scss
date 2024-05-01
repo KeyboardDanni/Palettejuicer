@@ -1,0 +1,60 @@
+@use "./_constants.scss" as *;
+@use "./_mixins.scss" as *;
+
+#tutorial {
+  @include scrollbar-with-recess();
+
+  width: 85rem;
+  height: 60rem;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+
+  p {
+    text-indent: 4rem;
+  }
+
+  label.tabbar-tab {
+    span {
+      padding-left: 1rem;
+      padding-right: 1rem;
+    }
+  }
+
+  .tutorial-scroll {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+
+    overflow: hidden;
+  }
+
+  .tutorial-page {
+    margin: (2rem - $size-section-padding);
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    gap: 2rem;
+    align-items: flex-start;
+
+    > div {
+      align-self: center;
+    }
+  }
+
+  .color-container {
+    min-width: 25%;
+    max-width: 75%;
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+
+    border: $size-widget-outline solid $color-section-border;
+    border-radius: $size-button-radius;
+
+    .palette-cel {
+      flex: 1;
+      min-width: 4rem;
+    }
+  }
+}

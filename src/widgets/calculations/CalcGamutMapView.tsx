@@ -3,8 +3,9 @@ import { produce } from "immer";
 import { CelIndex } from "../../util/cel";
 import { CalcPropertiesViewProps } from "../PropertiesView";
 import { CelSelector } from "../common/CelSelector";
-import { CalcGamutMap, GamutMapAlgorithm, gamutMapData } from "../../model/calculation/CalcGamutMap";
+import { CalcGamutMap } from "../../model/calculation/CalcGamutMap";
 import { DropdownChoiceButton } from "../common/DropdownButton";
+import { GamutMapAlgorithm, gamutMapData } from "../../model/color/Color";
 
 export function CalcGamutMapView(props: CalcPropertiesViewProps) {
   if (!(props.calc instanceof CalcGamutMap)) {

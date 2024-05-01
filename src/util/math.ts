@@ -13,6 +13,16 @@ export function positiveMod(a: number, b: number) {
   return ((a % b) + b) % b;
 }
 
+export function range(min: number, max: number, stepSize: number): number[] {
+  const output = [];
+
+  for (let i = min; i < max; i += stepSize) {
+    output.push(i);
+  }
+
+  return output;
+}
+
 export function steps(min: number, max: number, numSteps: number): number[] {
   if (numSteps === 0) {
     return [];
@@ -31,6 +41,28 @@ export function steps(min: number, max: number, numSteps: number): number[] {
   output.push(max);
 
   return output;
+}
+
+export function appendSteps(first: number[], max: number, numSteps: number): number[] {
+  if (numSteps === 0 || first.length <= 0) {
+    return [...first];
+  }
+  if (numSteps === 1) {
+    return [...first, max];
+  }
+
+  const min = first[first.length - 1];
+
+  const stepSize = (max - min) / (numSteps - 1);
+  const output = [];
+
+  for (let i = 1; i < numSteps - 1; i++) {
+    output.push(min + i * stepSize);
+  }
+
+  output.push(max);
+
+  return first.concat(output);
 }
 
 export function handleNaN(value: number, defaultValue: number) {

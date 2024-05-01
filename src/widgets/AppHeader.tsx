@@ -9,6 +9,7 @@ import { Project } from "../model/Project";
 import { PopupMenuItem, PopupMenuSeparatorItem } from "./common/PopupMenu";
 import { HistoryAction, HistoryActionType } from "../reducers/HistoryReducer";
 import { UndoHistory } from "../model/UndoHistory";
+import { Tutorial } from "./tutorial/Tutorial";
 
 type ConfirmPopupProps = {
   confirmOpen: boolean;
@@ -36,7 +37,7 @@ function ConfirmPopup(props: ConfirmPopupProps) {
     <>
       <Popup open={props.confirmOpen} onClose={closeConfirm} className="modal-popup">
         <div className="section popup-message-content">
-          <div className="section-header">Are you sure?</div>
+          <div className="popup-header">Are you sure?</div>
           <p>Do you really want to clear your project and start over?</p>
           <div className="button-bar">
             <button className="danger" onClick={acceptConfirm}>
@@ -130,6 +131,7 @@ export type AppHeaderProps = {
 };
 
 export function AppHeader(props: AppHeaderProps) {
+  const [tutorialOpen, setTutorialOpen] = useState(false);
   const onHistoryChange = props.onHistoryChange;
 
   const handleUndo = useCallback(
@@ -146,18 +148,27 @@ export function AppHeader(props: AppHeaderProps) {
     [onHistoryChange]
   );
 
+  const handleTutorial = useCallback(
+    function () {
+      setTutorialOpen(true);
+    },
+    [setTutorialOpen]
+  );
+
   return (
     <>
       <div id="app-header">
-        <div id="logo" />
+        <div className="logo" />
         <div id="menubar">
           <FileMenu project={props.history.current()} onProjectChange={props.onHistoryChange} />
           <div id="undo-redo-group">
             <button onClick={handleUndo}>Undo</button>
             <button onClick={handleRedo}>Redo</button>
           </div>
+          <button onClick={handleTutorial}>Tutorial</button>
         </div>
       </div>
+      <Tutorial popupOpen={tutorialOpen} setPopupOpen={setTutorialOpen} />
     </>
   );
 }

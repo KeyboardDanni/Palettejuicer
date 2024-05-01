@@ -192,15 +192,10 @@ export function CalcExtrapolateStripView(props: CalcPropertiesViewProps) {
     <>
       <div className="calc-grid">
         <div className="tabbar">
-          <PageTab groupName="extrapolate" pageName={ExtrapolatePage.Output} onPageChange={setPage} activePage={page} />
-          <PageTab
-            groupName="extrapolate"
-            pageName={ExtrapolatePage.Lightness}
-            onPageChange={setPage}
-            activePage={page}
-          />
-          <PageTab groupName="extrapolate" pageName={ExtrapolatePage.Chroma} onPageChange={setPage} activePage={page} />
-          <PageTab groupName="extrapolate" pageName={ExtrapolatePage.Hue} onPageChange={setPage} activePage={page} />
+          <PageTab pageName={ExtrapolatePage.Output} onPageChange={setPage} activePage={page} />
+          <PageTab pageName={ExtrapolatePage.Lightness} onPageChange={setPage} activePage={page} />
+          <PageTab pageName={ExtrapolatePage.Chroma} onPageChange={setPage} activePage={page} />
+          <PageTab pageName={ExtrapolatePage.Hue} onPageChange={setPage} activePage={page} />
         </div>
         <ExtrapolatePageView page={page} viewProps={props} />
       </div>

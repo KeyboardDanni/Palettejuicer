@@ -196,42 +196,12 @@ export function ColorSelector(props: ColorSelectorProps) {
           </div>
           <div>
             <div className="tabbar">
-              <PageTab
-                groupName="colorspace"
-                pageName={ColorSelectorPage.Lch}
-                onPageChange={setPage}
-                activePage={page}
-              />
-              <PageTab
-                groupName="colorspace"
-                pageName={ColorSelectorPage.Lab}
-                onPageChange={setPage}
-                activePage={page}
-              />
-              <PageTab
-                groupName="colorspace"
-                pageName={ColorSelectorPage.Oklch}
-                onPageChange={setPage}
-                activePage={page}
-              />
-              <PageTab
-                groupName="colorspace"
-                pageName={ColorSelectorPage.Oklab}
-                onPageChange={setPage}
-                activePage={page}
-              />
-              <PageTab
-                groupName="colorspace"
-                pageName={ColorSelectorPage.Hsl}
-                onPageChange={setPage}
-                activePage={page}
-              />
-              <PageTab
-                groupName="colorspace"
-                pageName={ColorSelectorPage.Hsv}
-                onPageChange={setPage}
-                activePage={page}
-              />
+              <PageTab pageName={ColorSelectorPage.Lch} onPageChange={setPage} activePage={page} />
+              <PageTab pageName={ColorSelectorPage.Lab} onPageChange={setPage} activePage={page} />
+              <PageTab pageName={ColorSelectorPage.Oklch} onPageChange={setPage} activePage={page} />
+              <PageTab pageName={ColorSelectorPage.Oklab} onPageChange={setPage} activePage={page} />
+              <PageTab pageName={ColorSelectorPage.Hsl} onPageChange={setPage} activePage={page} />
+              <PageTab pageName={ColorSelectorPage.Hsv} onPageChange={setPage} activePage={page} />
             </div>
             <PageSliders page={page} color={props.color} computed={props.computed} onColorChange={tryColorChange} />
           </div>

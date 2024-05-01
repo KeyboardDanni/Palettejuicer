@@ -6,23 +6,22 @@ import { memo, useCallback, useContext, useEffect, useRef, useState } from "reac
 import { clamp } from "../util/math";
 import { ClipboardContext } from "../contexts/ClipboardContext";
 import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
+import { Color } from "../model/color/Color";
+import { GAMUT_ROUNDING_ERROR } from "../model/color/ColorspaceRgb";
 
-const GAMUT_DISTANCE_ROUNDING_ERROR = 0.00001;
-
-type PaletteCelProps = {
-  palette: Palette;
-  index: CelIndex;
-  active: boolean;
-  scrubbing: boolean;
-  onIndexClick: (index: CelIndex) => void;
+export type PaletteCelProps = {
+  color: Color;
+  index?: CelIndex;
+  active?: boolean;
+  scrubbing?: boolean;
+  onIndexClick?: (index: CelIndex) => void;
 };
 
-function PaletteCel(props: PaletteCelProps) {
-  const color = props.palette.color(props.index);
+export function PaletteCel(props: PaletteCelProps) {
   const onIndexClick = props.onIndexClick;
   const handleClick = useCallback(
     function (event: React.MouseEvent) {
-      if (event.buttons === 1) {
+      if (onIndexClick && props.index !== undefined && event.buttons === 1) {
         onIndexClick(props.index);
       }
     },
@@ -30,7 +29,7 @@ function PaletteCel(props: PaletteCelProps) {
   );
   const handleMouseEnter = useCallback(
     function (event: React.MouseEvent) {
-      if (props.scrubbing && event.buttons === 1) {
+      if (onIndexClick && props.index !== undefined && props.scrubbing && event.buttons === 1) {
         onIndexClick(props.index);
       }
     },
@@ -38,10 +37,11 @@ function PaletteCel(props: PaletteCelProps) {
   );
 
   let className = "palette-cel";
-  const gamutDistance = color.rgb.outOfGamutDistance();
+  const rgb = props.color.rgb;
+  const gamutDistance = rgb.outOfGamutDistance();
 
-  if (props.active || gamutDistance > GAMUT_DISTANCE_ROUNDING_ERROR) {
-    if (color.lab.lightness > 50) {
+  if (props.active || gamutDistance > GAMUT_ROUNDING_ERROR) {
+    if (props.color.lab.lightness > 50) {
       className += " light-color";
     } else {
       className += " dark-color";
@@ -52,7 +52,7 @@ function PaletteCel(props: PaletteCelProps) {
     className += " active-cel";
   }
 
-  if (gamutDistance > GAMUT_DISTANCE_ROUNDING_ERROR) {
+  if (gamutDistance > GAMUT_ROUNDING_ERROR) {
     className += " out-of-gamut";
 
     if (gamutDistance > 0.2) {
@@ -64,7 +64,8 @@ function PaletteCel(props: PaletteCelProps) {
     <>
       <div
         className={className}
-        style={{ backgroundColor: color.rgb.hex }}
+        style={{ backgroundColor: rgb.hex }}
+        title={props.color.data.describe()}
         onMouseDown={handleClick}
         onMouseEnter={handleMouseEnter}
       />
@@ -91,11 +92,12 @@ const PaletteRow = memo(function (props: PaletteRowProps) {
 
   for (let x = 0; x < PALETTE_WIDTH; x++) {
     const active = x === props.activeX;
+    const index = { x: x, y: props.y };
     row.push(
       <PaletteCel
         key={x}
-        index={{ x: x, y: props.y }}
-        palette={props.palette}
+        index={index}
+        color={props.palette.color(index)}
         active={active}
         scrubbing={props.scrubbing}
         onIndexClick={props.onIndexClick}

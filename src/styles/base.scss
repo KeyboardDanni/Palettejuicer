@@ -12,6 +12,12 @@
   src: url("/assets/Lato-Semibold.woff2");
 }
 
+@font-face {
+  font-family: "Lato";
+  font-weight: 700;
+  src: url("/assets/Lato-Bold.woff2");
+}
+
 html {
   font: $font-weight-normal $size-pixel-base $font-stack;
   line-height: 1;
@@ -33,7 +39,7 @@ h5,
 h6,
 p,
 textarea {
-  line-height: 1.25;
+  line-height: 1.4;
   margin: 0;
   outline: none;
   user-select: text;
@@ -64,7 +70,6 @@ h4,
 h5,
 h6 {
   font-weight: bold;
-  text-transform: uppercase;
 }
 
 h1 {

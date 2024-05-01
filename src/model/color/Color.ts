@@ -36,6 +36,24 @@ const availableSpaceTypes: AvailableColorspaceItem[] = availableSpaces.map((spac
   };
 });
 
+export enum GamutMapAlgorithm {
+  Css,
+  LchC,
+  Clipping,
+}
+
+type GamutMapAlgorithmItem = {
+  readonly name: string;
+  readonly algorithm: string;
+  readonly description: string;
+};
+
+export const gamutMapData: readonly GamutMapAlgorithmItem[] = [
+  { name: "CSS 4", algorithm: "css", description: "Uses the CSS 4 Gamut Mapping Algorithm." },
+  { name: "LCH Chroma", algorithm: "lch.c", description: "Tries to lower the chroma until the color is in gamut." },
+  { name: "Clipping", algorithm: "clip", description: "Simply clips colors to be in gamut. Not recommended." },
+];
+
 export class Color {
   [immerable] = true;
 
@@ -95,6 +113,16 @@ export class Color {
     });
 
     return color;
+  }
+
+  toSrgbGamut(algorithm: GamutMapAlgorithm): Color | null {
+    if (this.rgb.inGamut()) return null;
+
+    return produce(this, (draft) => {
+      const converter = draft.data.converter();
+      const inGamut = converter.toGamut({ space: "srgb", method: gamutMapData[algorithm].algorithm });
+      draft.data = draft.data.compute(inGamut) as any;
+    });
   }
 
   static channelInfo(spaceName: string): ChannelInfo[] {

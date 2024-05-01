@@ -63,69 +63,71 @@ $size-palette-color-minimum: 2rem;
       outline-offset: 0.1rem;
     }
 
-    .palette-row {
-      padding-right: ($size-scrollbar-recess + $size-scrollbar-recess-spacing);
-      display: flex;
-      flex-direction: row;
-      flex: 1;
+    @include scrollbar-with-recess();
+  }
+}
 
-      .palette-cel {
-        min-width: $size-palette-color-minimum;
-        min-height: $size-palette-color-minimum;
-        margin: 0;
-        padding: 0;
-        flex: 1;
-        aspect-ratio: 1;
+.palette-row {
+  display: flex;
+  flex-direction: row;
+  flex: 1;
 
-        &.active-cel {
-          position: relative;
+  .palette-cel {
+    flex: 1;
+  }
+}
 
-          &:after {
-            @include layered-pseudo-element(0.1rem, 0.1rem, 0.1rem, 0.1rem);
+.palette-cel {
+  min-width: $size-palette-color-minimum;
+  min-height: $size-palette-color-minimum;
+  margin: 0;
+  padding: 0;
+  aspect-ratio: 1;
 
-            pointer-events: none;
-            z-index: 1;
-          }
+  &.active-cel {
+    position: relative;
 
-          &.light-color:after {
-            @include box-corners($color-palette-active-light, 0.2rem);
-          }
+    &:after {
+      @include layered-pseudo-element(0.1rem, 0.1rem, 0.1rem, 0.1rem);
 
-          &.dark-color:after {
-            @include box-corners($color-palette-active-dark, 0.2rem);
-          }
-        }
-
-        &.out-of-gamut {
-          position: relative;
-
-          &.light-color {
-            color: $color-palette-active-light;
-          }
-
-          &.dark-color {
-            color: $color-palette-active-dark;
-          }
-
-          &:before {
-            content: "!";
-            position: absolute;
-            top: 0.4rem;
-            bottom: 0.4rem;
-            left: 0.4rem;
-            right: 0.4rem;
-            pointer-events: none;
-
-            font-weight: $font-weight-heading;
-          }
-
-          &.really-out-of-gamut:before {
-            content: "!!";
-          }
-        }
-      }
+      pointer-events: none;
+      z-index: 1;
     }
 
-    @include scrollbar-with-recess();
+    &.light-color:after {
+      @include box-corners($color-palette-active-light, 0.2rem);
+    }
+
+    &.dark-color:after {
+      @include box-corners($color-palette-active-dark, 0.2rem);
+    }
+  }
+
+  &.out-of-gamut {
+    position: relative;
+
+    &.light-color {
+      color: $color-palette-active-light;
+    }
+
+    &.dark-color {
+      color: $color-palette-active-dark;
+    }
+
+    &:before {
+      content: "!";
+      position: absolute;
+      top: 0.4rem;
+      bottom: 0.4rem;
+      left: 0.4rem;
+      right: 0.4rem;
+      pointer-events: none;
+
+      font-weight: $font-weight-heading;
+    }
+
+    &.really-out-of-gamut:before {
+      content: "!!";
+    }
   }
 }

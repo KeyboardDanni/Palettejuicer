@@ -1,29 +1,11 @@
-import { immerable, produce } from "immer";
+import { immerable } from "immer";
 import { Transform } from "class-transformer";
 
 import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 import { CelIndex } from "../../util/cel";
-import { Color } from "../color/Color";
+import { Color, GamutMapAlgorithm } from "../color/Color";
 import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
 import { CalcGamutMapView } from "../../widgets/calculations/CalcGamutMapView";
-
-export enum GamutMapAlgorithm {
-  Css,
-  LchC,
-  Clipping,
-}
-
-type GamutMapAlgorithmItem = {
-  readonly name: string;
-  readonly algorithm: string;
-  readonly description: string;
-};
-
-export const gamutMapData: readonly GamutMapAlgorithmItem[] = [
-  { name: "CSS 4", algorithm: "css", description: "Uses the CSS 4 Gamut Mapping Algorithm." },
-  { name: "LCH Chroma", algorithm: "lch.c", description: "Tries to lower the chroma until the color is in gamut." },
-  { name: "Clipping", algorithm: "clip", description: "Simply clips colors to be in gamut. Not recommended." },
-];
 
 export class CalcGamutMap extends Calculation {
   [immerable] = true;
@@ -66,15 +48,7 @@ export class CalcGamutMap extends Calculation {
     const outputs = this.outputCels();
 
     for (const [i, color] of colors.entries()) {
-      let mapped = null;
-
-      if (!color.rgb.inGamut()) {
-        mapped = produce(color, (draft) => {
-          const converter = draft.data.converter();
-          const inGamut = converter.toGamut({ space: "srgb", method: gamutMapData[this.algorithm].algorithm });
-          draft.data = draft.data.compute(inGamut) as any;
-        });
-      }
+      const mapped = color.toSrgbGamut(this.algorithm);
 
       cels.push({
         index: outputs[i],

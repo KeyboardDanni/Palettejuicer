@@ -30,15 +30,6 @@
   flex-direction: row;
   gap: 4rem;
 
-  #logo {
-    background-image: url("/assets/logo.png");
-    background-repeat: no-repeat;
-    background-position: center;
-    background-size: contain;
-    min-width: 428px;
-    min-height: 64px;
-  }
-
   #menubar {
     display: flex;
     flex-direction: row;
@@ -167,4 +158,13 @@
   flex: 1;
   align-self: center;
   justify-content: center;
+}
+
+.logo {
+  background-image: url("/assets/logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  min-width: 428px;
+  min-height: 64px;
 }

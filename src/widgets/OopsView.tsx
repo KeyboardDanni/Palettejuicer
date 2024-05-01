@@ -35,7 +35,7 @@ export function OopsView() {
         </div>
         <div id="app-oops-container">
           <div className="section popup-message-content">
-            <div className="section-header">Uh oh! Palettejuicer made a mess!</div>
+            <div className="popup-header">Uh oh! Palettejuicer made a mess!</div>
             <p>
               Something went wrong and the app can't continue. You can try to fix this by clicking <b>Reload</b> below.
             </p>

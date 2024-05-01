@@ -1,5 +1,4 @@
 export type PageTabProps = {
-  groupName: string;
   pageName: string;
   displayName?: string;
   onPageChange: (value: string) => void;
@@ -16,7 +15,6 @@ export function PageTab(props: PageTabProps) {
       <label className="tabbar-tab">
         <input
           type="radio"
-          name={props.groupName}
           value={props.pageName}
           onChange={handlePageChange}
           checked={props.pageName === props.activePage}
