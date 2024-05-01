@@ -109,8 +109,8 @@ export function SelectingColorsPage() {
         </p>
         <p>
           The <b>A</b> and <b>B</b> components are a bit less straightforward. A positive <b>A</b> makes the color more
-          red, while a negative <b>A</b> is more green. A positive <b>B</b> is more blue, while a negative <b>B</b> is
-          more yellow.
+          red, while a negative <b>A</b> is more green. A positive <b>B</b> is more yellow, while a negative <b>B</b> is
+          more blue.
         </p>
         <p>
           In some ways, LAB is even more awkward to use than RGB because of how <b>A</b> and <b>B</b> work. Fortunately,
