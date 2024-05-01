@@ -2,18 +2,22 @@ import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
 import { CelIndex } from "../util/cel";
-import { memo, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { memo, useCallback, useContext, useEffect, useRef } from "react";
 import { clamp } from "../util/math";
 import { ClipboardContext } from "../contexts/ClipboardContext";
 import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
 import { Color } from "../model/color/Color";
 import { GAMUT_ROUNDING_ERROR } from "../model/color/ColorspaceRgb";
 
+class PaletteViewRefState {
+  scrubbing: boolean = false;
+}
+
 export type PaletteCelProps = {
   color: Color;
   index?: CelIndex;
   active?: boolean;
-  scrubbing?: boolean;
+  refState?: React.MutableRefObject<PaletteViewRefState>;
   onIndexClick?: (index: CelIndex) => void;
 };
 
@@ -29,11 +33,11 @@ export function PaletteCel(props: PaletteCelProps) {
   );
   const handleMouseEnter = useCallback(
     function (event: React.MouseEvent) {
-      if (onIndexClick && props.index !== undefined && props.scrubbing && event.buttons === 1) {
+      if (onIndexClick && props.index !== undefined && props.refState?.current.scrubbing && event.buttons === 1) {
         onIndexClick(props.index);
       }
     },
-    [props.index, props.scrubbing, onIndexClick]
+    [props.index, props.refState, onIndexClick]
   );
 
   let className = "palette-cel";
@@ -77,7 +81,7 @@ type PaletteRowProps = {
   palette: Palette;
   y: number;
   activeX: number | null;
-  scrubbing: boolean;
+  refState?: React.MutableRefObject<PaletteViewRefState>;
   onIndexClick: (index: CelIndex) => void;
 };
 
@@ -99,7 +103,7 @@ const PaletteRow = memo(function (props: PaletteRowProps) {
         index={index}
         color={props.palette.color(index)}
         active={active}
-        scrubbing={props.scrubbing}
+        refState={props.refState}
         onIndexClick={props.onIndexClick}
       />
     );
@@ -130,16 +134,16 @@ export type PaletteViewProps = {
 
 export const PaletteView = memo(function (props: PaletteViewProps) {
   const clipboard = useContext(ClipboardContext);
-  const [scrubbing, setScrubbing] = useState(false);
+  const refState = useRef(new PaletteViewRefState());
   const handleClick = useCallback(
     function () {
-      setScrubbing(true);
+      refState.current.scrubbing = true;
     },
-    [setScrubbing]
+    [refState]
   );
   useEffect(() => {
     function unsetScrub() {
-      setScrubbing(false);
+      refState.current.scrubbing = false;
     }
 
     document.addEventListener("mouseup", unsetScrub);
@@ -147,7 +151,7 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
     return () => {
       document.removeEventListener("mouseup", unsetScrub);
     };
-  }, [setScrubbing]);
+  }, [refState]);
 
   const { onIndexChange, onPaletteChange } = props;
   const handleKey = useCallback(
@@ -211,8 +215,8 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
         y={y}
         palette={props.palette}
         activeX={activeX}
-        onIndexClick={props.onIndexChange}
-        scrubbing={scrubbing}
+        onIndexClick={onIndexChange}
+        refState={refState}
       />
     );
   }
