@@ -37,6 +37,15 @@ const initialProject = LocalStorage.load("Project", Project);
 const initialHistory = new UndoHistory(initialProject);
 const historyReducer = createHistoryReducer(Project, ProjectReducer, ProjectConsolidator);
 
+function updateViewport() {
+  const landscape = window.screen.orientation.type.includes("landscape");
+  const viewportSettings = landscape ? "height=850, initial-scale=1" : "width=500, initial-scale=1";
+
+  document.querySelector('meta[name="viewport"]')?.setAttribute("content", viewportSettings);
+}
+
+updateViewport();
+
 export function AppBoundary() {
   const [history, dispatchHistory] = useImmerReducer(historyReducer, initialHistory);
   const [clipboard] = useState(new Clipboard());
@@ -55,6 +64,13 @@ export function AppBoundary() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [history]);
+  useEffect(() => {
+    window.screen.orientation.addEventListener("change", updateViewport);
+
+    return () => {
+      window.screen.orientation.removeEventListener("change", updateViewport);
+    };
+  }, []);
 
   return (
     <>

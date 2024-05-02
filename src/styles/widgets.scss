@@ -241,6 +241,7 @@ button {
   border-bottom: none;
   color: $color-text;
   text-align: center;
+  text-wrap: nowrap;
   min-width: 4.8rem;
   height: ($size-base-font + $size-tab-padding * 2);
   margin: 0 -0.1rem 0 0;
@@ -619,7 +620,7 @@ input[type="range"] {
   margin: 0 $size-label-spacing;
 }
 
-.os-scrollbar {
+.raised-scrollbar {
   padding: 0.2rem;
   pointer-events: auto;
   --os-size: #{$size-scrollbar-width};
@@ -648,6 +649,41 @@ input[type="range"] {
         $color-slider-border,
         $size-widget-outline,
         $size-button-height
+      );
+    }
+  }
+}
+
+.flat-scrollbar {
+  padding: 0.2rem $size-section-padding;
+  pointer-events: auto;
+  --os-size: #{$size-scrollbar-flat};
+  --os-handle-bg: #{$color-background-widget};
+  --os-handle-bg-hover: #{$color-background-widget};
+  --os-handle-bg-active: #{$color-background-widget};
+  --os-handle-border-radius: #{$size-section-radius};
+  --os-handle-border: #{$size-widget-outline} solid #{$color-widget-border};
+  --os-handle-border-hover: #{$size-widget-outline} solid #{$color-widget-border};
+  --os-handle-border-active: #{$size-widget-outline} solid #{$color-widget-border};
+  --os-handle-interactive-area-offset: 0;
+
+  .os-scrollbar-handle {
+    margin-bottom: calc($size-button-height / 2);
+    transition: none;
+
+    @include raised-box-shadow(
+      $color-widget-accent-inset,
+      $color-slider-border,
+      $size-widget-outline,
+      calc($size-button-height / 2)
+    );
+
+    &:hover {
+      @include raised-box-shadow(
+        $color-widget-accent-inset,
+        $color-slider-border,
+        $size-widget-outline,
+        calc($size-button-height / 2)
       );
     }
   }

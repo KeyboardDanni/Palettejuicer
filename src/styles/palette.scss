@@ -29,6 +29,10 @@ $size-palette-color-minimum: 2rem;
   margin: -0.4rem;
   overflow: hidden;
 
+  @media (max-height: $size-portrait-scroll-min) {
+    flex: 1;
+  }
+
   .palette-scroll {
     min-width: (
       ($size-palette-color-minimum * 16) + $size-widget-outline * 2 + $size-scrollbar-recess +

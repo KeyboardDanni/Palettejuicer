@@ -200,7 +200,7 @@ function CalculationsList(props: CalculationsViewProps) {
     <>
       <div className="calculations-list">
         <div className="calculations-scroll" onKeyDown={handleKey} onMouseDown={handleClick} tabIndex={0}>
-          <OverlayScrollbarsComponent defer>
+          <OverlayScrollbarsComponent options={{ scrollbars: { theme: "raised-scrollbar" } }} defer>
             <ul>{items}</ul>
           </OverlayScrollbarsComponent>
         </div>

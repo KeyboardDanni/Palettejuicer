@@ -42,3 +42,4 @@
 - [x] Enable/disable individual calculations
 - [x] Allow properties box to scroll
 - [x] Tutorial
+- [x] Responsive layout for mobile

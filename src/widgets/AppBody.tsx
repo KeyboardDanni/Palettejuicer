@@ -1,6 +1,7 @@
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
 import { immerable } from "immer";
 import { useImmer } from "use-immer";
+import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { Color } from "../model/color/Color";
 import { Palette } from "../model/Palette";
@@ -214,23 +215,27 @@ export function AppBody(props: AppBodyProps) {
       <div id="app-body">
         <div id="app-columns">
           <div id="document-sidebar">
-            <AppColorSelector
-              palette={props.project.palette}
-              onPaletteChange={props.onProjectChange}
-              activeColorIndex={viewState.activeColorIndex}
-            />
-            <AppCalculations
-              useCalculations={props.project.palette.useCalculations}
-              calculations={props.project.palette.calculations}
-              onPaletteChange={props.onProjectChange}
-              activeCalcIndex={viewState.activeCalcIndex}
-              onIndexChange={setActiveCalcIndex}
-            />
-            <AppProperties
-              palette={props.project.palette}
-              onPaletteChange={props.onProjectChange}
-              activeCalcIndex={viewState.activeCalcIndex}
-            />
+            <OverlayScrollbarsComponent options={{ scrollbars: { theme: "flat-scrollbar" } }} defer>
+              <div id="document-sidebar-column">
+                <AppColorSelector
+                  palette={props.project.palette}
+                  onPaletteChange={props.onProjectChange}
+                  activeColorIndex={viewState.activeColorIndex}
+                />
+                <AppCalculations
+                  useCalculations={props.project.palette.useCalculations}
+                  calculations={props.project.palette.calculations}
+                  onPaletteChange={props.onProjectChange}
+                  activeCalcIndex={viewState.activeCalcIndex}
+                  onIndexChange={setActiveCalcIndex}
+                />
+                <AppProperties
+                  palette={props.project.palette}
+                  onPaletteChange={props.onProjectChange}
+                  activeCalcIndex={viewState.activeCalcIndex}
+                />
+              </div>
+            </OverlayScrollbarsComponent>
           </div>
           <AppPalette
             palette={props.project.palette}

@@ -225,7 +225,12 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
     <>
       <div className="palette">
         <div className="palette-scroll" tabIndex={0} onKeyDown={handleKey} onMouseDown={handleClick}>
-          <OverlayScrollbarsComponent defer>{rows}</OverlayScrollbarsComponent>
+          <OverlayScrollbarsComponent
+            options={{ overflow: { x: "hidden", y: "scroll" }, scrollbars: { theme: "raised-scrollbar" } }}
+            defer
+          >
+            {rows}
+          </OverlayScrollbarsComponent>
         </div>
       </div>
     </>

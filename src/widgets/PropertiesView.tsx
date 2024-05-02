@@ -40,7 +40,7 @@ export function PropertiesView(props: PropertiesViewProps) {
     <>
       <div className="properties">
         <div className="properties-scroll">
-          <OverlayScrollbarsComponent defer>
+          <OverlayScrollbarsComponent options={{ scrollbars: { theme: "raised-scrollbar" } }} defer>
             <CalcPropertiesView calc={calc} onCalcChange={onCalcChange} />
           </OverlayScrollbarsComponent>
         </div>
