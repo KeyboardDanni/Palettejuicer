@@ -28,6 +28,7 @@ function CelNumberInput({ value, onValueChange, disabled, relative, ...other }: 
         {...other}
         value={valueString}
         displayValue={valueString}
+        inputMode="numeric"
         onChange={handleChange}
         disabled={disabled}
       />
