@@ -87,7 +87,7 @@ export function GeneratingColorsPage() {
           <i>shadow</i>. Make sure to space them out so you can generate more shades inbetween. You should have
           something that looks like this:
         </p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{shadesStart}</div>
         </div>
         <p>
@@ -112,7 +112,7 @@ export function GeneratingColorsPage() {
           Let's start by generating the shades between the <i>highlight</i> and the <i>midtone</i>. Edit the{" "}
           <b>cel range</b> so it goes from <i>[0, 0]</i> to <i>[4, 0]</i>. You should now see something like this:
         </p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{shadesPartial}</div>
         </div>
         <p>
@@ -120,7 +120,7 @@ export function GeneratingColorsPage() {
           <b>Calculations</b> pane and click on <b>Clone</b> to make a copy of your calculation. Adjust this new one so
           it goes from <i>[4, 0]</i> to <i>[8, 0]</i>. You should be seeing this:
         </p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{shadesFinal}</div>
         </div>
         <p>

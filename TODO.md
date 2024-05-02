@@ -22,6 +22,7 @@
 
 ### UI papercuts
 
+- [ ] Copy/paste color cels on mobile
 - [ ] Show color preview of calculations in list to make them easy to find
 - [ ] Inform user if start/end cels don't form a strip
 - [ ] Keyboard shortcut for undo/redo

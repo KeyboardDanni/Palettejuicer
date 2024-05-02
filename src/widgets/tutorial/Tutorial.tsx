@@ -66,7 +66,7 @@ export function Tutorial(props: TutorialProps) {
             <PageTab pageName={TutorialPage.SavingWork} onPageChange={setPage} activePage={page} />
           </div>
           <div className="tutorial-scroll" key={page}>
-            <OverlayScrollbarsComponent options={{ scrollbars: { theme: "raised-scrollbar" } }} defer>
+            <OverlayScrollbarsComponent options={{ scrollbars: { theme: "raised-scrollbar" } }}>
               <TutorialPageView page={page} />
             </OverlayScrollbarsComponent>
           </div>

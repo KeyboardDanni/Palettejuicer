@@ -87,6 +87,7 @@ $size-palette-color-minimum: 2rem;
   margin: 0;
   padding: 0;
   aspect-ratio: 1;
+  touch-action: manipulation;
 
   &.active-cel {
     position: relative;

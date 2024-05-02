@@ -1,6 +1,9 @@
 @use "./_constants.scss" as *;
 @use "./_mixins.scss" as *;
 
+$logo-width: 428px;
+$logo-height: 64px;
+
 #root {
   width: 100%;
   min-height: 100vh;
@@ -25,6 +28,16 @@
   gap: $size-section-padding;
 }
 
+.logo {
+  background-image: url("/assets/logo.png");
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: contain;
+  width: $logo-width;
+  height: $logo-height;
+  max-width: 100%;
+}
+
 #app-header {
   display: flex;
   flex-direction: row;
@@ -34,6 +47,11 @@
   @media (max-width: $size-portrait-max) {
     flex-direction: column;
     align-items: flex-start;
+
+    .logo {
+      min-width: auto;
+      max-width: $logo-width;
+    }
   }
 
   #menubar {
@@ -194,19 +212,4 @@
   flex: 1;
   align-self: center;
   justify-content: center;
-}
-
-.logo {
-  background-image: url("/assets/logo.png");
-  background-repeat: no-repeat;
-  background-position: center;
-  background-size: contain;
-  min-width: 428px;
-  min-height: 64px;
-
-  @media (max-width: $size-portrait-max) {
-    min-width: auto;
-    max-width: 428px;
-    align-self: stretch;
-  }
 }

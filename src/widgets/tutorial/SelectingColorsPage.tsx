@@ -87,7 +87,7 @@ export function SelectingColorsPage() {
           Both HSL and HSV are useful for selecting colors, but they have one big problem: they don't model how our eyes
           "perceive" color. Take a look at these hues below:
         </p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{hslColors}</div>
         </div>
         <p>
@@ -118,7 +118,7 @@ export function SelectingColorsPage() {
           <b>C</b> stands for <b>chroma</b>, which is similar to, but not exactly like, saturation. With LCH, we can see
           that lightness is much more even across hues:
         </p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{lchColors}</div>
         </div>
         <h2>OkLAB/OkLCH</h2>
@@ -130,15 +130,15 @@ export function SelectingColorsPage() {
           to address some of the shortcomings of the LAB/LCH spaces. It works similarly, but often produces better
           results:
         </p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{oklchColors}</div>
         </div>
         <p>In particular, it fixes an issue with fading from blue to white. With LCH, this happens:</p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{lchBlues}</div>
         </div>
         <p>With OkLCH, the colors stay blue instead of turning purple:</p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{oklchBlues}</div>
         </div>
         <h2>Hexadecimal code</h2>

@@ -6,6 +6,8 @@
 
   width: 85rem;
   height: 60rem;
+  max-width: 95vw;
+  max-height: 95vh;
   display: flex;
   flex-direction: column;
   overflow: hidden;
@@ -43,8 +45,8 @@
   }
 
   .color-container {
-    min-width: 25%;
-    max-width: 75%;
+    min-width: 30%;
+    max-width: 50rem;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -52,9 +54,8 @@
     border: $size-widget-outline solid $color-section-border;
     border-radius: $size-button-radius;
 
-    .palette-cel {
-      flex: 1;
-      min-width: 4rem;
+    &.color-container-large {
+      min-width: 60%;
     }
   }
 }

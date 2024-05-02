@@ -39,7 +39,7 @@ const historyReducer = createHistoryReducer(Project, ProjectReducer, ProjectCons
 
 function updateViewport() {
   const landscape = window.screen.orientation.type.includes("landscape");
-  const viewportSettings = landscape ? "height=850, initial-scale=1" : "width=500, initial-scale=1";
+  const viewportSettings = landscape ? "height=850" : "width=500";
 
   document.querySelector('meta[name="viewport"]')?.setAttribute("content", viewportSettings);
 }

@@ -1,3 +1,5 @@
+import { useEffect, useRef } from "react";
+
 export type PageTabProps = {
   pageName: string;
   displayName?: string;
@@ -6,13 +8,20 @@ export type PageTabProps = {
 };
 
 export function PageTab(props: PageTabProps) {
+  const ref = useRef<HTMLLabelElement>(null);
+  useEffect(() => {
+    if (props.pageName === props.activePage) {
+      ref.current?.scrollIntoView({ behavior: "smooth", inline: "center" });
+    }
+  }, [props.pageName, props.activePage]);
+
   function handlePageChange(event: React.ChangeEvent<HTMLInputElement>) {
     props.onPageChange(event.target.value);
   }
 
   return (
     <>
-      <label className="tabbar-tab">
+      <label className="tabbar-tab" ref={ref}>
         <input
           type="radio"
           value={props.pageName}
