@@ -79,10 +79,10 @@ export function OutOfGamutPage() {
           LAB/LCH-like colorspaces. To address this, you can use the <b>Gamut Map to sRGB</b> calculation. This will use
           an algorithm to try and automatically bring colors in-gamut:
         </p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{outOfGamutShades}</div>
         </div>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">{inGamutShades}</div>
         </div>
         <p>

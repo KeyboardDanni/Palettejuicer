@@ -127,13 +127,13 @@ export function SelectingColorsPage() {
           <a target="_blank" rel="noopener noreferrer" href="https://bottosson.github.io/posts/oklab/">
             Björn Ottosson
           </a>{" "}
-          to address some of the shortcomings of the LAB/LCH spaces. It works similarly, but often produces better
+          to address some of the shortcomings of the LAB/LCH spaces. They work similarly, but often produce better
           results:
         </p>
         <div className="color-container color-container-large">
           <div className="palette-row">{oklchColors}</div>
         </div>
-        <p>In particular, it fixes an issue with fading from blue to white. With LCH, this happens:</p>
+        <p>In particular, they fix an issue with fading from blue to white. With LCH, this happens:</p>
         <div className="color-container color-container-large">
           <div className="palette-row">{lchBlues}</div>
         </div>
