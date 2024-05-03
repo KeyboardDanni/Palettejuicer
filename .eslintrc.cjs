@@ -20,6 +20,9 @@ module.exports = {
       { 'argsIgnorePattern': '^_' }],
     'import/no-default-export': 'error',
     '@typescript-eslint/no-explicit-any': 'off',
+    'no-console': [
+      'error',
+      { 'allow': ['warn', 'error'] }],
   },
   settings: {
     'import/resolver': {

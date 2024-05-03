@@ -123,7 +123,7 @@ export class Palette {
         }
       } catch (error) {
         // TODO better error handling
-        console.log("Bad calculation: " + error);
+        console.error("Bad calculation: " + error);
       }
     }
 

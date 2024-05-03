@@ -12,7 +12,7 @@ async function onReset() {
   try {
     await FilePicker.save(project);
   } catch (error) {
-    console.log(error);
+    console.error(error);
   }
 
   LocalStorage.save("Project", new Project());

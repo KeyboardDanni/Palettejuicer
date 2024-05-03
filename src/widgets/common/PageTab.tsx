@@ -13,8 +13,6 @@ export function PageTab(props: PageTabProps) {
     if (props.pageName === props.activePage && ref.current) {
       const tabBar = ref.current.parentElement;
 
-      console.log(tabBar);
-
       if (tabBar && tabBar.scrollWidth > tabBar.clientWidth) {
         ref.current.scrollIntoView({ behavior: "smooth", inline: "center" });
       }
