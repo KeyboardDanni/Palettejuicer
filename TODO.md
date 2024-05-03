@@ -7,6 +7,7 @@
 ### Color Selection
 
 - [ ] Add OkHSL/OkHSV
+- [ ] Add OkLrCH
 - [ ] Custom palette size
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
@@ -14,6 +15,7 @@
 
 ### Calculations
 
+- [ ] Allow renaming calculations
 - [ ] Use null for hue on hue-less colors
 - [ ] Additional interpolation settings
 - [ ] Adjust Color calculation
