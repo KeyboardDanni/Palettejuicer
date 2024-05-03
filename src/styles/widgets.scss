@@ -84,6 +84,7 @@
       display: block;
       padding: $size-list-padding ($size-list-padding + $size-button-padding);
       outline: none;
+      touch-action: manipulation;
 
       &:hover:not(:focus-visible) {
         background-color: color.adjust($color-selected, $alpha: -0.7);

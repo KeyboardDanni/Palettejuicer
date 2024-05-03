@@ -22,6 +22,8 @@ html {
   font: $font-weight-normal $size-pixel-base $font-stack;
   line-height: 1;
   user-select: none;
+  text-size-adjust: none;
+  -webkit-text-size-adjust: none;
 }
 
 body {

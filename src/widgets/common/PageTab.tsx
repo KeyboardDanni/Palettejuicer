@@ -10,8 +10,14 @@ export type PageTabProps = {
 export function PageTab(props: PageTabProps) {
   const ref = useRef<HTMLLabelElement>(null);
   useEffect(() => {
-    if (props.pageName === props.activePage) {
-      ref.current?.scrollIntoView({ behavior: "smooth", inline: "center" });
+    if (props.pageName === props.activePage && ref.current) {
+      const tabBar = ref.current.parentElement;
+
+      console.log(tabBar);
+
+      if (tabBar && tabBar.scrollWidth > tabBar.clientWidth) {
+        ref.current.scrollIntoView({ behavior: "smooth", inline: "center" });
+      }
     }
   }, [props.pageName, props.activePage]);
 

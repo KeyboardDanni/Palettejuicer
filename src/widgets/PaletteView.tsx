@@ -1,13 +1,15 @@
+import { memo, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
+import { PopupActions } from "reactjs-popup/dist/types";
 
 import { PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
 import { CelIndex } from "../util/cel";
-import { memo, useCallback, useContext, useEffect, useRef } from "react";
 import { clamp } from "../util/math";
 import { ClipboardContext } from "../contexts/ClipboardContext";
 import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
 import { Color } from "../model/color/Color";
 import { GAMUT_ROUNDING_ERROR } from "../model/color/ColorspaceRgb";
+import { PopupMenu, PopupMenuItem } from "./common/PopupMenu";
 
 class PaletteViewRefState {
   scrubbing: boolean = false;
@@ -19,30 +21,76 @@ export type PaletteCelProps = {
   active?: boolean;
   refState?: React.MutableRefObject<PaletteViewRefState>;
   onIndexClick?: (index: CelIndex) => void;
+  onColorChange?: (index: CelIndex, color: Color) => void;
 };
 
-export function PaletteCel(props: PaletteCelProps) {
-  const onIndexClick = props.onIndexClick;
-  const handleClick = useCallback(
-    function (event: React.MouseEvent) {
-      if (onIndexClick && props.index !== undefined && event.buttons === 1) {
-        onIndexClick(props.index);
-      }
+export type PaletteCelMenuProps = PaletteCelProps & {
+  cel: JSX.Element;
+  onClose: () => void;
+};
+
+function PaletteCelMenu(props: PaletteCelMenuProps) {
+  const clipboard = useContext(ClipboardContext);
+  const popupRef = useRef<PopupActions>(null);
+  const onColorChange = props.onColorChange;
+
+  const handleCopy = useCallback(
+    async function () {
+      await clipboard.copy(props.color);
+      popupRef.current?.close();
     },
-    [props.index, onIndexClick]
-  );
-  const handleMouseEnter = useCallback(
-    function (event: React.MouseEvent) {
-      if (onIndexClick && props.index !== undefined && props.refState?.current.scrubbing && event.buttons === 1) {
-        onIndexClick(props.index);
-      }
-    },
-    [props.index, props.refState, onIndexClick]
+    [clipboard, props.color, popupRef]
   );
 
+  const handlePaste = useCallback(
+    async function () {
+      const color = await clipboard.paste();
+
+      if (onColorChange && props.index && color !== null) {
+        onColorChange(props.index, color);
+      }
+
+      popupRef.current?.close();
+    },
+    [props.index, clipboard, popupRef, onColorChange]
+  );
+
+  let paste = null;
+
+  if (onColorChange) {
+    paste = (
+      <PopupMenuItem
+        index={1}
+        name="Paste"
+        description={"Paste the color from the clipboard"}
+        onItemSelect={handlePaste}
+      />
+    );
+  }
+
+  return (
+    <>
+      <PopupMenu
+        button={props.cel}
+        on={["click", "right-click"]}
+        open={true}
+        onClose={props.onClose}
+        popupRef={popupRef}
+      >
+        <PopupMenuItem
+          index={0}
+          name="Copy"
+          description={"Copy the color to the clipboard"}
+          onItemSelect={handleCopy}
+        />
+        {paste}
+      </PopupMenu>
+    </>
+  );
+}
+
+function paletteCelClassName(props: PaletteCelProps, gamutDistance: number) {
   let className = "palette-cel";
-  const rgb = props.color.rgb;
-  const gamutDistance = rgb.outOfGamutDistance();
 
   if (props.active || gamutDistance > GAMUT_ROUNDING_ERROR) {
     if (props.color.lab.lightness > 50) {
@@ -63,18 +111,65 @@ export function PaletteCel(props: PaletteCelProps) {
       className += " really-out-of-gamut";
     }
   }
+  return className;
+}
 
-  return (
-    <>
-      <div
-        className={className}
-        style={{ backgroundColor: rgb.hex }}
-        title={props.color.data.describe()}
-        onMouseDown={handleClick}
-        onMouseEnter={handleMouseEnter}
-      />
-    </>
+export function PaletteCel(props: PaletteCelProps) {
+  const [popupOpen, setPopupOpen] = useState(false);
+  const popupRef = useRef<PopupActions>(null);
+  const onIndexClick = props.onIndexClick;
+
+  const handleClick = useCallback(
+    function (event: React.MouseEvent) {
+      if (onIndexClick && props.index !== undefined && event.buttons === 1) {
+        onIndexClick(props.index);
+        popupRef.current?.close();
+      }
+    },
+    [props.index, popupRef, onIndexClick]
   );
+
+  const handleMouseEnter = useCallback(
+    function (event: React.MouseEvent) {
+      if (onIndexClick && props.index !== undefined && props.refState?.current.scrubbing && event.buttons === 1) {
+        onIndexClick(props.index);
+      }
+    },
+    [props.index, props.refState, onIndexClick]
+  );
+
+  const handleContextMenu = useCallback(
+    function (event: React.MouseEvent) {
+      setPopupOpen(true);
+      if (onIndexClick && props.index !== undefined) {
+        onIndexClick(props.index);
+      }
+      event.preventDefault();
+    },
+    [props.index, setPopupOpen, onIndexClick]
+  );
+
+  const rgb = props.color.rgb;
+  const gamutDistance = rgb.outOfGamutDistance();
+
+  const className = paletteCelClassName(props, gamutDistance);
+
+  let cel = (
+    <div
+      className={className}
+      style={{ backgroundColor: rgb.hex }}
+      title={props.color.data.describe()}
+      onMouseDown={handleClick}
+      onMouseEnter={handleMouseEnter}
+      onContextMenu={handleContextMenu}
+    />
+  );
+
+  if (popupOpen) {
+    cel = <PaletteCelMenu cel={cel} onClose={() => setPopupOpen(false)} {...props} />;
+  }
+
+  return <>{cel}</>;
 }
 
 type PaletteRowProps = {
@@ -83,6 +178,7 @@ type PaletteRowProps = {
   activeX: number | null;
   refState?: React.MutableRefObject<PaletteViewRefState>;
   onIndexClick: (index: CelIndex) => void;
+  onColorChange?: (index: CelIndex, color: Color) => void;
 };
 
 const PaletteRow = memo(function (props: PaletteRowProps) {
@@ -105,6 +201,7 @@ const PaletteRow = memo(function (props: PaletteRowProps) {
         active={active}
         refState={props.refState}
         onIndexClick={props.onIndexClick}
+        onColorChange={props.onColorChange}
       />
     );
   }
@@ -135,12 +232,14 @@ export type PaletteViewProps = {
 export const PaletteView = memo(function (props: PaletteViewProps) {
   const clipboard = useContext(ClipboardContext);
   const refState = useRef(new PaletteViewRefState());
+
   const handleClick = useCallback(
     function () {
       refState.current.scrubbing = true;
     },
     [refState]
   );
+
   useEffect(() => {
     function unsetScrub() {
       refState.current.scrubbing = false;
@@ -154,6 +253,19 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
   }, [refState]);
 
   const { onIndexChange, onPaletteChange } = props;
+
+  const handleColorChange = useCallback(
+    function (index: CelIndex, color: Color) {
+      onPaletteChange(
+        new PaletteAction({
+          actionType: PaletteActionType.SetBaseColor,
+          args: { index, color },
+        })
+      );
+    },
+    [onPaletteChange]
+  );
+
   const handleKey = useCallback(
     async function (event: React.KeyboardEvent) {
       switch (event.key) {
@@ -184,12 +296,7 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
             const color = await clipboard.paste();
 
             if (color !== null) {
-              onPaletteChange(
-                new PaletteAction({
-                  actionType: PaletteActionType.SetBaseColor,
-                  args: { index: props.active, color },
-                })
-              );
+              handleColorChange(props.active, color);
             }
 
             event.preventDefault();
@@ -203,8 +310,9 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
           break;
       }
     },
-    [clipboard, props.active, props.palette, onIndexChange, onPaletteChange]
+    [clipboard, props.active, props.palette, onIndexChange, handleColorChange]
   );
+
   const rows = [];
 
   for (let y = 0; y < PALETTE_HEIGHT; y++) {
@@ -216,6 +324,7 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
         palette={props.palette}
         activeX={activeX}
         onIndexClick={onIndexChange}
+        onColorChange={handleColorChange}
         refState={refState}
       />
     );

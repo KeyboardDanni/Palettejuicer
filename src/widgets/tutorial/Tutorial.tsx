@@ -55,7 +55,7 @@ export function Tutorial(props: TutorialProps) {
 
   return (
     <>
-      <Popup open={props.popupOpen} onClose={closePopup} className="modal-popup">
+      <Popup open={props.popupOpen} onClose={closePopup} nested={true} className="modal-popup">
         <div id="tutorial" className="section">
           <h1>Palettejuicer Tutorial</h1>
           <div className="tabbar">

@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Popup from "reactjs-popup";
-import { PopupActions } from "reactjs-popup/dist/types";
+import { EventType, PopupActions } from "reactjs-popup/dist/types";
 
 export function PopupMenuSeparatorItem() {
   return (
@@ -55,12 +55,15 @@ export type PopupMenuChoiceData = {
 };
 
 export type PopupMenuProps = {
-  button: (isOpen: boolean) => JSX.Element;
+  button?: JSX.Element | ((isOpen: boolean) => JSX.Element);
+  on?: EventType | EventType[];
+  open?: boolean;
+  onClose?: () => void;
   children: React.ReactNode;
   popupRef: React.RefObject<PopupActions>;
 };
 
-export function PopupMenu({ button, children, popupRef }: PopupMenuProps) {
+export function PopupMenu({ button, on, open, onClose, children, popupRef }: PopupMenuProps) {
   const ref = useRef<HTMLUListElement>(null);
 
   function handleKey(event: React.KeyboardEvent) {
@@ -85,7 +88,16 @@ export function PopupMenu({ button, children, popupRef }: PopupMenuProps) {
 
   return (
     <>
-      <Popup trigger={button} ref={popupRef} position="bottom left" arrow={false} keepTooltipInside="#app-wrapper">
+      <Popup
+        trigger={button}
+        on={on}
+        open={open}
+        onClose={onClose}
+        ref={popupRef}
+        position="bottom left"
+        arrow={false}
+        keepTooltipInside="#app-wrapper"
+      >
         <div className="popup">
           <div className="menu" onKeyDown={handleKey}>
             <ul ref={ref}>{children}</ul>

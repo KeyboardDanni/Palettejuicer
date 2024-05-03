@@ -130,6 +130,10 @@ $logo-height: 64px;
     flex-direction: row;
     padding: 0 $size-section-padding ($size-scrollbar-flat + $size-section-padding) $size-section-padding;
   }
+
+  .section {
+    width: 42.5rem;
+  }
 }
 
 #sidebar-color-selector {
