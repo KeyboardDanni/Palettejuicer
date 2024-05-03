@@ -15,7 +15,6 @@
 
 ### Calculations
 
-- [ ] Allow renaming calculations
 - [ ] Use null for hue on hue-less colors
 - [ ] Additional interpolation settings
 - [ ] Adjust Color calculation
@@ -46,3 +45,4 @@
 - [x] Tutorial
 - [x] Responsive layout for mobile
 - [x] Copy/paste color cels on mobile
+- [x] Allow renaming calculations

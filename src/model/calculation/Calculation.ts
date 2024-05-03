@@ -19,6 +19,7 @@ export abstract class Calculation {
 
   readonly uid: string;
   readonly enabled: boolean = true;
+  readonly customName: string = "";
 
   constructor() {
     this.uid = uuidv4();

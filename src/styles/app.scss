@@ -185,6 +185,11 @@ $logo-height: 64px;
   margin-bottom: 1rem;
 }
 
+input[type="text"].section-header-rename {
+  width: 100%;
+  font-size: 1.6rem;
+}
+
 .header-bar {
   display: flex;
   flex-direction: row;

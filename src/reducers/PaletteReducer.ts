@@ -13,6 +13,7 @@ export const enum PaletteActionType {
   RemoveCalculation,
   MoveCalculation,
   SetCalculation,
+  RenameCalculation,
 }
 
 export interface PaletteActionArgs {}
@@ -51,6 +52,11 @@ export interface SetCalculationArgs extends PaletteActionArgs {
   calc: Calculation;
 }
 
+export interface RenameCalculationArgs extends PaletteActionArgs {
+  index: number;
+  customName: string;
+}
+
 export class PaletteAction {
   actionType!: PaletteActionType;
   args!: PaletteActionArgs;
@@ -71,6 +77,8 @@ function checkCalcIndex(draft: Draft<Palette>, calcIndex: number, isAdd: boolean
 }
 
 export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
+  let recompute = true;
+
   switch (action.actionType) {
     case PaletteActionType.SetBaseColor: {
       const args = action.args as SetBaseColorArgs;
@@ -130,9 +138,20 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
       break;
     }
 
+    case PaletteActionType.RenameCalculation: {
+      const args = action.args as RenameCalculationArgs;
+      if (!checkCalcIndex(draft, args.index)) return;
+
+      draft.calculations[args.index].customName = args.customName;
+      recompute = false;
+      break;
+    }
+
     default:
       throw new Error("Bad action type");
   }
 
-  draft.computedColors = castDraft(draft.computeColors());
+  if (recompute) {
+    draft.computedColors = castDraft(draft.computeColors());
+  }
 }

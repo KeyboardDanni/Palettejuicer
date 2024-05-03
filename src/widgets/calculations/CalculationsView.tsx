@@ -95,7 +95,11 @@ function CalculationItem(props: CalculationItemProps) {
     );
   }
 
-  const description = calculation.listDescription();
+  const calcClass = calculation.constructor as typeof Calculation;
+  const description =
+    calculation.customName.length > 0
+      ? `${calculation.customName} - ${calcClass.calcName()}`
+      : calculation.listDescription();
 
   return (
     <>
