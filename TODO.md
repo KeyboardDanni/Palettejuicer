@@ -19,7 +19,6 @@
 - [ ] Additional interpolation settings
 - [ ] Adjust Color calculation
 - [ ] Bake calculation
-- [ ] Cache color calculations
 
 ### UI papercuts
 
@@ -46,3 +45,4 @@
 - [x] Responsive layout for mobile
 - [x] Copy/paste color cels on mobile
 - [x] Allow renaming calculations
+- [x] Cache gamut mapping calculations

@@ -1,7 +1,9 @@
 import "reflect-metadata";
 
+import { produce } from "immer";
 import { expect, test } from "vitest";
-import { Color } from "../model/color/Color";
+
+import { Color, GamutMapAlgorithm, availableSpaces, gamutMapData } from "../model/color/Color";
 import { TestColor, testColors, TestColorNames } from "./TestColors";
 import { ColorspaceRgb } from "../model/color/ColorspaceRgb";
 import { ColorspaceHsl } from "../model/color/ColorspaceHsl";
@@ -64,14 +66,18 @@ function expectColorsEqual(actual: Color, expected: Color) {
   const typeActual = actual.data.constructor as typeof Colorspace;
   const typeExpected = expected.data.constructor as typeof Colorspace;
 
-  const actualA = actual.data;
-  const expectedA = expected.converted(typeActual.colorspaceName()).data;
+  if (typeActual === typeExpected) {
+    expectNumericArraysClose(actual.data.values, expected.data.values);
+  } else {
+    const actualA = actual.data;
+    const expectedA = expected.converted(typeActual.colorspaceName()).data;
 
-  const actualB = actual.converted(typeExpected.colorspaceName()).data;
-  const expectedB = expected.data;
+    const actualB = actual.converted(typeExpected.colorspaceName()).data;
+    const expectedB = expected.data;
 
-  expectNumericArraysClose(actualA.values, expectedA.values);
-  expectNumericArraysClose(actualB.values, expectedB.values);
+    expectNumericArraysClose(actualA.values, expectedA.values);
+    expectNumericArraysClose(actualB.values, expectedB.values);
+  }
 }
 
 function expectTestColorRgbEqual(actual: Color, expected: TestColor) {
@@ -399,5 +405,43 @@ test("handles hex strings correctly", () => {
   for (const name of testBadHexNames) {
     const color = Color.fromHex(name);
     expect(color, name).toBeNull();
+  }
+});
+
+test("moves color in-gamut correctly", () => {
+  const lightSteps = [0, 75];
+  const chromaSteps = [0, 75];
+  const hueSteps = [0, 180];
+  const colorspaces = availableSpaces.map((spaceClass) => spaceClass.colorspaceName());
+  const algorithms = Object.values(GamutMapAlgorithm).filter(
+    (value) => !Number.isNaN(Number(value))
+  ) as GamutMapAlgorithm[];
+
+  for (const light of lightSteps) {
+    for (const chroma of chromaSteps) {
+      for (const hue of hueSteps) {
+        const baseColor = new Color(new ColorspaceLch([light, chroma, hue]));
+
+        for (const space of colorspaces) {
+          const converted = baseColor.converted(space);
+
+          for (const algorithm of algorithms) {
+            let expected = converted;
+
+            if (!expected.rgb.inGamut()) {
+              expected = produce(expected, (draft) => {
+                const converter = draft.data.converter();
+                const inGamut = converter.toGamut({ space: "srgb", method: gamutMapData[algorithm].algorithm });
+                draft.data = draft.data.compute(inGamut) as any;
+              });
+            }
+
+            const actual = converted.toSrgbGamut(algorithm) ?? converted;
+
+            expectColorsEqual(actual, expected);
+          }
+        }
+      }
+    }
   }
 });

@@ -9,6 +9,7 @@ import { ColorspaceLch } from "./ColorspaceLch";
 import { ColorspaceLab } from "./ColorspaceLab";
 import { ColorspaceOklab } from "./ColorspaceOklab";
 import { ColorspaceOklch } from "./ColorspaceOklch";
+import { MruCache } from "../MruCache";
 
 type AvailableColorspaceItem = {
   value: typeof Colorspace;
@@ -53,6 +54,8 @@ export const gamutMapData: readonly GamutMapAlgorithmItem[] = [
   { name: "LCH Chroma", algorithm: "lch.c", description: "Tries to lower the chroma until the color is in gamut." },
   { name: "Clipping", algorithm: "clip", description: "Simply clips colors to be in gamut. Not recommended." },
 ];
+
+const gamutMapCache = new MruCache<string, Color | null>();
 
 export class Color {
   [immerable] = true;
@@ -115,14 +118,36 @@ export class Color {
     return color;
   }
 
-  toSrgbGamut(algorithm: GamutMapAlgorithm): Color | null {
-    if (this.rgb.inGamut()) return null;
+  toSrgbGamutUncached(algorithm: GamutMapAlgorithm): Color | null {
+    const methodName = gamutMapData[algorithm].algorithm;
 
-    return produce(this, (draft) => {
+    if (this.rgb.inGamut()) {
+      return null;
+    }
+
+    const newColor = produce(this, (draft) => {
       const converter = draft.data.converter();
-      const inGamut = converter.toGamut({ space: "srgb", method: gamutMapData[algorithm].algorithm });
+      const inGamut = converter.toGamut({ space: "srgb", method: methodName });
       draft.data = draft.data.compute(inGamut) as any;
     });
+
+    return newColor;
+  }
+
+  toSrgbGamut(algorithm: GamutMapAlgorithm): Color | null {
+    const methodName = gamutMapData[algorithm].algorithm;
+    const key = this.data.values.join(";") + ";" + this.spaceName() + ";" + methodName;
+    const cached = gamutMapCache.lookup(key);
+
+    if (cached !== undefined) {
+      return cached;
+    }
+
+    const newColor = this.toSrgbGamutUncached(algorithm);
+
+    gamutMapCache.store(key, newColor);
+
+    return newColor;
   }
 
   static channelInfo(spaceName: string): ChannelInfo[] {
