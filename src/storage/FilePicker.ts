@@ -1,39 +1,36 @@
-import { showOpenFilePicker, showSaveFilePicker } from "native-file-system-adapter";
-import { deserialize, serialize } from "./Serialize";
+import { FileSystemFileHandle, showOpenFilePicker, showSaveFilePicker } from "native-file-system-adapter";
 
-const TYPES = [
-  {
-    description: "Palettejuicer Project JSON",
-    accept: { "application/json": [".palettejuice"] },
-  },
-];
+export interface FiletypeInfo {
+  description: string;
+  extensions: string[];
+  mimetype: string;
+  suggestedName: string;
+}
+
+function getAcceptTypes(filetypeInfo: FiletypeInfo) {
+  return [
+    {
+      description: filetypeInfo.description,
+      accept: { [filetypeInfo.mimetype]: filetypeInfo.extensions.map((extension) => "." + extension) },
+    },
+  ];
+}
 
 export class FilePicker {
-  static async load<T>(classType: { new (): T }): Promise<T> {
-    const handle = await showOpenFilePicker({
+  static async loadPicker(filetypeInfo: FiletypeInfo): Promise<FileSystemFileHandle[]> {
+    return showOpenFilePicker({
       multiple: false,
       // @ts-expect-error Need to specify types for native open dialog
-      types: TYPES,
+      types: getAcceptTypes(filetypeInfo),
       accepts: [
         {
-          extensions: ["palettejuice", "json"],
+          extensions: filetypeInfo.extensions,
         },
       ],
     });
-    const file = await handle[0].getFile();
-    const json = await file.text();
-
-    const data = deserialize(json, classType);
-
-    return data;
   }
 
-  static async save(item: object) {
-    const blob = new Blob([serialize(item)]);
-    const handle = await showSaveFilePicker({ suggestedName: "project.palettejuice", types: TYPES });
-
-    const file = await handle.createWritable();
-    await file.write(blob);
-    await file.close();
+  static async savePicker(filetypeInfo: FiletypeInfo): Promise<FileSystemFileHandle> {
+    return showSaveFilePicker({ suggestedName: filetypeInfo.suggestedName, types: getAcceptTypes(filetypeInfo) });
   }
 }

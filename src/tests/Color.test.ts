@@ -4,7 +4,7 @@ import { produce } from "immer";
 import { expect, test } from "vitest";
 
 import { Color, GamutMapAlgorithm, availableSpaces, gamutMapData } from "../model/color/Color";
-import { TestColor, testColors, TestColorNames } from "./TestColors";
+import { testColors, TestColorNames } from "./data/TestColors";
 import { ColorspaceRgb } from "../model/color/ColorspaceRgb";
 import { ColorspaceHsl } from "../model/color/ColorspaceHsl";
 import { ColorspaceHsv } from "../model/color/ColorspaceHsv";
@@ -17,6 +17,28 @@ import { Colorspace } from "../model/color/Colorspace";
 const ROUNDING_ERROR = 0.001;
 const CLOSE_TO_0 = 0 + ROUNDING_ERROR;
 const CLOSE_TO_1 = 1 - ROUNDING_ERROR;
+
+interface TestColor {
+  red: number;
+  green: number;
+  blue: number;
+  hue: number;
+  saturationL: number;
+  lightness: number;
+  saturationV: number;
+  value: number;
+  labLightness: number;
+  labA: number;
+  labB: number;
+  lchChroma: number;
+  lchHue: number;
+  oklabLightness: number;
+  oklabA: number;
+  oklabB: number;
+  oklchChroma: number;
+  oklchHue: number;
+  hex: string;
+}
 
 function wrapDegreesIfClose(value: number) {
   if (value + ROUNDING_ERROR > 360) {

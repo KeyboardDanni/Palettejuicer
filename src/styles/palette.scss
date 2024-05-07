@@ -22,6 +22,12 @@ $size-palette-color-minimum: 2rem;
     linear-gradient(90deg, $color, $color 25%, transparent 25%, transparent 75%, $color 75%);
 }
 
+input[type="text"].palette-rename {
+  font-size: 1.8rem;
+  max-width: 32rem;
+  margin: -0.4rem -0.4rem 0.8rem -0.4rem;
+}
+
 .palette {
   display: flex;
   flex-direction: column;

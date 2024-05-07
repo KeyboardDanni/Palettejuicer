@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Popup from "reactjs-popup";
-import { EventType, PopupActions } from "reactjs-popup/dist/types";
+import { EventType, PopupActions, PopupPosition } from "reactjs-popup/dist/types";
 
 export function PopupMenuSeparatorItem() {
   return (
@@ -13,12 +13,15 @@ export function PopupMenuSeparatorItem() {
 export type PopupMenuItemProps = {
   index: number;
   name: string;
-  description: string;
+  description?: string;
+  children?: React.ReactNode;
   popupRef?: React.RefObject<PopupActions>;
-  onItemSelect: (index: number) => void;
+  onItemSelect?: (index: number) => void;
 };
 
 export function PopupMenuItem(props: PopupMenuItemProps) {
+  const nestedPopupRef = useRef<PopupActions>(null);
+
   function handleKey(event: React.KeyboardEvent) {
     switch (event.key) {
       case "Enter":
@@ -28,22 +31,42 @@ export function PopupMenuItem(props: PopupMenuItemProps) {
   }
 
   function handleSelect() {
-    props.onItemSelect(props.index);
+    if (props.onItemSelect) {
+      props.onItemSelect(props.index);
+    }
+    nestedPopupRef.current?.open();
     props.popupRef?.current?.close();
   }
 
-  return (
-    <>
+  const menuItem = (isOpen: boolean) => {
+    let className = "menu-item";
+
+    if (isOpen) className += " menu-item-open";
+    if (props.children) className += " menu-item-submenu";
+
+    return (
       <li
-        className="menu-item"
+        className={className}
         title={props.description}
         data-id={props.index}
         tabIndex={0}
         onMouseUp={handleSelect}
         onKeyDown={handleKey}
       >
-        <div>{props.name}</div>
+        {props.name}
       </li>
+    );
+  };
+
+  if (!props.children) {
+    return <>{menuItem(false)}</>;
+  }
+
+  return (
+    <>
+      <PopupMenu button={menuItem} on={"hover"} popupRef={nestedPopupRef} position="right top">
+        {props.children}
+      </PopupMenu>
     </>
   );
 }
@@ -59,15 +82,21 @@ export type PopupMenuProps = {
   on?: EventType | EventType[];
   open?: boolean;
   onClose?: () => void;
+  position?: PopupPosition | PopupPosition[];
   children: React.ReactNode;
   popupRef: React.RefObject<PopupActions>;
 };
 
-export function PopupMenu({ button, on, open, onClose, children, popupRef }: PopupMenuProps) {
+export function PopupMenu(props: PopupMenuProps) {
   const ref = useRef<HTMLUListElement>(null);
 
   function handleKey(event: React.KeyboardEvent) {
     if (!ref.current) {
+      return;
+    }
+
+    // Stop this menu from stealing keystrokes if it's not the topmost
+    if (ref.current.closest(".popup-content")?.nextElementSibling?.classList.contains("popup-content")) {
       return;
     }
 
@@ -89,18 +118,19 @@ export function PopupMenu({ button, on, open, onClose, children, popupRef }: Pop
   return (
     <>
       <Popup
-        trigger={button}
-        on={on}
-        open={open}
-        onClose={onClose}
-        ref={popupRef}
-        position="bottom left"
+        trigger={props.button}
+        on={props.on}
+        open={props.open}
+        onClose={props.onClose}
+        ref={props.popupRef}
+        position={props.position ?? "bottom left"}
         arrow={false}
         keepTooltipInside="#app-wrapper"
+        nested={true}
       >
         <div className="popup">
           <div className="menu" onKeyDown={handleKey}>
-            <ul ref={ref}>{children}</ul>
+            <ul ref={ref}>{props.children}</ul>
           </div>
         </div>
       </Popup>

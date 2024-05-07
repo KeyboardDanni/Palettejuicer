@@ -6,6 +6,7 @@ import { Calculation } from "../model/calculation/Calculation";
 import { Color } from "../model/color/Color";
 
 export const enum PaletteActionType {
+  RenamePalette,
   SetBaseColor,
   EnableCalculations,
   AddCalculation,
@@ -24,6 +25,10 @@ export interface BooleanArgs extends PaletteActionArgs {
 
 export interface IndexArgs extends PaletteActionArgs {
   index: number;
+}
+
+export interface RenamePaletteArgs extends PaletteActionArgs {
+  paletteName: string;
 }
 
 export interface SetBaseColorArgs extends PaletteActionArgs {
@@ -80,6 +85,14 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
   let recompute = true;
 
   switch (action.actionType) {
+    case PaletteActionType.RenamePalette: {
+      const args = action.args as RenamePaletteArgs;
+
+      draft.paletteName = args.paletteName;
+      recompute = false;
+      break;
+    }
+
     case PaletteActionType.SetBaseColor: {
       const args = action.args as SetBaseColorArgs;
       const offset = draft.indexToOffset(args.index);

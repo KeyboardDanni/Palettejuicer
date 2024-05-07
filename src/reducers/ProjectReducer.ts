@@ -1,17 +1,23 @@
-import { Draft } from "immer";
+import { castDraft, Draft } from "immer";
 
 import { PaletteAction, PaletteActionType, PaletteReducer, SetBaseColorArgs } from "./PaletteReducer";
 import { Project } from "../model/Project";
+import { Palette } from "../model/Palette";
 
 export const enum ProjectFileActionType {
   Clear,
-  Set,
+  SetProject,
+  SetPalette,
 }
 
 export interface ProjectFileActionArgs {}
 
-export interface ProjectFileSetActionArgs extends ProjectFileActionArgs {
+export interface ProjectFileSetProjectArgs extends ProjectFileActionArgs {
   project: Project;
+}
+
+export interface ProjectFileSetPaletteArgs extends ProjectFileActionArgs {
+  palette: Palette;
 }
 
 export class ProjectFileAction {
@@ -25,16 +31,21 @@ export class ProjectFileAction {
 
 export type ProjectAction = ProjectFileAction | PaletteAction;
 
-function ProjectFileReducer(_draft: Draft<Project>, action: ProjectFileAction) {
+function ProjectFileReducer(draft: Draft<Project>, action: ProjectFileAction) {
   let args;
 
   switch (action.actionType) {
     case ProjectFileActionType.Clear:
       return new Project();
 
-    case ProjectFileActionType.Set:
-      args = action.args as ProjectFileSetActionArgs;
+    case ProjectFileActionType.SetProject:
+      args = action.args as ProjectFileSetProjectArgs;
       return args.project;
+
+    case ProjectFileActionType.SetPalette:
+      args = action.args as ProjectFileSetPaletteArgs;
+      draft.palette = castDraft(args.palette);
+      break;
 
     default:
       throw new Error("Bad action type");

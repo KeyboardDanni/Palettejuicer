@@ -178,6 +178,7 @@ type AppPaletteProps = {
 
 function AppPalette(props: AppPaletteProps) {
   const onIndexChange = props.onIndexChange;
+  const onPaletteChange = props.onPaletteChange;
   const handleClick = useCallback(
     function (index: CelIndex) {
       onIndexChange(index);
@@ -185,9 +186,28 @@ function AppPalette(props: AppPaletteProps) {
     [onIndexChange]
   );
 
+  const handleNameChange = useCallback(
+    function (event: ChangeEvent<HTMLInputElement>) {
+      onPaletteChange(
+        new PaletteAction({
+          actionType: PaletteActionType.RenamePalette,
+          args: { paletteName: event.target.value },
+        })
+      );
+    },
+    [onPaletteChange]
+  );
+
   return (
     <>
       <div id="document-palette" className="section">
+        <input
+          className="palette-rename flat-text"
+          type="text"
+          value={props.palette.paletteName}
+          onChange={handleNameChange}
+          placeholder={"Untitled Palette"}
+        />
         <div id="palette-inner-bg" className="section-gray-background">
           <PaletteView
             palette={props.palette}

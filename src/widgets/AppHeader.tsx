@@ -4,12 +4,18 @@ import Popup from "reactjs-popup";
 
 import { DropdownButton } from "./common/DropdownButton";
 import { ProjectAction, ProjectFileAction, ProjectFileActionType } from "../reducers/ProjectReducer";
-import { FilePicker } from "../storage/FilePicker";
 import { Project } from "../model/Project";
+import { ProjectFile } from "../storage/ProjectFile";
 import { PopupMenuItem, PopupMenuSeparatorItem } from "./common/PopupMenu";
 import { HistoryAction, HistoryActionType } from "../reducers/HistoryReducer";
 import { UndoHistory } from "../model/UndoHistory";
 import { Tutorial } from "./tutorial/Tutorial";
+
+import { Exporter } from "../storage/exporters/Exporter";
+import { GnuPaletteExporter } from "../storage/exporters/GnuPaletteExporter";
+import { JascPalExporter } from "../storage/exporters/JascPalExporter";
+
+const availableExporters: (typeof Exporter)[] = [GnuPaletteExporter, JascPalExporter];
 
 type ConfirmPopupProps = {
   confirmOpen: boolean;
@@ -80,8 +86,8 @@ export function FileMenu(props: FileMenuProps) {
     async function () {
       popupRef?.current?.close();
 
-      const project = await FilePicker.load(Project);
-      props.onProjectChange(new ProjectFileAction({ actionType: ProjectFileActionType.Set, args: { project } }));
+      const project = await ProjectFile.loadWithPicker();
+      props.onProjectChange(new ProjectFileAction({ actionType: ProjectFileActionType.SetProject, args: { project } }));
     },
     [props]
   );
@@ -89,10 +95,64 @@ export function FileMenu(props: FileMenuProps) {
   const handleSave = useCallback(
     async function () {
       popupRef?.current?.close();
-      await FilePicker.save(props.project);
+      await ProjectFile.saveWithPicker(props.project);
     },
     [props]
   );
+
+  const handleImport = useCallback(
+    async function (index: number) {
+      popupRef?.current?.close();
+
+      const importer = availableExporters[index];
+
+      const palette = await importer.importWithPicker();
+      props.onProjectChange(new ProjectFileAction({ actionType: ProjectFileActionType.SetPalette, args: { palette } }));
+    },
+    [props]
+  );
+
+  const handleExport = useCallback(
+    async function (index: number) {
+      popupRef?.current?.close();
+
+      const exporter = availableExporters[index];
+
+      await exporter.exportWithPicker(props.project.palette);
+    },
+    [props]
+  );
+
+  const importers = [];
+  const exporters = [];
+
+  for (const [i, exporter] of availableExporters.entries()) {
+    const info = exporter.filetypeInfo();
+
+    importers.push(
+      <PopupMenuItem
+        key={i}
+        index={i}
+        name={`${info.description} (.${info.extensions.join(", ")})`}
+        description={`Import from ${info.description}`}
+        onItemSelect={handleImport}
+      />
+    );
+  }
+
+  for (const [i, exporter] of availableExporters.entries()) {
+    const info = exporter.filetypeInfo();
+
+    exporters.push(
+      <PopupMenuItem
+        key={i}
+        index={i}
+        name={`${info.description} (.${info.extensions.join(", ")})`}
+        description={`Export to ${info.description}`}
+        onItemSelect={handleExport}
+      />
+    );
+  }
 
   return (
     <>
@@ -108,17 +168,24 @@ export function FileMenu(props: FileMenuProps) {
         <PopupMenuItem
           key={1}
           index={1}
-          name="Load from JSON"
+          name="Load Project File"
           description="Load a Palettejuicer project from JSON stored on your local drive."
           onItemSelect={handleLoad}
         />
         <PopupMenuItem
           key={2}
           index={2}
-          name="Save to JSON"
+          name="Save Project File"
           description="Save a Palettejuicer project to JSON stored on your local drive."
           onItemSelect={handleSave}
         />
+        <PopupMenuSeparatorItem />
+        <PopupMenuItem key={3} index={3} name="Import">
+          {importers}
+        </PopupMenuItem>
+        <PopupMenuItem key={4} index={4} name="Export">
+          {exporters}
+        </PopupMenuItem>
       </DropdownButton>
       <ConfirmPopup confirmOpen={confirmOpen} setConfirmOpen={setConfirmOpen} onConfirm={handleReallyClear} />
     </>

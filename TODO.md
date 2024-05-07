@@ -2,12 +2,13 @@
 
 ### I/O
 
-- [ ] Palette file import/export
+- [ ] Select export region
 
 ### Color Selection
 
 - [ ] Add OkHSL/OkHSV
 - [ ] Add OkLrCH
+- [ ] Color preview on sliders
 - [ ] Custom palette size
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
@@ -31,6 +32,10 @@
 - [ ] Restore view selections on undo/redo
 - [ ] Indicate which cels are affected by a calculation on selection
 
+# Other
+
+- [ ] FAQ section
+
 # Done
 
 - [x] Copy and paste color cels
@@ -46,3 +51,4 @@
 - [x] Copy/paste color cels on mobile
 - [x] Allow renaming calculations
 - [x] Cache gamut mapping calculations
+- [x] Palette file import/export

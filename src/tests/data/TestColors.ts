@@ -1,25 +1,3 @@
-export interface TestColor {
-  red: number;
-  green: number;
-  blue: number;
-  hue: number;
-  saturationL: number;
-  lightness: number;
-  saturationV: number;
-  value: number;
-  labLightness: number;
-  labA: number;
-  labB: number;
-  lchChroma: number;
-  lchHue: number;
-  oklabLightness: number;
-  oklabA: number;
-  oklabB: number;
-  oklchChroma: number;
-  oklchHue: number;
-  hex: string;
-}
-
 export enum TestColorNames {
   Black,
   White,
@@ -76,7 +54,7 @@ export enum TestColorNames {
   PastelHotPink,
 }
 
-export const testColors: TestColor[] = [
+export const testColors = [
   {
     red: 0,
     green: 0,

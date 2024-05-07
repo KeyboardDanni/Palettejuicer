@@ -36,6 +36,8 @@ type NullableColor = Color | null;
 export class Palette {
   [immerable] = true;
 
+  readonly paletteName: string = "Untitled Palette";
+
   @Type(() => Calculation, {
     discriminator: {
       property: "calcType",
@@ -88,6 +90,18 @@ export class Palette {
     }
 
     return this.baseColors[offset];
+  }
+
+  colors(): Color[] {
+    if (!this.useCalculations) {
+      return [...this.baseColors];
+    }
+
+    const colors = this.computedColors.map((color, i) => {
+      return color !== null ? color : this.baseColors[i];
+    });
+
+    return colors;
   }
 
   baseColor(index: CelIndex): Color {
