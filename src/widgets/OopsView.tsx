@@ -1,6 +1,6 @@
 import { LocalStorage } from "../storage/LocalStorage";
 import { Project } from "../model/Project";
-import { FilePicker } from "../storage/FilePicker";
+import { ProjectFile } from "../storage/ProjectFile";
 
 function onReload() {
   window.location.reload();
@@ -10,7 +10,7 @@ async function onReset() {
   const project = LocalStorage.load("Project", Project);
 
   try {
-    await FilePicker.save(project);
+    await ProjectFile.saveWithPicker(project);
   } catch (error) {
     console.error(error);
   }
@@ -23,7 +23,7 @@ async function onReset() {
 async function onMakeBackup() {
   const project = LocalStorage.load("Project", Project);
 
-  await FilePicker.save(project);
+  await ProjectFile.saveWithPicker(project);
 }
 
 export function OopsView() {

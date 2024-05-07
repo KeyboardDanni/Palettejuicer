@@ -27,7 +27,7 @@ class Autosaver {
       clearTimeout(Autosaver.timeoutId);
     }
 
-    Autosaver.timeoutId = setTimeout(() => {
+    Autosaver.timeoutId = window.setTimeout(() => {
       Autosaver.autosaveNow(project);
     }, AUTOSAVE_DELAY_MS);
   }
