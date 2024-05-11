@@ -1,5 +1,4 @@
 import { immerable, produce } from "immer";
-import Colorjs from "colorjs.io";
 
 import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
 import { fixArraySize } from "../../util/math";
@@ -35,16 +34,6 @@ export class ColorspaceLab extends Colorspace {
     return produce(this, (draft) => {
       draft.values = [lightness, a, b];
     });
-  }
-
-  compute(converter: Colorjs): ColorspaceLab {
-    const [lightness, a, b] = converter.lab;
-
-    return this.with(lightness, a, b);
-  }
-
-  converter(): Colorjs {
-    return new Colorjs("lab", [this.values[0], this.values[1], this.values[2]]);
   }
 
   static channelInfo(): ChannelInfo[] {

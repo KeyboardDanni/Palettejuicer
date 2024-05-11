@@ -5,15 +5,17 @@ export type DropdownButtonProps = {
   label: string;
   children: React.ReactNode;
   popupRef: React.RefObject<PopupActions>;
+  className?: string;
   [key: string]: any;
 };
 
-export function DropdownButton({ label, children, popupRef, ...other }: DropdownButtonProps) {
+export function DropdownButton({ label, children, popupRef, className, ...other }: DropdownButtonProps) {
   const dropdownButton = (isOpen: boolean) => {
-    const className = isOpen ? "dropdown selected" : "dropdown";
+    let dropdownClass = isOpen ? "dropdown selected" : "dropdown";
+    if (className) dropdownClass = dropdownClass + " " + className;
 
     return (
-      <button className={className} {...other}>
+      <button className={dropdownClass} {...other}>
         {label}
       </button>
     );
@@ -32,15 +34,17 @@ export type DropdownChoiceButtonProps = {
   label: string;
   items: readonly PopupMenuChoiceData[];
   onItemSelect: (index: number) => void;
+  className?: string;
   [key: string]: any;
 };
 
-export function DropdownChoiceButton({ label, items, onItemSelect, ...other }: DropdownChoiceButtonProps) {
+export function DropdownChoiceButton({ label, items, onItemSelect, className, ...other }: DropdownChoiceButtonProps) {
   const dropdownButton = (isOpen: boolean) => {
-    const className = isOpen ? "dropdown selected" : "dropdown";
+    let dropdownClass = isOpen ? "dropdown selected" : "dropdown";
+    if (className) dropdownClass = dropdownClass + " " + className;
 
     return (
-      <button className={className} {...other}>
+      <button className={dropdownClass} {...other}>
         {label}
       </button>
     );

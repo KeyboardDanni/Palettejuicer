@@ -9,7 +9,7 @@ const CHANNEL_INFO: ChannelInfo[] = [
   { channel: "value", label: "V", channelType: ChannelType.IsLightness, range: [0, 100], step: 2 },
 ];
 
-export class ColorspaceHsv extends Colorspace {
+export class ColorspaceOkhsv extends Colorspace {
   [immerable] = true;
 
   get hue() {
@@ -23,16 +23,29 @@ export class ColorspaceHsv extends Colorspace {
   }
 
   static colorspaceName(): string {
-    return "hsv";
+    return "okhsv";
   }
 
   constructor(values?: number[]) {
     super(fixArraySize(values ?? [], 3));
   }
 
-  with(hue: number, saturation: number, value: number): ColorspaceHsv {
+  static rawToTransformed(raw: readonly number[]): number[] {
+    return [raw[0], raw[1] * 100, raw[2] * 100];
+  }
+  static transformedToRaw(transformed: readonly number[]): number[] {
+    return [transformed[0], transformed[1] / 100, transformed[2] / 100];
+  }
+
+  with(hue: number, saturation: number, value: number): ColorspaceOkhsv {
     return produce(this, (draft) => {
       draft.values = [hue, saturation, value];
+    });
+  }
+
+  withTransformed(hue: number, saturation: number, value: number): ColorspaceOkhsv {
+    return produce(this, (draft) => {
+      draft.values = ColorspaceOkhsv.transformedToRaw([hue, saturation, value]);
     });
   }
 

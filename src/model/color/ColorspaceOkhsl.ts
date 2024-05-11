@@ -4,26 +4,26 @@ import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
 import { fixArraySize } from "../../util/math";
 
 const CHANNEL_INFO: ChannelInfo[] = [
+  { channel: "hue", label: "H", channelType: ChannelType.IsHue, range: [0, 360], step: 5 },
+  { channel: "saturation", label: "S", channelType: ChannelType.IsSaturation, range: [0, 100], step: 2 },
   { channel: "lightness", label: "L", channelType: ChannelType.IsLightness, range: [0, 100], step: 2 },
-  { channel: "a", label: "A", channelType: ChannelType.None, range: [-40, 40], step: 2 },
-  { channel: "b", label: "B", channelType: ChannelType.None, range: [-40, 40], step: 2 },
 ];
 
-export class ColorspaceOklab extends Colorspace {
+export class ColorspaceOkhsl extends Colorspace {
   [immerable] = true;
 
-  get lightness() {
+  get hue() {
     return this.values[0];
   }
-  get a() {
+  get saturation() {
     return this.values[1];
   }
-  get b() {
+  get lightness() {
     return this.values[2];
   }
 
   static colorspaceName(): string {
-    return "oklab";
+    return "okhsl";
   }
 
   constructor(values?: number[]) {
@@ -31,21 +31,21 @@ export class ColorspaceOklab extends Colorspace {
   }
 
   static rawToTransformed(raw: readonly number[]): number[] {
-    return raw.map((rawValue) => rawValue * 100);
+    return [raw[0], raw[1] * 100, raw[2] * 100];
   }
   static transformedToRaw(transformed: readonly number[]): number[] {
-    return transformed.map((transformedValue) => transformedValue / 100);
+    return [transformed[0], transformed[1] / 100, transformed[2] / 100];
   }
 
-  with(lightness: number, a: number, b: number): ColorspaceOklab {
+  with(hue: number, saturation: number, lightness: number): ColorspaceOkhsl {
     return produce(this, (draft) => {
-      draft.values = [lightness, a, b];
+      draft.values = [hue, saturation, lightness];
     });
   }
 
-  withTransformed(lightness: number, a: number, b: number): ColorspaceOklab {
+  withTransformed(hue: number, saturation: number, lightness: number): ColorspaceOkhsl {
     return produce(this, (draft) => {
-      draft.values = ColorspaceOklab.transformedToRaw([lightness, a, b]);
+      draft.values = ColorspaceOkhsl.transformedToRaw([hue, saturation, lightness]);
     });
   }
 

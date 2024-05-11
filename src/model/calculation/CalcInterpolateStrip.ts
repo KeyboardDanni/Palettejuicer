@@ -1,19 +1,20 @@
 import { immerable } from "immer";
-import Colorjs from "colorjs.io";
 
 import { CelIndex, celStrip } from "../../util/cel";
 import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
 import { CalcInterpolateStripView } from "../../widgets/calculations/CalcInterpolateStripView";
 import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 import { Color } from "../color/Color";
-import { ColorspaceRgb } from "../color/ColorspaceRgb";
 import { Transform } from "class-transformer";
+import { colorSteps } from "../../util/colorjs";
 
 export enum LerpColorspace {
   OkLch,
   OkLab,
   Lch,
   Lab,
+  OkHsl,
+  OkHsv,
   Hsl,
   Hsv,
   Srgb,
@@ -27,12 +28,6 @@ type LerpColorspaceItem = {
 
 export const lerpColorspaceData: readonly LerpColorspaceItem[] = [
   {
-    name: "LCH",
-    colorspace: "lch",
-    description: "Blends over hue, maintaining perceptual lightness. Good for making colors that pop.",
-  },
-  { name: "LAB", colorspace: "lab", description: "Maintains perceptual lightness. Good for earthy tones." },
-  {
     name: "OkLCH",
     colorspace: "oklch",
     description: "Blends over hue, maintaining perceptual lightness. Uses the newer OkLAB colorspace.",
@@ -43,14 +38,30 @@ export const lerpColorspaceData: readonly LerpColorspaceItem[] = [
     description: "Maintains perceptual lightness. Uses the newer OkLAB colorspace.",
   },
   {
+    name: "LCH",
+    colorspace: "lch",
+    description: "Blends over hue, maintaining perceptual lightness. Good for making colors that pop.",
+  },
+  { name: "LAB", colorspace: "lab", description: "Maintains perceptual lightness. Good for earthy tones." },
+  {
+    name: "OkHSL",
+    colorspace: "okhsl",
+    description: "Maintains some perceptual lightness while staying inside the sRGB gamut.",
+  },
+  {
+    name: "OkHSV",
+    colorspace: "okhsv",
+    description: "Maintains some perceptual lightness while staying inside the sRGB gamut.",
+  },
+  {
     name: "HSL",
     colorspace: "hsl",
-    description: "Blends nicely over hue, but perceptual lightness will be inconsistent.",
+    description: "Blends nicely over hue, but perceptual lightness will be inconsistent. Not recommended.",
   },
   {
     name: "HSV",
     colorspace: "hsv",
-    description: "Blends nicely over hue, but perceptual lightness will be inconsistent.",
+    description: "Blends nicely over hue, but perceptual lightness will be inconsistent. Not recommended.",
   },
   { name: "sRGB", colorspace: "srgb", description: "Blends over the standard RGB colorspace. Not recommended." },
 ];
@@ -118,25 +129,21 @@ export class CalcInterpolateStrip extends Calculation {
     const indexes = this.outputCels();
     const startColor = colors[0];
     const endColor = colors[1];
-    const start = startColor.rgb.converter();
-    const end = endColor.rgb.converter();
+    const colorspace = lerpColorspaceData[this.colorspace].colorspace;
 
-    const steps = Colorjs.steps(start, end, {
-      steps: indexes.length + 2,
-      space: lerpColorspaceData[this.colorspace].colorspace,
-      outputSpace: "srgb",
-      hue: lerpHueModeData[this.hueMode].mode,
-      progression: (p) => Math.pow(p, this.curve),
+    const steps = colorSteps(startColor, endColor, {
+      numSteps: indexes.length + 2,
+      colorspace,
+      hueMode: lerpHueModeData[this.hueMode].mode,
+      powerCurve: this.curve,
     });
 
     for (let i = 0; i < indexes.length; i++) {
       const step = steps[i + 1];
-      const [red, green, blue] = step.srgb;
-      const color = new Color(new ColorspaceRgb([red, green, blue]));
 
       cels.push({
         index: indexes[i],
-        color,
+        color: step,
       });
     }
 

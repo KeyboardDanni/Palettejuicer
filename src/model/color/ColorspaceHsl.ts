@@ -1,8 +1,7 @@
 import { immerable, produce } from "immer";
-import Colorjs from "colorjs.io";
 
 import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
-import { fixArraySize, handleNaN } from "../../util/math";
+import { fixArraySize } from "../../util/math";
 
 const CHANNEL_INFO: ChannelInfo[] = [
   { channel: "hue", label: "H", channelType: ChannelType.IsHue, range: [0, 360], step: 5 },
@@ -35,16 +34,6 @@ export class ColorspaceHsl extends Colorspace {
     return produce(this, (draft) => {
       draft.values = [hue, saturation, lightness];
     });
-  }
-
-  compute(converter: Colorjs): ColorspaceHsl {
-    const [hue, saturation, lightness] = converter.hsl;
-
-    return this.with(handleNaN(hue, this.values[0]), saturation, lightness);
-  }
-
-  converter(): Colorjs {
-    return new Colorjs("hsl", [this.values[0], this.values[1], this.values[2]]);
   }
 
   static channelInfo(): ChannelInfo[] {

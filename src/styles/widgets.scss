@@ -52,13 +52,13 @@
 .popup {
   @include raised-box-shadow(
     $color-section-inset,
-    $color-section-border,
+    $color-popup-border,
     calc($size-widget-outline / 2),
     $size-button-height
   );
 
   background-color: $color-popup-background;
-  border: $size-widget-outline solid $color-section-border;
+  border: $size-widget-outline solid $color-popup-border;
   border-radius: $size-button-radius;
   margin: $size-popup-margin $size-popup-margin ($size-button-height + $size-popup-margin) $size-popup-margin;
   padding: $size-button-padding;
@@ -234,6 +234,24 @@ button {
       outline-color: $color-text-selected;
     }
   }
+
+  &.thin-button {
+    @include raised-button-thin($color-widget, $color-widget-border, 0);
+
+    padding: 0.2em $size-button-padding;
+    height: 1.6em;
+    margin: 0 0.4rem;
+
+    &:hover,
+    &:focus-visible {
+      @include raised-button-thin($color-widget-hover, $color-widget-border-hover, 0);
+    }
+
+    &:active,
+    &.selected {
+      @include raised-button-thin($color-widget-accent-hover, $color-widget-accent-border, 1);
+    }
+  }
 }
 
 .button-bar {
@@ -291,6 +309,14 @@ button {
   border-bottom: 0.1rem solid $color-tab-border;
   overflow-x: auto;
   overflow-y: clip;
+
+  .tabbar-spacer {
+    flex: 1;
+  }
+
+  .dropdown {
+    align-self: flex-start;
+  }
 }
 
 label.tabbar-tab {
@@ -322,11 +348,11 @@ label.tabbar-tab {
     }
   }
 
-  &:first-child input + span {
+  &:first-of-type input + span {
     border-top-left-radius: $size-button-radius;
   }
 
-  &:last-child input + span {
+  &:last-of-type input + span {
     border-top-right-radius: $size-button-radius;
   }
 }

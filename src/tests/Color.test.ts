@@ -1,10 +1,11 @@
 import "reflect-metadata";
 
-import { produce } from "immer";
+import { castDraft, produce } from "immer";
 import { expect, test } from "vitest";
 
+import { toGamut } from "../util/colorjs";
 import { Color, GamutMapAlgorithm, availableSpaces, gamutMapData } from "../model/color/Color";
-import { testColors, TestColorNames } from "./data/TestColors";
+import { testColors, TestColorNames, TestColor } from "./data/TestColors";
 import { ColorspaceRgb } from "../model/color/ColorspaceRgb";
 import { ColorspaceHsl } from "../model/color/ColorspaceHsl";
 import { ColorspaceHsv } from "../model/color/ColorspaceHsv";
@@ -13,34 +14,17 @@ import { ColorspaceLch } from "../model/color/ColorspaceLch";
 import { ColorspaceOklab } from "../model/color/ColorspaceOklab";
 import { ColorspaceOklch } from "../model/color/ColorspaceOklch";
 import { Colorspace } from "../model/color/Colorspace";
+import { ColorspaceOkhsl } from "../model/color/ColorspaceOkhsl";
+import { ColorspaceOkhsv } from "../model/color/ColorspaceOkhsv";
 
 const ROUNDING_ERROR = 0.001;
 const CLOSE_TO_0 = 0 + ROUNDING_ERROR;
 const CLOSE_TO_1 = 1 - ROUNDING_ERROR;
 
-interface TestColor {
-  red: number;
-  green: number;
-  blue: number;
-  hue: number;
-  saturationL: number;
-  lightness: number;
-  saturationV: number;
-  value: number;
-  labLightness: number;
-  labA: number;
-  labB: number;
-  lchChroma: number;
-  lchHue: number;
-  oklabLightness: number;
-  oklabA: number;
-  oklabB: number;
-  oklchChroma: number;
-  oklchHue: number;
-  hex: string;
-}
-
-function wrapDegreesIfClose(value: number) {
+function massageHue(value: number) {
+  if (Number.isNaN(value)) {
+    return 0;
+  }
   if (value + ROUNDING_ERROR > 360) {
     return value - 360;
   }
@@ -80,7 +64,11 @@ function expectNumericArraysClose(actual: readonly number[], expected: readonly 
   expect(actual.length).toBe(expected.length);
 
   for (const [i, value] of actual.entries()) {
-    expect(value).toBeCloseTo(expected[i]);
+    if (Number.isNaN(expected[i])) {
+      expect(value).toBeNaN();
+    } else {
+      expect(value).toBeCloseTo(expected[i]);
+    }
   }
 }
 
@@ -117,7 +105,7 @@ function expectTestColorHslEqual(actual: Color, expected: TestColor) {
 
   if (hsl.lightness > CLOSE_TO_0 && hsl.lightness < CLOSE_TO_1) {
     if (hsl.saturation > CLOSE_TO_0) {
-      expect(wrapDegreesIfClose(hsl.hue)).toBeCloseTo(wrapDegreesIfClose(expected.hue), 1);
+      expect(massageHue(hsl.hue)).toBeCloseTo(massageHue(expected.hue), 1);
     }
     expect(hsl.saturation).toBeCloseTo(expected.saturationL, 1);
   }
@@ -128,7 +116,7 @@ function expectTestColorHsvEqual(actual: Color, expected: TestColor) {
   const hsv = actual.hsv;
 
   if (hsv.saturation > CLOSE_TO_0) {
-    expect(wrapDegreesIfClose(hsv.hue)).toBeCloseTo(wrapDegreesIfClose(expected.hue), 1);
+    expect(massageHue(hsv.hue)).toBeCloseTo(massageHue(expected.hue), 1);
   }
   expect(hsv.saturation).toBeCloseTo(expected.saturationV, 1);
   expect(hsv.value).toBeCloseTo(expected.value, 1);
@@ -149,7 +137,7 @@ function expectTestColorLchEqual(actual: Color, expected: TestColor) {
   expect(lch.chroma).toBeCloseTo(expected.lchChroma, 1);
 
   if (lch.chroma > 0) {
-    expect(wrapDegreesIfClose(lch.hue)).toBeCloseTo(wrapDegreesIfClose(expected.lchHue), 1);
+    expect(massageHue(lch.hue)).toBeCloseTo(massageHue(expected.lchHue), 1);
   }
 }
 
@@ -170,8 +158,32 @@ function expectTestColorOklchEqual(actual: Color, expected: TestColor) {
   expect(chroma).toBeCloseTo(expected.oklchChroma, 1);
 
   if (chroma > 0) {
-    expect(wrapDegreesIfClose(hue)).toBeCloseTo(wrapDegreesIfClose(expected.oklchHue), 1);
+    expect(massageHue(hue)).toBeCloseTo(massageHue(expected.oklchHue), 1);
   }
+}
+
+function expectTestColorOkhslEqual(actual: Color, expected: TestColor) {
+  const okhsl = actual.okhsl;
+  const [hue, saturation, lightness] = okhsl.transformed();
+
+  if (lightness > CLOSE_TO_0 && lightness < CLOSE_TO_1) {
+    if (saturation > CLOSE_TO_0) {
+      expect(massageHue(hue)).toBeCloseTo(massageHue(expected.okhslHue), 1);
+    }
+    expect(saturation).toBeCloseTo(expected.okhslSaturation, 1);
+  }
+  expect(lightness).toBeCloseTo(expected.okhslLightness, 1);
+}
+
+function expectTestColorOkhsvEqual(actual: Color, expected: TestColor) {
+  const okhsv = actual.okhsv;
+  const [hue, saturation, value] = okhsv.transformed();
+
+  if (saturation > CLOSE_TO_0) {
+    expect(massageHue(hue)).toBeCloseTo(massageHue(expected.okhslHue), 1);
+  }
+  expect(saturation).toBeCloseTo(expected.okhsvSaturation, 1);
+  expect(value).toBeCloseTo(expected.okhsvValue, 1);
 }
 
 function expectTestColorAllEqual(actual: Color, expected: TestColor) {
@@ -182,6 +194,8 @@ function expectTestColorAllEqual(actual: Color, expected: TestColor) {
   expectTestColorLchEqual(actual, expected);
   expectTestColorOklabEqual(actual, expected);
   expectTestColorOklchEqual(actual, expected);
+  expectTestColorOkhslEqual(actual, expected);
+  expectTestColorOkhsvEqual(actual, expected);
 }
 
 test("constructs an empty Color", () => {
@@ -368,6 +382,30 @@ test("adjusts color by OkLCH", () => {
   expectTestColorAllEqual(initialColor, testColors[TestColorNames.Black]);
 });
 
+test("adjusts color by OkHSL", () => {
+  const initialColor = new Color(new ColorspaceOkhsl([0, 0, 0]));
+  const testColor = testColors[TestColorNames.SeaGreen];
+
+  const color = initialColor.with(
+    ColorspaceOkhsl.fromTransformed([testColor.okhslHue, testColor.okhslSaturation, testColor.okhslLightness])
+  );
+
+  expectTestColorAllEqual(color, testColors[TestColorNames.SeaGreen]);
+  expectTestColorAllEqual(initialColor, testColors[TestColorNames.Black]);
+});
+
+test("adjusts color by OkHSV", () => {
+  const initialColor = new Color(new ColorspaceOkhsv([0, 0, 0]));
+  const testColor = testColors[TestColorNames.SeaGreen];
+
+  const color = initialColor.with(
+    ColorspaceOkhsv.fromTransformed([testColor.okhslHue, testColor.okhsvSaturation, testColor.okhsvValue])
+  );
+
+  expectTestColorAllEqual(color, testColors[TestColorNames.SeaGreen]);
+  expectTestColorAllEqual(initialColor, testColors[TestColorNames.Black]);
+});
+
 test("maintains hue when adjusting HSL/HSV", () => {
   const initialColor = new Color(new ColorspaceHsl([260, 50, 50]));
   let color = initialColor;
@@ -452,9 +490,7 @@ test("moves color in-gamut correctly", () => {
 
             if (!expected.rgb.inGamut()) {
               expected = produce(expected, (draft) => {
-                const converter = draft.data.converter();
-                const inGamut = converter.toGamut({ space: "srgb", method: gamutMapData[algorithm].algorithm });
-                draft.data = draft.data.compute(inGamut) as any;
+                draft.data = castDraft(toGamut(draft.data, gamutMapData[algorithm].algorithm));
               });
             }
 

@@ -1,8 +1,7 @@
 import { immerable, produce } from "immer";
-import Colorjs from "colorjs.io";
 
 import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
-import { fixArraySize, handleNaN } from "../../util/math";
+import { fixArraySize } from "../../util/math";
 
 const CHANNEL_INFO: ChannelInfo[] = [
   { channel: "lightness", label: "L", channelType: ChannelType.IsLightness, range: [0, 100], step: 2 },
@@ -48,16 +47,6 @@ export class ColorspaceOklch extends Colorspace {
     return produce(this, (draft) => {
       draft.values = ColorspaceOklch.transformedToRaw([lightness, chroma, hue]);
     });
-  }
-
-  compute(converter: Colorjs): ColorspaceOklch {
-    const [lightness, chroma, hue] = converter.oklch;
-
-    return this.with(lightness, chroma, handleNaN(hue, this.values[2]));
-  }
-
-  converter(): Colorjs {
-    return new Colorjs("oklch", [this.values[0], this.values[1], this.values[2]]);
   }
 
   static channelInfo(): ChannelInfo[] {

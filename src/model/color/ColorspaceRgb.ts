@@ -1,12 +1,11 @@
 import { immerable, produce } from "immer";
-import Colorjs from "colorjs.io";
 import hexRgb from "hex-rgb";
 import rgbHex from "rgb-hex";
 
 import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
 import { clamp, fixArraySize, outOfRange } from "../../util/math";
 
-export const GAMUT_ROUNDING_ERROR = 0.00001;
+export const GAMUT_ROUNDING_ERROR = 0.0001;
 
 const MAX_HEX_LENGTH = 16;
 
@@ -74,16 +73,6 @@ export class ColorspaceRgb extends Colorspace {
     return produce(this, (draft) => {
       draft.values = ColorspaceRgb.transformedToRaw([red, green, blue]);
     });
-  }
-
-  compute(converter: Colorjs): ColorspaceRgb {
-    const [red, green, blue] = converter.srgb;
-
-    return this.with(red, green, blue);
-  }
-
-  converter(): Colorjs {
-    return new Colorjs("srgb", [this.values[0], this.values[1], this.values[2]]);
   }
 
   inGamut(): boolean {

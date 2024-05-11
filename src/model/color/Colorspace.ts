@@ -1,5 +1,6 @@
-import Colorjs from "colorjs.io";
 import { immerable } from "immer";
+import { spaceToSpace } from "../../util/colorjs";
+import { Transform } from "class-transformer";
 
 export enum ChannelType {
   None,
@@ -20,6 +21,7 @@ export interface ChannelInfo {
 export abstract class Colorspace {
   [immerable] = true;
 
+  @Transform((options) => options.value.map((value: any) => (value !== null ? value : Number.NaN)))
   readonly values: readonly number[] = [];
 
   protected constructor(values: number[]) {
@@ -49,28 +51,25 @@ export abstract class Colorspace {
     return colorspaceClass.rawToTransformed(this.values);
   }
 
-  converted<T extends Colorspace>(classType: { new (): T }): T {
+  converted<T extends Colorspace>(classType: { new (values: number[]): T; colorspaceName(): string }): T {
     if (classType === this.constructor) {
       return this as unknown as T;
     }
 
-    const converter = this.converter();
-    const converted = new classType().compute(converter);
-
-    return converted as T;
+    return spaceToSpace(this, classType.colorspaceName()) as T;
   }
 
   describe(): string {
     const colorspaceClass = this.constructor as typeof Colorspace;
     const name = colorspaceClass.colorspaceName();
-    const values = colorspaceClass.rawToTransformed(this.values).map((value) => parseFloat(value.toPrecision(4)));
+    const values = colorspaceClass
+      .rawToTransformed(this.values)
+      .map((value) => (!Number.isNaN(value) ? parseFloat(value.toPrecision(4)) : "None"));
     const valuesString = values.join(", ");
 
     return `${name}(${valuesString})`;
   }
 
-  abstract compute(converter: Colorjs): ThisType<this>;
-  abstract converter(): Colorjs;
   static channelInfo(): ChannelInfo[] {
     throw new Error("Method not implemented.");
   }

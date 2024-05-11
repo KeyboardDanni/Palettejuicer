@@ -8,6 +8,7 @@ import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
 import { ColorspaceHsl } from "../../model/color/ColorspaceHsl";
 import { ColorspaceLch } from "../../model/color/ColorspaceLch";
 import { ColorspaceOklch } from "../../model/color/ColorspaceOklch";
+import { ColorspaceOkhsl } from "../../model/color/ColorspaceOkhsl";
 
 const COLOR_HSL_HUES = range(0, 360, 30).map((hue) => {
   return new Color(new ColorspaceHsl([hue, 90, 50]));
@@ -23,6 +24,14 @@ const COLOR_OKLCH_HUES = range(0, 360, 30).map((hue) => {
   const color = new Color(ColorspaceOklch.fromTransformed([68, 20, hue]));
 
   return color.toSrgbGamut(GamutMapAlgorithm.Css) ?? color;
+});
+
+const COLOR_OKHSL_HUES = range(0, 360, 30).map((hue) => {
+  return new Color(ColorspaceOkhsl.fromTransformed([hue, 90, 64]));
+});
+
+const COLOR_OKHSL_BRIGHT_HUES = range(0, 360, 30).map((hue) => {
+  return new Color(ColorspaceOkhsl.fromTransformed([hue, 100, 90]));
 });
 
 const BLUES_LCH_L_STEPS = steps(29.56830197909668, 100, 10);
@@ -44,14 +53,20 @@ const COLOR_OKLCH_BLUES = range(0, 10, 1).map((i) => {
   return color.toSrgbGamut(GamutMapAlgorithm.Css) ?? color;
 });
 
+function colorArrayToCel(colors: Color[]) {
+  return colors.map((color) => <PaletteCel key={color.hex} color={color} />);
+}
+
 export function SelectingColorsPage() {
   const [color, setColor] = useState(new Color(ColorspaceRgb.fromTransformed([192, 64, 128])));
 
-  const hslColors = COLOR_HSL_HUES.map((color) => <PaletteCel key={color.hex} color={color} />);
-  const lchColors = COLOR_LCH_HUES.map((color) => <PaletteCel key={color.hex} color={color} />);
-  const oklchColors = COLOR_OKLCH_HUES.map((color) => <PaletteCel key={color.hex} color={color} />);
-  const lchBlues = COLOR_LCH_BLUES.map((color) => <PaletteCel key={color.hex} color={color} />);
-  const oklchBlues = COLOR_OKLCH_BLUES.map((color) => <PaletteCel key={color.hex} color={color} />);
+  const hslColors = colorArrayToCel(COLOR_HSL_HUES);
+  const lchColors = colorArrayToCel(COLOR_LCH_HUES);
+  const oklchColors = colorArrayToCel(COLOR_OKLCH_HUES);
+  const lchBlues = colorArrayToCel(COLOR_LCH_BLUES);
+  const oklchBlues = colorArrayToCel(COLOR_OKLCH_BLUES);
+  const okhslColors = colorArrayToCel(COLOR_OKHSL_HUES);
+  const okhslBrightColors = colorArrayToCel(COLOR_OKHSL_BRIGHT_HUES);
 
   return (
     <>
@@ -141,6 +156,27 @@ export function SelectingColorsPage() {
         <div className="color-container color-container-large">
           <div className="palette-row">{oklchBlues}</div>
         </div>
+        <h2>OkHSL/OkHSV</h2>
+        <p>
+          OkHSL and OkHSV were also by{" "}
+          <a target="_blank" rel="noopener noreferrer" href="https://bottosson.github.io/posts/colorpicker/">
+            Björn Ottosson
+          </a>
+          . These spaces aim to take the even perceptual lightness of LAB/LCH-like spaces and combine them with HSL/HSV.
+          A nice feature is that OkHSL/OkHSV produces colors that are within the sRGB gamut (a topic that is covered
+          later).
+        </p>
+        <div className="color-container color-container-large">
+          <div className="palette-row">{okhslColors}</div>
+        </div>
+        <p>
+          However, you can't have both perfect perceptual lightness and full sRGB compatibility. Thus, OkHSL/OkHSV
+          creates some irregularities, especially with high saturation and lightness:
+        </p>
+        <div className="color-container color-container-large">
+          <div className="palette-row">{okhslBrightColors}</div>
+        </div>
+        <p>Still, its ease of use makes it very attractive.</p>
         <h2>Hexadecimal code</h2>
         <p>
           Of course, you can also get and set the color using classic HTML color codes. These are a compact way to

@@ -46,6 +46,18 @@
   @include raised-widget-bounds($size-button-height, $pressed);
 }
 
+@mixin raised-button-thin($color, $color-border, $pressed) {
+  @include raised-widget(
+    $color,
+    $color-widget-accent-inset,
+    $color-border,
+    $size-button-radius,
+    $size-chip-height,
+    $pressed
+  );
+  @include raised-widget-bounds($size-button-height, $pressed);
+}
+
 @mixin striped-background($color, $color-alt) {
   background: repeating-linear-gradient(-45deg, $color, $color 1rem, $color-alt 1rem, $color-alt 2rem);
 }

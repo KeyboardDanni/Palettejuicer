@@ -1,3 +1,30 @@
+export interface TestColor {
+  red: number;
+  green: number;
+  blue: number;
+  hue: number;
+  saturationL: number;
+  lightness: number;
+  saturationV: number;
+  value: number;
+  labLightness: number;
+  labA: number;
+  labB: number;
+  lchChroma: number;
+  lchHue: number;
+  oklabLightness: number;
+  oklabA: number;
+  oklabB: number;
+  oklchChroma: number;
+  oklchHue: number;
+  okhslHue: number;
+  okhslSaturation: number;
+  okhslLightness: number;
+  okhsvSaturation: number;
+  okhsvValue: number;
+  hex: string;
+}
+
 export enum TestColorNames {
   Black,
   White,
@@ -54,7 +81,7 @@ export enum TestColorNames {
   PastelHotPink,
 }
 
-export const testColors = [
+export const testColors: TestColor[] = [
   {
     red: 0,
     green: 0,
@@ -74,6 +101,11 @@ export const testColors = [
     oklabB: 0,
     oklchChroma: 0,
     oklchHue: 0,
+    okhslHue: 0,
+    okhslSaturation: 0,
+    okhslLightness: 0,
+    okhsvSaturation: 0,
+    okhsvValue: 0,
     hex: "#000000",
   },
   {
@@ -95,6 +127,11 @@ export const testColors = [
     oklabB: 0,
     oklchChroma: 4.9960036108132044e-14,
     oklchHue: 0,
+    okhslHue: 180,
+    okhslSaturation: 65.19721306444566,
+    okhslLightness: 100.00000000000003,
+    okhsvSaturation: 1.3189507366749436e-13,
+    okhsvValue: 100.00000000000007,
     hex: "#ffffff",
   },
   {
@@ -116,6 +153,11 @@ export const testColors = [
     oklabB: 5.551115123125783e-15,
     oklchChroma: 1.7554167342883507e-14,
     oklchHue: 0,
+    okhslHue: 161.56505117707798,
+    okhslSaturation: 9.148821565142172e-14,
+    okhslLightness: 53.1812034624231,
+    okhsvSaturation: 7.643658415500145e-14,
+    okhsvValue: 53.18120346242311,
     hex: "#7f7f7f",
   },
   {
@@ -137,6 +179,11 @@ export const testColors = [
     oklabB: 0,
     oklchChroma: 3.3306690738754696e-14,
     oklchHue: 0,
+    okhslHue: 180,
+    okhslSaturation: 2.337232258899721e-13,
+    okhslLightness: 27.6216402070527,
+    okhsvSaturation: 2.366924504664066e-13,
+    okhsvValue: 27.62164020705272,
     hex: "#404040",
   },
   {
@@ -158,6 +205,11 @@ export const testColors = [
     oklabB: 0,
     oklchChroma: 4.440892098500626e-14,
     oklchHue: 0,
+    okhslHue: 180,
+    okhslSaturation: 3.158986305425135e-13,
+    okhslLightness: 77.27305327206298,
+    okhsvSaturation: 1.457017298340908e-13,
+    okhsvValue: 77.27305327206302,
     hex: "#bfbfbf",
   },
   {
@@ -179,6 +231,11 @@ export const testColors = [
     oklabB: 12.5846277330585,
     oklchChroma: 25.76833038053608,
     oklchHue: 29.23388027962784,
+    okhslHue: 29.233880279627897,
+    okhslSaturation: 100.00000995016396,
+    okhslLightness: 56.80846563197034,
+    okhsvSaturation: 100.00002264814273,
+    okhsvValue: 100.00000000000003,
     hex: "#ff0000",
   },
   {
@@ -200,6 +257,11 @@ export const testColors = [
     oklabB: 14.803622895827578,
     oklchChroma: 18.642647987475645,
     oklchHue: 52.56778301706686,
+    okhslHue: 52.56778301706686,
+    okhslSaturation: 100.00000065040804,
+    okhslLightness: 68.65666536290223,
+    okhsvSaturation: 100.0000011631939,
+    okhsvValue: 99.99999999999994,
     hex: "#ff7f00",
   },
   {
@@ -221,6 +283,11 @@ export const testColors = [
     oklabB: 19.856971763168097,
     oklchChroma: 21.10058737497979,
     oklchHue: 109.76923612816614,
+    okhslHue: 109.76923612816614,
+    okhslSaturation: 100.00000004884639,
+    okhslLightness: 96.27044043394304,
+    okhsvSaturation: 100.00000195142759,
+    okhsvValue: 100.00000000000003,
     hex: "#ffff00",
   },
   {
@@ -242,6 +309,11 @@ export const testColors = [
     oklabB: 18.996161779674857,
     oklchChroma: 23.44705299485124,
     oklchHue: 125.8871937795571,
+    okhslHue: 125.8871937795571,
+    okhslSaturation: 100.00000034267566,
+    okhslLightness: 90.97304355911162,
+    okhsvSaturation: 100.00000146918555,
+    okhsvValue: 99.99999999999999,
     hex: "#bfff00",
   },
   {
@@ -263,6 +335,11 @@ export const testColors = [
     oklabB: 17.949844516093762,
     oklchChroma: 29.482722454269577,
     oklchHue: 142.4953450414439,
+    okhslHue: 142.4953450414439,
+    okhslSaturation: 100.00000000000016,
+    okhslLightness: 84.45289714936317,
+    okhsvSaturation: 99.9999866247201,
+    okhsvValue: 100.00000000000004,
     hex: "#00ff00",
   },
   {
@@ -284,6 +361,11 @@ export const testColors = [
     oklabB: 7.915807942139841,
     oklchChroma: 20.74974924372843,
     oklchHue: 157.5740342469452,
+    okhslHue: 157.5740342469452,
+    okhslSaturation: 100.00000078952438,
+    okhslLightness: 86.0818240415838,
+    okhsvSaturation: 100.00000182721271,
+    okhsvValue: 100.00000000000007,
     hex: "#00ffa0",
   },
   {
@@ -305,6 +387,11 @@ export const testColors = [
     oklabB: -3.9398192151822053,
     oklchChroma: 15.45500236044062,
     oklchHue: 194.7689598979818,
+    okhslHue: 194.76895989798186,
+    okhslSaturation: 100.00000000000023,
+    okhslLightness: 88.98483085518511,
+    okhsvSaturation: 99.99996310024463,
+    okhsvValue: 100.00000000000009,
     hex: "#00ffff",
   },
   {
@@ -326,6 +413,11 @@ export const testColors = [
     oklabB: -13.493552887400707,
     oklchChroma: 16.025013139035448,
     oklchHue: 237.3551809279396,
+    okhslHue: 237.3551809279396,
+    okhslSaturation: 100.00002663668381,
+    okhslLightness: 68.61115821155472,
+    okhsvSaturation: 100.00005824217413,
+    okhsvValue: 99.99999999999999,
     hex: "#00b4ff",
   },
   {
@@ -347,6 +439,11 @@ export const testColors = [
     oklabB: -31.152816567757778,
     oklchChroma: 31.321438863448492,
     oklchHue: 264.0520226163699,
+    okhslHue: 264.05202261636987,
+    okhslSaturation: 100.00000005848084,
+    okhslLightness: 36.65653391870817,
+    okhsvSaturation: 100.00000023007057,
+    okhsvValue: 100.00000000000004,
     hex: "#0000ff",
   },
   {
@@ -368,6 +465,11 @@ export const testColors = [
     oklabB: -26.854178270078716,
     oklchChroma: 29.307494724399003,
     oklchHue: 293.6103385066071,
+    okhslHue: 293.61033850660715,
+    okhslSaturation: 100.00000001354286,
+    okhslLightness: 45.47019511993476,
+    okhsvSaturation: 100.00000001334963,
+    okhsvValue: 99.99999999999997,
     hex: "#7f00ff",
   },
   {
@@ -389,6 +491,11 @@ export const testColors = [
     oklabB: -16.915608446137853,
     oklchChroma: 32.249098770537216,
     oklchHue: 328.36341517499017,
+    okhslHue: 328.3634151749902,
+    okhslSaturation: 100,
+    okhslLightness: 65.32987485868166,
+    okhsvSaturation: 99.9999999954202,
+    okhsvValue: 100,
     hex: "#ff00ff",
   },
   {
@@ -410,6 +517,11 @@ export const testColors = [
     oklabB: -3.4716363308554876,
     oklchChroma: 27.120921231150845,
     oklchHue: 352.6456273491666,
+    okhslHue: 352.6456273491667,
+    okhslSaturation: 99.99999999999987,
+    okhslLightness: 60.029370328612885,
+    okhsvSaturation: 99.99999999201847,
+    okhsvValue: 99.99999999999991,
     hex: "#ff00a0",
   },
   {
@@ -431,6 +543,11 @@ export const testColors = [
     oklabB: 7.506597811092858,
     oklchChroma: 15.370537494877407,
     oklchHue: 29.23388027962784,
+    okhslHue: 29.23388027962784,
+    okhslSaturation: 100.0000152615701,
+    okhslLightness: 27.96255920744265,
+    okhsvSaturation: 100.00002264814268,
+    okhsvValue: 50.020779499455934,
     hex: "#7f0000",
   },
   {
@@ -452,6 +569,11 @@ export const testColors = [
     oklabB: 8.983495859886492,
     oklchChroma: 10.844941318185974,
     oklchHue: 55.93045100938269,
+    okhslHue: 55.93045100938269,
+    okhslSaturation: 100.00001590877619,
+    okhslLightness: 35.61432751651476,
+    okhsvSaturation: 100.0000058078828,
+    okhsvValue: 51.265407422128504,
     hex: "#7f4000",
   },
   {
@@ -473,6 +595,11 @@ export const testColors = [
     oklabB: 11.844474380499149,
     oklchChroma: 12.586277986254105,
     oklchHue: 109.7692361281662,
+    okhslHue: 109.7692361281662,
+    okhslSaturation: 100.00000195698702,
+    okhslLightness: 50.983336176693705,
+    okhsvSaturation: 100.00000195142773,
+    okhsvValue: 52.990883014941026,
     hex: "#7f7f00",
   },
   {
@@ -494,6 +621,11 @@ export const testColors = [
     oklabB: 11.364842546756709,
     oklchChroma: 13.852141917212762,
     oklchHue: 124.87119970848886,
+    okhslHue: 124.87119970848886,
+    okhslSaturation: 100.00000183277066,
+    okhslLightness: 48.07178114958841,
+    okhsvSaturation: 100.00000243668572,
+    okhsvValue: 52.720817869644854,
     hex: "#607f00",
   },
   {
@@ -515,6 +647,11 @@ export const testColors = [
     oklabB: 10.706893077179613,
     oklchChroma: 17.586133220206975,
     oklchHue: 142.49534504144378,
+    okhslHue: 142.49534504144384,
+    okhslSaturation: 99.99999798478999,
+    okhslLightness: 44.03589195890339,
+    okhsvSaturation: 99.99998662471974,
+    okhsvValue: 52.30805300376362,
     hex: "#007f00",
   },
   {
@@ -536,6 +673,11 @@ export const testColors = [
     oklabB: 4.358841656009954,
     oklchChroma: 12.110691427321688,
     oklchHue: 158.90491170004816,
+    okhslHue: 158.90491170004816,
+    okhslSaturation: 100.00000171317444,
+    okhslLightness: 45.062874158398515,
+    okhsvSaturation: 100.00000383029928,
+    okhsvValue: 52.41768601671256,
     hex: "#007f50",
   },
   {
@@ -557,6 +699,11 @@ export const testColors = [
     oklabB: -2.3500606393861756,
     oklchChroma: 9.218746024926949,
     oklchHue: 194.76895989798186,
+    okhslHue: 194.76895989798186,
+    okhslSaturation: 99.99996555042655,
+    okhslLightness: 46.69678179395965,
+    okhsvSaturation: 99.99996310024424,
+    okhsvValue: 52.58551079278308,
     hex: "#007f7f",
   },
   {
@@ -578,6 +725,11 @@ export const testColors = [
     oklabB: -7.697166111522358,
     oklchChroma: 9.382062421211677,
     oklchHue: 235.12615946355368,
+    okhslHue: 235.12615946355368,
+    okhslSaturation: 100.00026676903192,
+    okhslLightness: 35.465920340145594,
+    okhsvSaturation: 100.00011724771191,
+    okhsvValue: 51.24435941566164,
     hex: "#005a7f",
   },
   {
@@ -599,6 +751,11 @@ export const testColors = [
     oklabB: -18.582326757477627,
     oklchChroma: 18.682908179716147,
     oklchHue: 264.0520226163699,
+    okhslHue: 264.05202261636987,
+    okhslSaturation: 100.0000000605298,
+    okhslLightness: 16.65553184631464,
+    okhsvSaturation: 100.00000023007057,
+    okhsvValue: 47.284553922439024,
     hex: "#00007f",
   },
   {
@@ -620,6 +777,11 @@ export const testColors = [
     oklabB: -15.71645211643009,
     oklchChroma: 17.509439339305803,
     oklchHue: 296.15578367968186,
+    okhslHue: 296.1557836796819,
+    okhslSaturation: 100.00000010418842,
+    okhslLightness: 22.087406081374873,
+    okhsvSaturation: 100.00000004897865,
+    okhsvValue: 48.7760957753424,
     hex: "#40007f",
   },
   {
@@ -641,6 +803,11 @@ export const testColors = [
     oklabB: -10.089982161452642,
     oklchChroma: 19.2362475375184,
     oklchHue: 328.36341517499017,
+    okhslHue: 328.3634151749902,
+    okhslSaturation: 99.99999997676025,
+    okhslLightness: 32.877548258018074,
+    okhsvSaturation: 99.99999999542017,
+    okhsvValue: 50.85936211028142,
     hex: "#7f007f",
   },
   {
@@ -662,6 +829,11 @@ export const testColors = [
     oklabB: -2.5335367121757937,
     oklchChroma: 16.3117660189412,
     oklchHue: 351.0646684594832,
+    okhslHue: 351.0646684594832,
+    okhslSaturation: 99.99999992855722,
+    okhslLightness: 29.94811213915478,
+    okhsvSaturation: 99.99999998779046,
+    okhsvValue: 50.378325431854435,
     hex: "#7f0050",
   },
   {
@@ -683,6 +855,11 @@ export const testColors = [
     oklabB: 6.6808912004119145,
     oklchChroma: 16.311421063068966,
     oklchHue: 24.178682355621618,
+    okhslHue: 24.178682355621618,
+    okhslSaturation: 78.68977418681024,
+    okhslLightness: 48.095263809064555,
+    okhsvSaturation: 79.04671534362559,
+    okhsvValue: 76.0655159961759,
     hex: "#bf4040",
   },
   {
@@ -704,6 +881,11 @@ export const testColors = [
     oklabB: 9.977637416783413,
     oklchChroma: 11.191420518012164,
     oklchHue: 63.06783871794488,
+    okhslHue: 63.067838717944824,
+    okhslSaturation: 67.07542075984351,
+    okhslLightness: 59.38557831809752,
+    okhsvSaturation: 70.06630471068817,
+    okhsvValue: 76.61348647584838,
     hex: "#bf7f40",
   },
   {
@@ -725,6 +907,11 @@ export const testColors = [
     oklabB: 13.744673313341687,
     oklchChroma: 14.567110239540684,
     oklchHue: 109.34492333707857,
+    okhslHue: 109.34492333707857,
+    okhslSaturation: 78.94915070151441,
+    okhslLightness: 74.58237128229088,
+    okhsvSaturation: 73.91337560916432,
+    okhsvValue: 77.1820067158966,
     hex: "#bfbf40",
   },
   {
@@ -746,6 +933,11 @@ export const testColors = [
     oklabB: 13.16890242294686,
     oklchChroma: 15.52918131807016,
     oklchHue: 122.00410922359242,
+    okhslHue: 122.00410922359242,
+    okhslSaturation: 79.57259038272409,
+    okhslLightness: 71.76589577347805,
+    okhsvSaturation: 75.25338154636466,
+    okhsvValue: 77.09817167061787,
     hex: "#a0bf40",
   },
   {
@@ -767,6 +959,11 @@ export const testColors = [
     oklabB: 12.02504422641304,
     oklchChroma: 20.02785618793431,
     oklchHue: 143.10030657940183,
+    okhslHue: 143.10030657940183,
+    okhslSaturation: 94.72279002303507,
+    okhslLightness: 66.21653020106416,
+    okhsvSaturation: 81.8908802611948,
+    okhsvValue: 76.89665264462018,
     hex: "#40bf40",
   },
   {
@@ -788,6 +985,11 @@ export const testColors = [
     oklabB: 3.5053491665464342,
     oklchChroma: 13.122036977031643,
     oklchHue: 164.5061744769696,
+    okhslHue: 164.5061744769697,
+    okhslSaturation: 82.71305546381991,
+    okhslLightness: 67.78797811042287,
+    okhsvSaturation: 76.90266168060703,
+    okhsvValue: 76.95117110339746,
     hex: "#40bf90",
   },
   {
@@ -809,6 +1011,11 @@ export const testColors = [
     oklabB: -2.822078224606628,
     oklchChroma: 10.865728976622359,
     oklchHue: 195.05361838127016,
+    okhslHue: 195.0536183812701,
+    okhslSaturation: 77.68131742496054,
+    okhslLightness: 69.40796029865812,
+    okhsvSaturation: 74.00953166684717,
+    okhsvValue: 77.00610510938807,
     hex: "#40bfbf",
   },
   {
@@ -830,6 +1037,11 @@ export const testColors = [
     oklabB: -7.554981128515104,
     oklchChroma: 10.081403708163544,
     oklchHue: 228.5382349462073,
+    okhslHue: 228.53823494620735,
+    okhslSaturation: 69.57629299408788,
+    okhslLightness: 59.07425831398216,
+    okhsvSaturation: 72.75481972343033,
+    okhsvValue: 76.5856024751298,
     hex: "#409abf",
   },
   {
@@ -851,6 +1063,11 @@ export const testColors = [
     oklabB: -19.20241307222127,
     oklchChroma: 19.294139331884672,
     oklchHue: 275.58912694852074,
+    okhslHue: 275.58912694852074,
+    okhslSaturation: 85.10508689502211,
+    okhslLightness: 37.16744548290601,
+    okhsvSaturation: 82.9951225079627,
+    okhsvValue: 75.25327921396627,
     hex: "#4040bf",
   },
   {
@@ -872,6 +1089,11 @@ export const testColors = [
     oklabB: -16.013945930596396,
     oklchChroma: 19.09469806934765,
     oklchHue: 303.0011863883228,
+    okhslHue: 303.0011863883228,
+    okhslSaturation: 76.47713301143452,
+    okhslLightness: 43.80334282764827,
+    okhsvSaturation: 81.43533207460565,
+    okhsvValue: 75.75031073202418,
     hex: "#7f40bf",
   },
   {
@@ -893,6 +1115,11 @@ export const testColors = [
     oklabB: -11.471006397221906,
     oklchChroma: 21.563237769725717,
     oklchHue: 327.86130943549557,
+    okhslHue: 327.8613094354955,
+    okhslSaturation: 80.12989260056513,
+    okhslLightness: 53.35196086371046,
+    okhsvSaturation: 82.97531770552725,
+    okhsvValue: 76.31031408374108,
     hex: "#bf40bf",
   },
   {
@@ -914,6 +1141,11 @@ export const testColors = [
     oklabB: -4.533386715199455,
     oklchChroma: 18.212260225959756,
     oklchHue: 345.58641699965506,
+    okhslHue: 345.58641699965506,
+    okhslSaturation: 73.3596142929289,
+    okhslLightness: 50.74723470728601,
+    okhsvSaturation: 79.882334439545,
+    okhsvValue: 76.21026692166963,
     hex: "#bf4090",
   },
   {
@@ -935,6 +1167,11 @@ export const testColors = [
     oklabB: 3.2570630128018085,
     oklchChroma: 9.77818481894065,
     oklchHue: 19.45672837304562,
+    okhslHue: 19.45672837304562,
+    okhslSaturation: 75.45547502305295,
+    okhslLightness: 76.2610223955774,
+    okhsvSaturation: 37.887265922539164,
+    okhsvValue: 96.44273077788903,
     hex: "#f5a3a3",
   },
   {
@@ -956,6 +1193,11 @@ export const testColors = [
     oklabB: 6.531179643070462,
     oklchChroma: 7.1130642745632775,
     oklchHue: 66.66360528677956,
+    okhslHue: 66.66360528677956,
+    okhslSaturation: 68.69980623742616,
+    okhslLightness: 84.94164378641358,
+    okhsvSaturation: 29.800585933950835,
+    okhsvValue: 96.47543432089716,
     hex: "#f5cca3",
   },
   {
@@ -977,6 +1219,11 @@ export const testColors = [
     oklabB: 9.76826348277825,
     oklchChroma: 10.282930984825498,
     oklchHue: 108.20416616689147,
+    okhslHue: 108.20416616689147,
+    okhslSaturation: 88.7147729968783,
+    okhslLightness: 94.3783514350397,
+    okhsvSaturation: 32.31244826368249,
+    okhsvValue: 96.51271588319065,
     hex: "#f5f5a3",
   },
   {
@@ -998,6 +1245,11 @@ export const testColors = [
     oklabB: 9.244059344182165,
     oklchChroma: 10.694837558924098,
     oklchHue: 120.19168391684872,
+    okhslHue: 120.19168391684866,
+    okhslSaturation: 78.8627582689907,
+    okhslLightness: 92.51980220311677,
+    okhsvSaturation: 33.332367199575756,
+    okhsvValue: 96.50868848024228,
     hex: "#e0f5a3",
   },
   {
@@ -1019,6 +1271,11 @@ export const testColors = [
     oklabB: 7.9665251073847365,
     oklchChroma: 13.662723279822114,
     oklchHue: 144.3322011771029,
+    okhslHue: 144.33220117710283,
+    okhslSaturation: 79.36725583660657,
+    okhslLightness: 88.03764016277029,
+    okhsvSaturation: 41.73767981926719,
+    okhsvValue: 96.49019385809115,
     hex: "#a3f5a3",
   },
   {
@@ -1040,6 +1297,11 @@ export const testColors = [
     oklabB: 1.8102092584961538,
     oklchChroma: 9.115502231793995,
     oklchHue: 168.5457276442345,
+    okhslHue: 168.5457276442345,
+    okhslSaturation: 72.04957439856747,
+    okhslLightness: 89.38471847160332,
+    okhsvSaturation: 34.41548027967284,
+    okhsvValue: 96.49441826312449,
     hex: "#a3f5d6",
   },
   {
@@ -1061,6 +1323,11 @@ export const testColors = [
     oklabB: -2.1773752489869236,
     oklchChroma: 7.9718387642001804,
     oklchHue: 195.8508065036724,
+    okhslHue: 195.8508065036724,
+    okhslSaturation: 80.21602192107929,
+    okhslLightness: 90.42278097271621,
+    okhsvSaturation: 31.93669279454927,
+    okhsvValue: 96.49724462938843,
     hex: "#a3f5f5",
   },
   {
@@ -1082,6 +1349,11 @@ export const testColors = [
     oklabB: -4.832248976674524,
     oklchChroma: 6.782099485500233,
     oklchHue: 225.4387251990435,
+    okhslHue: 225.43872519904346,
+    okhslSaturation: 69.49995507260086,
+    okhslLightness: 84.4007597482416,
+    okhsvSaturation: 31.628990343028217,
+    okhsvValue: 96.47050097630469,
     hex: "#a3ddf5",
   },
   {
@@ -1103,6 +1375,11 @@ export const testColors = [
     oklabB: -11.417161366749884,
     oklchChroma: 11.726764204767834,
     oklchHue: 283.19505355605327,
+    okhslHue: 283.19505355605327,
+    okhslSaturation: 78.58293829909239,
+    okhslLightness: 70.62499534195481,
+    okhsvSaturation: 44.18112904316713,
+    okhsvValue: 96.40282794796299,
     hex: "#a3a3f5",
   },
   {
@@ -1124,6 +1401,11 @@ export const testColors = [
     oklabB: -9.736880750005671,
     oklchChroma: 12.143649273363598,
     oklchHue: 306.69685354162874,
+    okhslHue: 306.6968535416288,
+    okhslSaturation: 79.62467406448593,
+    okhslLightness: 74.62685666059639,
+    okhsvSaturation: 43.12085965050165,
+    okhsvValue: 96.42444161116808,
     hex: "#cca3f5",
   },
   {
@@ -1145,6 +1427,11 @@ export const testColors = [
     oklabB: -7.781602010224875,
     oklchChroma: 14.20035724694062,
     oklchHue: 326.7710220979734,
+    okhslHue: 326.7710220979734,
+    okhslSaturation: 93.08879343315427,
+    okhslLightness: 79.32557272301963,
+    okhsvSaturation: 44.953273841557326,
+    okhsvValue: 96.44746682688708,
     hex: "#f5a3f5",
   },
   {
@@ -1166,6 +1453,11 @@ export const testColors = [
     oklabB: -3.5486608182230706,
     oklchChroma: 11.567004482717968,
     oklchHue: 342.1340113943798,
+    okhslHue: 342.13401139437974,
+    okhslSaturation: 84.16475638482359,
+    okhslLightness: 78.00067133976245,
+    okhsvSaturation: 40.098336102371356,
+    okhsvValue: 96.44954397121964,
     hex: "#f5a3d6",
   },
 ];

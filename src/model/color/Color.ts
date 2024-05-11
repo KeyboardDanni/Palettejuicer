@@ -9,7 +9,10 @@ import { ColorspaceLch } from "./ColorspaceLch";
 import { ColorspaceLab } from "./ColorspaceLab";
 import { ColorspaceOklab } from "./ColorspaceOklab";
 import { ColorspaceOklch } from "./ColorspaceOklch";
+import { ColorspaceOkhsl } from "./ColorspaceOkhsl";
+import { ColorspaceOkhsv } from "./ColorspaceOkhsv";
 import { MruCache } from "../MruCache";
+import { toGamut } from "../../util/colorjs";
 
 type AvailableColorspaceItem = {
   value: typeof Colorspace;
@@ -24,9 +27,11 @@ export const availableSpaces: (typeof Colorspace)[] = [
   ColorspaceLch,
   ColorspaceOklab,
   ColorspaceOklch,
+  ColorspaceOkhsl,
+  ColorspaceOkhsv,
 ];
 
-const availableSpaceClasses: { [key: string]: typeof Colorspace } = Object.fromEntries(
+export const availableSpaceNames: { [key: string]: typeof Colorspace } = Object.fromEntries(
   availableSpaces.map((space) => [space.colorspaceName(), space])
 );
 
@@ -91,6 +96,8 @@ export class Color {
   get lch() { return this.data.converted(ColorspaceLch); } // prettier-ignore
   get oklab() { return this.data.converted(ColorspaceOklab); } // prettier-ignore
   get oklch() { return this.data.converted(ColorspaceOklch); } // prettier-ignore
+  get okhsl() { return this.data.converted(ColorspaceOkhsl); } // prettier-ignore
+  get okhsv() { return this.data.converted(ColorspaceOkhsv); } // prettier-ignore
   get hex() { return this.rgb.hex; } // prettier-ignore
 
   spaceName(): string {
@@ -109,7 +116,7 @@ export class Color {
 
   converted(spaceName: string): Color {
     const color = produce(this, (draft) => {
-      const spaceClass = availableSpaceClasses[spaceName];
+      const spaceClass = availableSpaceNames[spaceName];
       const space = this.data.converted(spaceClass as any);
 
       draft.data = castDraft(space);
@@ -126,9 +133,7 @@ export class Color {
     }
 
     const newColor = produce(this, (draft) => {
-      const converter = draft.data.converter();
-      const inGamut = converter.toGamut({ space: "srgb", method: methodName });
-      draft.data = draft.data.compute(inGamut) as any;
+      draft.data = castDraft(toGamut(draft.data, methodName));
     });
 
     return newColor;
@@ -151,7 +156,7 @@ export class Color {
   }
 
   static channelInfo(spaceName: string): ChannelInfo[] {
-    const spaceClass = availableSpaceClasses[spaceName];
+    const spaceClass = availableSpaceNames[spaceName];
 
     return spaceClass.channelInfo();
   }

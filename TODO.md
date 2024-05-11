@@ -6,7 +6,6 @@
 
 ### Color Selection
 
-- [ ] Add OkHSL/OkHSV
 - [ ] Add OkLrCH
 - [ ] Color preview on sliders
 - [ ] Custom palette size
@@ -16,13 +15,14 @@
 
 ### Calculations
 
-- [ ] Use null for hue on hue-less colors
 - [ ] Additional interpolation settings
 - [ ] Adjust Color calculation
 - [ ] Bake calculation
 
 ### UI papercuts
 
+- [ ] Dark mode
+- [ ] Cel coordinates on the sides
 - [ ] Show color preview of calculations in list to make them easy to find
 - [ ] Inform user if start/end cels don't form a strip
 - [ ] Keyboard shortcut for undo/redo
@@ -52,3 +52,5 @@
 - [x] Allow renaming calculations
 - [x] Cache gamut mapping calculations
 - [x] Palette file import/export
+- [x] Add OkHSL/OkHSV
+- [x] Use "none" for hue on hue-less colors

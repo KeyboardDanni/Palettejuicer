@@ -8,18 +8,26 @@ export type NumberSliderProps = {
   min: number;
   max: number;
   step: number;
+  allowNone?: boolean;
 };
 
 const LIMIT_ROUNDING_ERROR = 0.0001;
 
 export function NumberSlider(props: NumberSliderProps) {
-  const displayValue = props.step >= 1 ? Math.round(props.value * 10) / 10 : props.value;
-  const limitMin = props.min - LIMIT_ROUNDING_ERROR;
-  const limitMax = props.max + LIMIT_ROUNDING_ERROR;
+  const sliderValue = !Number.isNaN(props.value) ? props.value : 0;
+  const textValue = !Number.isNaN(props.value) ? props.value.toString() : "None";
+  const displayValue =
+    !Number.isNaN(props.value) && props.step >= 1 ? (Math.round(props.value * 10) / 10).toString() : textValue;
+  const limitDistance = Math.abs(props.max - props.min);
+  const limitMin = props.min - LIMIT_ROUNDING_ERROR * limitDistance;
+  const limitMax = props.max + LIMIT_ROUNDING_ERROR * limitDistance;
   const className = props.value < limitMin || props.value > limitMax ? "out-of-range" : "";
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    const value = parseFloat(event.target.value) || 0;
+    let value = parseFloat(event.target.value);
+    if (Number.isNaN(value) && !props.allowNone) {
+      value = 0;
+    }
 
     props.onChange(value);
   }
@@ -30,7 +38,7 @@ export function NumberSlider(props: NumberSliderProps) {
         <input
           type="range"
           className={className}
-          value={props.value}
+          value={sliderValue}
           onChange={handleChange}
           min={props.min}
           max={props.max}
@@ -38,9 +46,9 @@ export function NumberSlider(props: NumberSliderProps) {
           disabled={props.disabled}
         />
         <ControlledTextInput
-          value={props.value.toString()}
-          title={props.value.toString()}
-          displayValue={displayValue.toString()}
+          value={textValue}
+          title={textValue}
+          displayValue={displayValue}
           inputMode="decimal"
           onChange={handleChange}
           disabled={props.disabled ?? false}

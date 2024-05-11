@@ -1,0 +1,37 @@
+diff --git a/node_modules/colorjs.io/package.json b/node_modules/colorjs.io/package.json
+index 13443ea..0a0f1c4 100644
+--- a/node_modules/colorjs.io/package.json
++++ b/node_modules/colorjs.io/package.json
+@@ -13,11 +13,11 @@
+ 		".": {
+ 			"import": {
+ 				"types": "./types/index.d.ts",
+-				"default": "./dist/color.js"
++				"default": "./src/color.js"
+ 			},
+ 			"require": {
+ 				"types": "./types/index.d.cts",
+-				"default": "./dist/color.cjs"
++				"default": "./src/color.cjs"
+ 			}
+ 		},
+ 		"./fn": {
+@@ -27,7 +27,7 @@
+ 			},
+ 			"require": {
+ 				"types": "./types/src/index-fn.d.cts",
+-				"default": "./dist/color-fn.cjs"
++				"default": "./src/color-fn.cjs"
+ 			}
+ 		},
+ 		"./dist/*": "./dist/*"
+@@ -40,8 +40,7 @@
+ 		}
+ 	},
+ 	"type": "module",
+-	"main": "./dist/color.cjs",
+-	"module": "./dist/color.js",
++	"module": "./src/color.js",
+ 	"types": "./types",
+ 	"directories": {
+ 		"test": "tests"
