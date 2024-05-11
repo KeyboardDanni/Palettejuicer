@@ -10,8 +10,8 @@ import { positiveMod, steps } from "../../util/math";
 import { Colorspace } from "../color/Colorspace";
 
 export enum ExtrapolateColorspace {
-  Lch,
   OkLch,
+  Lch,
 }
 
 type ExtrapolateColorspaceItem = {
@@ -22,14 +22,14 @@ type ExtrapolateColorspaceItem = {
 
 export const extrapolateSpaceData: readonly ExtrapolateColorspaceItem[] = [
   {
-    name: "LCH",
-    colorspace: "lch",
-    description: "Blends over hue, maintaining perceptual lightness. Good for making colors that pop.",
-  },
-  {
     name: "OkLCH",
     colorspace: "oklch",
     description: "Blends over hue, maintaining perceptual lightness. Uses the newer OkLAB colorspace.",
+  },
+  {
+    name: "LCH",
+    colorspace: "lch",
+    description: "Blends over hue, maintaining perceptual lightness. Good for making colors that pop.",
   },
 ];
 
@@ -57,7 +57,7 @@ export class CalcExtrapolateStrip extends Calculation {
   readonly startCel: CelIndex = { x: 0, y: 0 };
   readonly endCel: CelIndex = { x: 0, y: 0 };
   @Transform((options) => ExtrapolateColorspace[options.value])
-  readonly colorspace: ExtrapolateColorspace = ExtrapolateColorspace.Lch;
+  readonly colorspace: ExtrapolateColorspace = ExtrapolateColorspace.OkLch;
   @Type(() => StripAdjustment)
   readonly adjustLightness: StripAdjustment = new StripAdjustment();
   @Type(() => StripAdjustment)
