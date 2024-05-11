@@ -24,28 +24,28 @@ enum ColorSelectorPage {
 const colorSelectorDropdownItems: PopupMenuChoiceData[] = [
   {
     name: "OkLCH",
-    description: "A newer variant of LCH. Like OkLAB, but easier to select colors from. Can go outside the sRGB gamut.",
+    description: "A newer variant of LCH. Like OkLAB, but easier to select colors from. May go outside the sRGB gamut.",
   },
   {
     name: "OkLAB",
-    description: "A newer variant of LAB with more evenly distributed results. Can go outside the sRGB gamut.",
+    description: "A newer variant of LAB with more evenly distributed results. May go outside the sRGB gamut.",
   },
   {
     name: "OkHSL",
-    description: "A newer variant of HSL. Has more even perceptual lighting, but stays within the sRGB gamut.",
+    description: "A newer variant of HSL. Has more even perceptual lighting, and stays within the sRGB gamut.",
   },
   {
     name: "OkHSV",
-    description: "A newer variant of HSV. Has more even perceptual lighting, but stays within the sRGB gamut.",
+    description: "A newer variant of HSV. Has more even perceptual lighting, and stays within the sRGB gamut.",
   },
   {
     name: "LCH",
     description:
-      "A classic space that aims for even perceptual lighting. Like LAB, but easier to select colors from. Can go outside the sRGB gamut.",
+      "A classic space that aims for even perceptual lighting. Like LAB, but easier to select colors from. May go outside the sRGB gamut.",
   },
   {
     name: "LAB",
-    description: "A classic space that aims for even perceptual lighting. Can go outside the sRGB gamut.",
+    description: "A classic space that aims for even perceptual lighting. May go outside the sRGB gamut.",
   },
   {
     name: "HSL",
