@@ -7,10 +7,11 @@ import { Color } from "../color/Color";
 import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
 import { CalcExtrapolateStripView } from "../../widgets/calculations/CalcExtrapolateStripView";
 import { positiveMod, steps } from "../../util/math";
-import { Colorspace } from "../color/Colorspace";
+import { ChannelType, Colorspace } from "../color/Colorspace";
 
 export enum ExtrapolateColorspace {
   OkLch,
+  Okhsl,
   Lch,
 }
 
@@ -25,6 +26,11 @@ export const extrapolateSpaceData: readonly ExtrapolateColorspaceItem[] = [
     name: "OkLCH",
     colorspace: "oklch",
     description: "Blends over hue, maintaining perceptual lightness. Uses the newer OkLAB colorspace.",
+  },
+  {
+    name: "OkHSL",
+    colorspace: "okhsl",
+    description: "Maintains some perceptual lightness while staying inside the sRGB gamut.",
   },
   {
     name: "LCH",
@@ -103,12 +109,34 @@ export class CalcExtrapolateStrip extends Calculation {
       const deltaHue = this.adjustHue.valueAtStep(step);
 
       const spaceClass = sourceColor.data.constructor as typeof Colorspace;
-      const deltas = spaceClass.transformedToRaw([deltaLightness, deltaChroma, deltaHue]);
+      const info = spaceClass.channelInfo();
+      const deltas = new Array(info.length).fill(0);
+
+      for (const [i, channel] of info.entries()) {
+        switch (channel.channelType) {
+          case ChannelType.IsHue:
+            deltas[i] = deltaHue;
+            break;
+          case ChannelType.IsChroma:
+          case ChannelType.IsSaturation:
+            deltas[i] = deltaChroma;
+            break;
+          case ChannelType.IsLightness:
+            deltas[i] = deltaLightness;
+        }
+      }
+
+      const transformed = spaceClass.transformedToRaw(deltas);
+      const newValues = sourceColor.data.values.map((value, i) => {
+        let newValue = value + transformed[i];
+        if (info[i]?.channelType === ChannelType.IsHue) {
+          newValue = positiveMod(newValue, info[i].range[1]);
+        }
+        return newValue;
+      });
 
       const newColor = produce(sourceColor, (draft) => {
-        draft.data.values[0] = sourceColor.data.values[0] + deltas[0];
-        draft.data.values[1] = sourceColor.data.values[1] + deltas[1];
-        draft.data.values[2] = positiveMod(sourceColor.data.values[2] + deltas[2], 360);
+        draft.data.values = newValues;
       });
 
       cels.push({
