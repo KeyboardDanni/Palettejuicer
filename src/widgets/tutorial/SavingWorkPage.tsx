@@ -29,10 +29,11 @@ export function SavingWorkPage() {
           changes later.
         </p>
         <p>
-          You can also copy individual cels from Palettejuicer with <i>Ctrl + C</i>. This lets you copy colors around
-          within the project while retaining all their colorspace information. It will also copy the hex code to your OS
-          clipboard so you can paste it into other applications. Additionally, you can copy colors from these external
-          apps and paste them into Palettejuicer, though hexadecimal codes are currently the only supported format.
+          You can also copy individual cels from Palettejuicer with <i>Ctrl + C</i> (or tap and hold on mobile). This
+          lets you copy colors around within the project while retaining all their colorspace information. It will also
+          copy the hex code to your OS clipboard so you can paste it into other applications. Additionally, you can copy
+          colors from these external apps and paste them into Palettejuicer, though hexadecimal codes are currently the
+          only supported format.
         </p>
       </div>
     </>
