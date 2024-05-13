@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { useImmerReducer } from "use-immer";
 
 import { AppBody } from "./AppBody";
@@ -10,7 +10,7 @@ import { ErrorBoundary } from "react-error-boundary";
 import { OopsView } from "./OopsView";
 import { ClipboardContext } from "../contexts/ClipboardContext";
 import { Clipboard } from "../model/Clipboard";
-import { createHistoryReducer } from "../reducers/HistoryReducer";
+import { HistoryAction, HistoryActionType, createHistoryReducer } from "../reducers/HistoryReducer";
 import { UndoHistory } from "../model/UndoHistory";
 
 const AUTOSAVE_DELAY_MS = 3000;
@@ -53,6 +53,7 @@ export function AppBoundary() {
   useEffect(() => {
     Autosaver.waitAndAutosave(history.current());
   }, [history]);
+
   useEffect(() => {
     function handleBeforeUnload() {
       Autosaver.autosaveNow(history.current());
@@ -64,6 +65,7 @@ export function AppBoundary() {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
   }, [history]);
+
   useEffect(() => {
     window.screen.orientation.addEventListener("change", updateViewport);
 
@@ -71,6 +73,34 @@ export function AppBoundary() {
       window.screen.orientation.removeEventListener("change", updateViewport);
     };
   }, []);
+
+  const handleKey = useCallback(
+    function (event: KeyboardEvent) {
+      switch (event.key) {
+        case "z":
+          if (event.ctrlKey && !event.shiftKey) {
+            dispatchHistory(new HistoryAction({ actionType: HistoryActionType.Undo }));
+            event.preventDefault();
+          }
+          break;
+        case "Z":
+          if (event.ctrlKey && event.shiftKey) {
+            dispatchHistory(new HistoryAction({ actionType: HistoryActionType.Redo }));
+            event.preventDefault();
+          }
+          break;
+      }
+    },
+    [dispatchHistory]
+  );
+
+  useEffect(() => {
+    document.addEventListener("keydown", handleKey);
+
+    return () => {
+      document.removeEventListener("keydown", handleKey);
+    };
+  }, [handleKey, dispatchHistory]);
 
   return (
     <>

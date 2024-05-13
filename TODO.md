@@ -17,6 +17,7 @@
 
 - [ ] Additional interpolation settings
 - [ ] Adjust Color calculation
+- [ ] Gradient Smoothing calculation
 - [ ] Bake calculation
 
 ### UI papercuts
@@ -25,7 +26,6 @@
 - [ ] Cel coordinates on the sides
 - [ ] Show color preview of calculations in list to make them easy to find
 - [ ] Inform user if start/end cels don't form a strip
-- [ ] Keyboard shortcut for undo/redo
 - [ ] Consolidate undo steps for calculation properties
 - [ ] Click to pick cel
 - [ ] Multi-selection in palette
@@ -54,3 +54,4 @@
 - [x] Palette file import/export
 - [x] Add OkHSL/OkHSV
 - [x] Use "none" for hue on hue-less colors
+- [x] Keyboard shortcut for undo/redo
