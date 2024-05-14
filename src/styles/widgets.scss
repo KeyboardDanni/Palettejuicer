@@ -174,14 +174,21 @@ button {
   padding: $size-button-padding;
   text-wrap: nowrap;
 
-  &:hover,
-  &:focus-visible {
-    @include raised-button($color-widget-hover, $color-widget-border-hover, 0);
+  &:disabled {
+    color: $color-text-disabled;
+    background-color: $color-widget-disabled;
   }
 
-  &:active,
-  &.selected {
-    @include raised-button($color-widget-accent-hover, $color-widget-accent-border, 1);
+  &:not(:disabled) {
+    &:hover,
+    &:focus-visible {
+      @include raised-button($color-widget-hover, $color-widget-border-hover, 0);
+    }
+
+    &:active,
+    &.selected {
+      @include raised-button($color-widget-accent-hover, $color-widget-accent-border, 1);
+    }
   }
 
   &:focus-visible {

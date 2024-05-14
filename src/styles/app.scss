@@ -68,14 +68,20 @@ $logo-height: 64px;
       font-size: 1.8rem;
       padding: 1rem;
 
-      &:hover,
-      &:focus-visible {
-        @include raised-button($color-background-widget-hover, $color-widget-border-hover, 0);
+      &:disabled {
+        background-color: $color-background-widget-disabled;
       }
 
-      &:active,
-      &.selected {
-        @include raised-button($color-widget-accent-hover, $color-widget-accent-border, 1);
+      &:not(:disabled) {
+        &:hover,
+        &:focus-visible {
+          @include raised-button($color-background-widget-hover, $color-widget-border-hover, 0);
+        }
+
+        &:active,
+        &.selected {
+          @include raised-button($color-widget-accent-hover, $color-widget-accent-border, 1);
+        }
       }
 
       &:focus-visible {

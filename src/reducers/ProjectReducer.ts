@@ -1,6 +1,12 @@
 import { castDraft, Draft } from "immer";
 
-import { PaletteAction, PaletteActionType, PaletteReducer, SetBaseColorArgs } from "./PaletteReducer";
+import {
+  PaletteAction,
+  PaletteActionType,
+  PaletteReducer,
+  SetBaseColorArgs,
+  SetCalculationArgs,
+} from "./PaletteReducer";
 import { Project } from "../model/Project";
 import { Palette } from "../model/Palette";
 
@@ -67,20 +73,32 @@ export function ProjectReducer(draft: Draft<Project>, action: ProjectAction) {
 
 export function ProjectConsolidator(previous: ProjectAction, action: ProjectAction) {
   if (previous.constructor !== action.constructor) return false;
-  let palettePrev, paletteAction, indexPrev, indexNext;
 
   switch (action.constructor) {
-    case PaletteAction:
-      palettePrev = previous as PaletteAction;
-      paletteAction = action as PaletteAction;
+    case PaletteAction: {
+      const palettePrev = previous as PaletteAction;
+      const paletteAction = action as PaletteAction;
 
       if (paletteAction.actionType !== palettePrev.actionType) return false;
-      if (paletteAction.actionType !== PaletteActionType.SetBaseColor) return false;
 
-      indexPrev = (palettePrev.args as SetBaseColorArgs).index;
-      indexNext = (paletteAction.args as SetBaseColorArgs).index;
+      switch (paletteAction.actionType) {
+        case PaletteActionType.SetBaseColor: {
+          const indexPrev = (palettePrev.args as SetBaseColorArgs).index;
+          const indexNext = (paletteAction.args as SetBaseColorArgs).index;
 
-      return indexNext.x === indexPrev.x && indexNext.y === indexPrev.y;
+          return indexNext.x === indexPrev.x && indexNext.y === indexPrev.y;
+        }
+        case PaletteActionType.SetCalculation: {
+          const indexPrev = (palettePrev.args as SetCalculationArgs).index;
+          const indexNext = (paletteAction.args as SetCalculationArgs).index;
+
+          return indexPrev === indexNext;
+        }
+        case PaletteActionType.RenamePalette:
+        case PaletteActionType.RenameCalculation:
+          return true;
+      }
+    }
   }
 
   return false;

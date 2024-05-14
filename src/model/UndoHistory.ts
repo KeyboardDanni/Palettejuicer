@@ -84,4 +84,12 @@ export class UndoHistory<T> {
 
     return newHistory;
   }
+
+  hasUndo(): boolean {
+    return this.currentIndex > 0;
+  }
+
+  hasRedo(): boolean {
+    return this.currentIndex < this.history.length - 1;
+  }
 }
