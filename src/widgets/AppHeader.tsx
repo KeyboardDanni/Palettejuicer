@@ -15,6 +15,8 @@ import { Exporter } from "../storage/exporters/Exporter";
 import { GnuPaletteExporter } from "../storage/exporters/GnuPaletteExporter";
 import { JascPalExporter } from "../storage/exporters/JascPalExporter";
 
+const PROJECT_URL = "https://github.com/KeyboardDanni/palettejuicer";
+
 const availableExporters: (typeof Exporter)[] = [GnuPaletteExporter, JascPalExporter];
 
 type ConfirmPopupProps = {
@@ -192,6 +194,32 @@ export function FileMenu(props: FileMenuProps) {
   );
 }
 
+export function AboutMenu() {
+  const popupRef = useRef<PopupActions>(null);
+
+  const handleSource = useCallback(
+    function () {
+      popupRef?.current?.close();
+      window.open(PROJECT_URL, "_blank", "noopener,noreferrer");
+    },
+    [popupRef]
+  );
+
+  return (
+    <>
+      <DropdownButton popupRef={popupRef} label="About">
+        <PopupMenuItem
+          key={0}
+          index={0}
+          name="View on GitHub"
+          description="View source code on GitHub."
+          onItemSelect={handleSource}
+        />
+      </DropdownButton>
+    </>
+  );
+}
+
 export type AppHeaderProps = {
   history: UndoHistory<Project>;
   onHistoryChange: React.Dispatch<HistoryAction | ProjectAction>;
@@ -237,6 +265,7 @@ export function AppHeader(props: AppHeaderProps) {
             </button>
           </div>
           <button onClick={handleTutorial}>Tutorial</button>
+          <AboutMenu />
         </div>
       </div>
       <Tutorial popupOpen={tutorialOpen} setPopupOpen={setTutorialOpen} />
