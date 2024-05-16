@@ -14,6 +14,7 @@ import { Tutorial } from "./tutorial/Tutorial";
 import { Exporter } from "../storage/exporters/Exporter";
 import { GnuPaletteExporter } from "../storage/exporters/GnuPaletteExporter";
 import { JascPalExporter } from "../storage/exporters/JascPalExporter";
+import { Credits } from "./Credits";
 
 const PROJECT_URL = "https://github.com/KeyboardDanni/palettejuicer";
 
@@ -196,6 +197,7 @@ export function FileMenu(props: FileMenuProps) {
 
 export function AboutMenu() {
   const popupRef = useRef<PopupActions>(null);
+  const [creditsOpen, setCreditsOpen] = useState(false);
 
   const handleSource = useCallback(
     function () {
@@ -203,6 +205,14 @@ export function AboutMenu() {
       window.open(PROJECT_URL, "_blank", "noopener,noreferrer");
     },
     [popupRef]
+  );
+
+  const handleCredits = useCallback(
+    function () {
+      popupRef?.current?.close();
+      setCreditsOpen(true);
+    },
+    [setCreditsOpen]
   );
 
   return (
@@ -215,7 +225,10 @@ export function AboutMenu() {
           description="View source code on GitHub."
           onItemSelect={handleSource}
         />
+        <PopupMenuSeparatorItem />
+        <PopupMenuItem key={1} index={1} name="Credits" onItemSelect={handleCredits} />
       </DropdownButton>
+      <Credits popupOpen={creditsOpen} setPopupOpen={setCreditsOpen} />
     </>
   );
 }
@@ -257,11 +270,11 @@ export function AppHeader(props: AppHeaderProps) {
         <div id="menubar">
           <FileMenu project={props.history.current()} onProjectChange={props.onHistoryChange} />
           <div id="undo-redo-group">
-            <button onClick={handleUndo} disabled={!props.history.hasUndo()}>
-              Undo
+            <button onClick={handleUndo} disabled={!props.history.hasUndo()} title="Undo">
+              <i className="fa-solid icon-undo"></i>
             </button>
-            <button onClick={handleRedo} disabled={!props.history.hasRedo()}>
-              Redo
+            <button onClick={handleRedo} disabled={!props.history.hasRedo()} title="Redo">
+              <i className="fa-solid icon-redo"></i>
             </button>
           </div>
           <button onClick={handleTutorial}>Tutorial</button>

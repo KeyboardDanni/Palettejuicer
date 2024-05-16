@@ -287,8 +287,12 @@ export const CalculationsView = memo(function (props: CalculationsViewProps) {
         <button onClick={handleClone}>Clone</button>
         <button onClick={handleRemove}>Remove</button>
         <div className="button-bar-spacer" />
-        <button onClick={handleMoveUp}>Up</button>
-        <button onClick={handleMoveDown}>Down</button>
+        <button onClick={handleMoveUp} title="Up">
+          <i className="fa-solid icon-up"></i>
+        </button>
+        <button onClick={handleMoveDown} title="Down">
+          <i className="fa-solid icon-down"></i>
+        </button>
       </div>
       <CalculationsList {...props} />
     </>

@@ -47,6 +47,14 @@ textarea {
   user-select: text;
 }
 
+a:link,
+a:visited,
+a:active,
+a:focus,
+a:hover {
+  color: $color-text-link;
+}
+
 ol,
 ul {
   margin: 0;
