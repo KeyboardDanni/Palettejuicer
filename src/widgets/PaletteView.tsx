@@ -10,6 +10,7 @@ import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
 import { Color } from "../model/color/Color";
 import { GAMUT_ROUNDING_ERROR } from "../model/color/ColorspaceRgb";
 import { PopupMenu, PopupMenuItem } from "./common/PopupMenu";
+import { CelPickerContext, CelPickerSetterContext } from "../contexts/CelPickerContext";
 
 class PaletteViewRefState {
   scrubbing: boolean = false;
@@ -153,12 +154,14 @@ export function PaletteCel(props: PaletteCelProps) {
   const gamutDistance = rgb.outOfGamutDistance();
 
   const className = paletteCelClassName(props, gamutDistance);
+  let description = props.index ? `Color cel [${props.index.x}, ${props.index.y}]\n` : "";
+  description += props.color.data.describe();
 
   let cel = (
     <div
       className={className}
       style={{ backgroundColor: rgb.hex }}
-      title={props.color.data.describe()}
+      title={description}
       onMouseDown={handleClick}
       onMouseEnter={handleMouseEnter}
       onContextMenu={handleContextMenu}
@@ -227,11 +230,36 @@ export type PaletteViewProps = {
   onPaletteChange: React.Dispatch<PaletteAction>;
   active: CelIndex;
   onIndexChange: (index: CelIndex) => void;
+  autoFocus?: boolean;
 };
 
 export const PaletteView = memo(function (props: PaletteViewProps) {
   const clipboard = useContext(ClipboardContext);
+  const celPicker = useContext(CelPickerContext);
+  const setCelPicker = useContext(CelPickerSetterContext);
+  const ref = useRef<HTMLDivElement>(null);
   const refState = useRef(new PaletteViewRefState());
+
+  const { onIndexChange, onPaletteChange } = props;
+
+  useEffect(() => {
+    if (props.autoFocus && celPicker && ref) {
+      ref.current?.focus();
+      onIndexChange(celPicker.currentIndex);
+    }
+  }, [props.autoFocus, celPicker, ref, onIndexChange]);
+
+  const handleIndexClick = useCallback(
+    function (index: CelIndex) {
+      if (celPicker && setCelPicker) {
+        celPicker.acceptCallback(index);
+        celPicker.resetCallback();
+        setCelPicker(null);
+      }
+      onIndexChange(index);
+    },
+    [celPicker, setCelPicker, onIndexChange]
+  );
 
   const handleClick = useCallback(
     function () {
@@ -251,8 +279,6 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
       document.removeEventListener("mouseup", unsetScrub);
     };
   }, [refState]);
-
-  const { onIndexChange, onPaletteChange } = props;
 
   const handleColorChange = useCallback(
     function (index: CelIndex, color: Color) {
@@ -302,6 +328,10 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
             event.preventDefault();
           }
           break;
+        case "Enter":
+          handleIndexClick(props.active);
+          event.preventDefault();
+          break;
         case "PageUp":
         case "PageDown":
         case "Home":
@@ -310,7 +340,7 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
           break;
       }
     },
-    [clipboard, props.active, props.palette, onIndexChange, handleColorChange]
+    [clipboard, props.active, props.palette, onIndexChange, handleColorChange, handleIndexClick]
   );
 
   const rows = [];
@@ -323,17 +353,23 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
         y={y}
         palette={props.palette}
         activeX={activeX}
-        onIndexClick={onIndexChange}
+        onIndexClick={handleIndexClick}
         onColorChange={handleColorChange}
         refState={refState}
       />
     );
   }
 
+  let className = "palette";
+
+  if (celPicker) {
+    className += " cel-picker-active";
+  }
+
   return (
     <>
-      <div className="palette">
-        <div className="palette-scroll" tabIndex={0} onKeyDown={handleKey} onMouseDown={handleClick}>
+      <div className={className}>
+        <div className="palette-scroll" ref={ref} tabIndex={0} onKeyDown={handleKey} onMouseDown={handleClick}>
           <OverlayScrollbarsComponent
             options={{ overflow: { x: "hidden", y: "scroll" }, scrollbars: { theme: "raised-scrollbar" } }}
             defer

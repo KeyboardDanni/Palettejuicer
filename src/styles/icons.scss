@@ -13,8 +13,7 @@
   src: url("/assets/fa-solid-900.woff2");
 }
 
-.fas,
-.fa-solid {
+@mixin icon-solid {
   font-family: "Font Awesome 6 Free";
   font-style: normal;
   font-weight: 900;
@@ -28,25 +27,33 @@
   src: url("/assets/fa-regular-400.woff2");
 }
 
-.far,
-.fa-regular {
+@mixin icon-regular {
   font-family: "Font Awesome 6 Free";
   font-style: normal;
   font-weight: 400;
 }
 
 .icon-undo::before {
+  @include icon-solid;
   content: "\f0e2";
 }
 
 .icon-redo::before {
+  @include icon-solid;
   content: "\f01e";
 }
 
 .icon-up::before {
+  @include icon-solid;
   content: "\f062";
 }
 
 .icon-down::before {
+  @include icon-solid;
   content: "\f063";
+}
+
+.icon-pick::before {
+  @include icon-solid;
+  content: "\f05b";
 }

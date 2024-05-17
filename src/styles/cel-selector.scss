@@ -2,8 +2,8 @@
 @use "./_mixins.scss" as *;
 
 .cel-selector {
-  background-color: $color-widget;
-  border: $size-widget-outline solid $color-widget-border-soft;
+  background-color: $color-widget-group;
+  border: $size-widget-outline solid $color-widget-group-border;
   border-radius: $size-button-radius;
 
   width: fit-content;
@@ -23,8 +23,16 @@
   input {
     display: inline-block;
     text-wrap: nowrap;
-    width: 4rem;
+    width: 3.6rem;
     text-align: center;
     vertical-align: baseline;
+  }
+
+  button {
+    margin: -0.1rem 0.1rem -0.3rem -0.1rem;
+    height: calc(100% + 0.4rem);
+    padding: 0.4rem 0.6rem;
+    vertical-align: top;
+    font-size: 1.4rem;
   }
 }

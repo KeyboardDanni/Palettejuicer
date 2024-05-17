@@ -14,6 +14,7 @@ import { Calculation } from "../model/calculation/Calculation";
 import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
 import { ProjectAction } from "../reducers/ProjectReducer";
 import { Project } from "../model/Project";
+import { CelPickerContext, CelPickerData, CelPickerSetterContext } from "../contexts/CelPickerContext";
 
 class AppViewState {
   [immerable] = true;
@@ -214,6 +215,7 @@ function AppPalette(props: AppPaletteProps) {
             onPaletteChange={props.onPaletteChange}
             active={props.activeColorIndex}
             onIndexChange={handleClick}
+            autoFocus={true}
           />
         </div>
       </div>
@@ -230,6 +232,7 @@ const initialAppState = new AppViewState();
 
 export function AppBody(props: AppBodyProps) {
   const [viewState, updateViewState] = useImmer(initialAppState);
+  const [celPicker, setCelPicker] = useState<CelPickerData | null>(null);
 
   const setActiveColorIndex = useCallback(
     function (index: CelIndex) {
@@ -251,39 +254,43 @@ export function AppBody(props: AppBodyProps) {
 
   return (
     <>
-      <div id="app-body">
-        <div id="app-columns">
-          <div id="document-sidebar">
-            <OverlayScrollbarsComponent options={{ scrollbars: { theme: "flat-scrollbar" } }} defer>
-              <div id="document-sidebar-column">
-                <AppColorSelector
-                  palette={props.project.palette}
-                  onPaletteChange={props.onProjectChange}
-                  activeColorIndex={viewState.activeColorIndex}
-                />
-                <AppCalculations
-                  useCalculations={props.project.palette.useCalculations}
-                  calculations={props.project.palette.calculations}
-                  onPaletteChange={props.onProjectChange}
-                  activeCalcIndex={viewState.activeCalcIndex}
-                  onIndexChange={setActiveCalcIndex}
-                />
-                <AppProperties
-                  palette={props.project.palette}
-                  onPaletteChange={props.onProjectChange}
-                  activeCalcIndex={viewState.activeCalcIndex}
-                />
+      <CelPickerContext.Provider value={celPicker}>
+        <CelPickerSetterContext.Provider value={setCelPicker}>
+          <div id="app-body">
+            <div id="app-columns">
+              <div id="document-sidebar">
+                <OverlayScrollbarsComponent options={{ scrollbars: { theme: "flat-scrollbar" } }} defer>
+                  <div id="document-sidebar-column">
+                    <AppColorSelector
+                      palette={props.project.palette}
+                      onPaletteChange={props.onProjectChange}
+                      activeColorIndex={viewState.activeColorIndex}
+                    />
+                    <AppCalculations
+                      useCalculations={props.project.palette.useCalculations}
+                      calculations={props.project.palette.calculations}
+                      onPaletteChange={props.onProjectChange}
+                      activeCalcIndex={viewState.activeCalcIndex}
+                      onIndexChange={setActiveCalcIndex}
+                    />
+                    <AppProperties
+                      palette={props.project.palette}
+                      onPaletteChange={props.onProjectChange}
+                      activeCalcIndex={viewState.activeCalcIndex}
+                    />
+                  </div>
+                </OverlayScrollbarsComponent>
               </div>
-            </OverlayScrollbarsComponent>
+              <AppPalette
+                palette={props.project.palette}
+                onPaletteChange={props.onProjectChange}
+                activeColorIndex={viewState.activeColorIndex}
+                onIndexChange={setActiveColorIndex}
+              />
+            </div>
           </div>
-          <AppPalette
-            palette={props.project.palette}
-            onPaletteChange={props.onProjectChange}
-            activeColorIndex={viewState.activeColorIndex}
-            onIndexChange={setActiveColorIndex}
-          />
-        </div>
-      </div>
+        </CelPickerSetterContext.Provider>
+      </CelPickerContext.Provider>
     </>
   );
 }

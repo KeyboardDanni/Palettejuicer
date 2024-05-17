@@ -104,21 +104,18 @@ export function GeneratingColorsPage() {
           <b>Cel range</b>. This is the region we want to generate our new shades over.
         </p>
         <p>
-          Take note of the cel coordinates that the <b>Base Colors</b> are on. In our example, we put the{" "}
-          <i>highlight</i> at <i>[0, 0]</i>, the <i>midtone</i> at <i>[4, 0]</i>, and the <i>shadow</i> at{" "}
-          <i>[8, 0].</i>
-        </p>
-        <p>
-          Let's start by generating the shades between the <i>highlight</i> and the <i>midtone</i>. Edit the{" "}
-          <b>cel range</b> so it goes from <i>[0, 0]</i> to <i>[4, 0]</i>. You should now see something like this:
+          Let's start by generating the shades between the <i>highlight</i> and the <i>midtone</i>. Next to{" "}
+          <b>Cel range</b>, click on the first <i className="icon-pick"></i> <b>Pick cel</b> button, then click your{" "}
+          <i>highlight</i>. Click the second <i className="icon-pick"></i> <b>Pick cel</b> button, then click your{" "}
+          <i>midtone</i>. You should now see something like this:
         </p>
         <div className="color-container color-container-large">
           <div className="palette-row">{shadesPartial}</div>
         </div>
         <p>
-          Now let's make a second calculation that goes from the <i>midtone</i> to the <i>shadow</i>. Go to the{" "}
-          <b>Calculations</b> pane and click on <b>Clone</b> to make a copy of your calculation. Adjust this new one so
-          it goes from <i>[4, 0]</i> to <i>[8, 0]</i>. You should be seeing this:
+          Now let's make a second calculation that covers the rest of our shades. Go to the <b>Calculations</b> pane and
+          click on <b>Clone</b> to make a copy of your calculation. Adjust this new one so it goes from the{" "}
+          <i>midtone</i> to the <i>shadow</i>. You should be seeing this:
         </p>
         <div className="color-container color-container-large">
           <div className="palette-row">{shadesFinal}</div>
@@ -145,8 +142,9 @@ export function GeneratingColorsPage() {
         </p>
         <div className="color-container">{chainedBadOrder}</div>
         <p>
-          You can reorder calculations by using the <b>Up</b> and <b>Down</b> buttons in the <b>Calculations</b> view.
-          You can also enable or disable individual calculations to see their effects.
+          You can reorder calculations by using the <i className="icon-up"></i> <b>Up</b> and{" "}
+          <i className="icon-down"></i> <b>Down</b> buttons in the <b>Calculations</b> view. You can also enable or
+          disable individual calculations to see their effects.
         </p>
         <p>
           There are more ways to generate colors, such as the <b>Extrapolate Strip</b> calculation, which lets you

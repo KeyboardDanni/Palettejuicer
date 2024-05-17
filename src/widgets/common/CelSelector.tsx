@@ -1,7 +1,9 @@
-import { ChangeEvent } from "react";
+import { ChangeEvent, useContext, useEffect, useRef, useState } from "react";
+
 import { CelIndex } from "../../util/cel";
 import { ControlledTextInput } from "./ControlledTextInput";
 import { clamp } from "../../util/math";
+import { CelPickerContext, CelPickerSetterContext } from "../../contexts/CelPickerContext";
 
 type CelNumberInputProps = {
   value: number;
@@ -45,6 +47,27 @@ export type CelSelectorProps = {
 };
 
 export function CelSelector({ index, onIndexChange, relative, disabled, ...other }: CelSelectorProps) {
+  const [active, setActive] = useState(false);
+  const ref = useRef<HTMLButtonElement>(null);
+  const celPicker = useContext(CelPickerContext);
+  const setCelPicker = useContext(CelPickerSetterContext);
+
+  useEffect(() => {
+    function reset(event?: MouseEvent) {
+      if (active && celPicker && setCelPicker && (!event || event.target !== ref.current)) {
+        celPicker.resetCallback();
+        setCelPicker(null);
+      }
+    }
+
+    document.addEventListener("mousedown", reset);
+
+    return () => {
+      reset();
+      document.removeEventListener("mousedown", reset);
+    };
+  }, [ref, active, celPicker, setCelPicker]);
+
   function handleChangeX(value: number) {
     onIndexChange({ x: value, y: index.y });
   }
@@ -53,9 +76,45 @@ export function CelSelector({ index, onIndexChange, relative, disabled, ...other
     onIndexChange({ x: index.x, y: value });
   }
 
+  function handleClick() {
+    if (!setCelPicker) {
+      return;
+    }
+
+    setActive(!active);
+
+    if (celPicker) {
+      celPicker.resetCallback();
+    }
+
+    if (!active) {
+      setCelPicker({
+        currentIndex: index,
+        acceptCallback: (index) => {
+          onIndexChange(index);
+          ref.current?.focus();
+        },
+        resetCallback: () => {
+          setActive(false);
+        },
+      });
+    } else {
+      setCelPicker(null);
+    }
+  }
+
+  let className = "thin-button";
+
+  if (active) {
+    className += " selected";
+  }
+
   return (
     <>
       <div className="cel-selector">
+        <button className={className} title="Click to pick cel" onClick={handleClick} ref={ref}>
+          <i className="icon-pick"></i>
+        </button>
         <CelNumberInput
           {...other}
           name="x"

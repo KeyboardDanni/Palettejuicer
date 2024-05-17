@@ -271,10 +271,10 @@ export function AppHeader(props: AppHeaderProps) {
           <FileMenu project={props.history.current()} onProjectChange={props.onHistoryChange} />
           <div id="undo-redo-group">
             <button onClick={handleUndo} disabled={!props.history.hasUndo()} title="Undo">
-              <i className="fa-solid icon-undo"></i>
+              <i className="icon-undo"></i>
             </button>
             <button onClick={handleRedo} disabled={!props.history.hasRedo()} title="Redo">
-              <i className="fa-solid icon-redo"></i>
+              <i className="icon-redo"></i>
             </button>
           </div>
           <button onClick={handleTutorial}>Tutorial</button>

@@ -36,6 +36,7 @@ class Autosaver {
 const initialProject = LocalStorage.load("Project", Project);
 const initialHistory = new UndoHistory(initialProject);
 const historyReducer = createHistoryReducer(Project, ProjectReducer, ProjectConsolidator);
+const initialClipboard = new Clipboard();
 
 function updateViewport() {
   const landscape = window.screen.orientation.type.includes("landscape");
@@ -48,7 +49,7 @@ updateViewport();
 
 export function AppBoundary() {
   const [history, dispatchHistory] = useImmerReducer(historyReducer, initialHistory);
-  const [clipboard] = useState(new Clipboard());
+  const [clipboard] = useState(initialClipboard);
 
   useEffect(() => {
     Autosaver.waitAndAutosave(history.current());

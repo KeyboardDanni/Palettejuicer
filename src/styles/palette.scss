@@ -75,6 +75,10 @@ input[type="text"].palette-rename {
 
     @include scrollbar-with-recess();
   }
+
+  &.cel-picker-active {
+    cursor: crosshair;
+  }
 }
 
 .palette-row {

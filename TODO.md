@@ -22,7 +22,7 @@
 
 ### UI papercuts
 
-- [ ] Click to pick cel
+- [ ] Better tooltip prompt for picking cel
 - [ ] Dark mode
 - [ ] Cel coordinates on the sides
 - [ ] Show color preview of calculations in list to make them easy to find
@@ -55,3 +55,4 @@
 - [x] Use "none" for hue on hue-less colors
 - [x] Keyboard shortcut for undo/redo
 - [x] Consolidate undo steps for calculation properties
+- [x] Click to pick cel
