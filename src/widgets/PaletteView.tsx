@@ -252,8 +252,8 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
   const handleIndexClick = useCallback(
     function (index: CelIndex) {
       if (celPicker && setCelPicker) {
-        celPicker.acceptCallback(index);
-        celPicker.resetCallback();
+        celPicker.onAccept(index);
+        celPicker.onReset();
         setCelPicker(null);
       }
       onIndexChange(index);

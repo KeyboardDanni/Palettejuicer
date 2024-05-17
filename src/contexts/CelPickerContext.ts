@@ -4,8 +4,8 @@ import { CelIndex } from "../util/cel";
 
 export type CelPickerData = {
   currentIndex: CelIndex;
-  acceptCallback: (cel: CelIndex) => void;
-  resetCallback: () => void;
+  onAccept: (cel: CelIndex) => void;
+  onReset: () => void;
 };
 
 export const CelPickerContext = createContext<CelPickerData | null>(null);

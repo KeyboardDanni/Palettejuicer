@@ -55,16 +55,25 @@ export function CelSelector({ index, onIndexChange, relative, disabled, ...other
   useEffect(() => {
     function reset(event?: MouseEvent) {
       if (active && celPicker && setCelPicker && (!event || event.target !== ref.current)) {
-        celPicker.resetCallback();
+        celPicker.onReset();
         setCelPicker(null);
       }
     }
 
+    function keyboardReset(event: KeyboardEvent) {
+      if (event.key === "Escape") {
+        reset();
+        event.preventDefault();
+      }
+    }
+
     document.addEventListener("mousedown", reset);
+    document.addEventListener("keydown", keyboardReset);
 
     return () => {
       reset();
       document.removeEventListener("mousedown", reset);
+      document.removeEventListener("keydown", keyboardReset);
     };
   }, [ref, active, celPicker, setCelPicker]);
 
@@ -84,18 +93,19 @@ export function CelSelector({ index, onIndexChange, relative, disabled, ...other
     setActive(!active);
 
     if (celPicker) {
-      celPicker.resetCallback();
+      celPicker.onReset();
     }
 
     if (!active) {
       setCelPicker({
         currentIndex: index,
-        acceptCallback: (index) => {
+        onAccept: (index) => {
           onIndexChange(index);
           ref.current?.focus();
         },
-        resetCallback: () => {
+        onReset: () => {
           setActive(false);
+          ref.current?.focus();
         },
       });
     } else {
