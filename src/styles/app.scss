@@ -41,17 +41,13 @@ $logo-height: 64px;
 #app-header {
   display: flex;
   flex-direction: row;
+  flex-wrap: wrap;
   row-gap: $size-section-padding;
   column-gap: 4rem;
 
-  @media (max-width: $size-portrait-max) {
-    flex-direction: column;
-    align-items: flex-start;
-
-    .logo {
-      min-width: auto;
-      max-width: $logo-width;
-    }
+  .logo {
+    min-width: auto;
+    max-width: $logo-width;
   }
 
   #menubar {
@@ -132,25 +128,37 @@ $logo-height: 64px;
   flex-direction: column;
   gap: $size-section-padding;
 
+  .section {
+    width: 42.5rem;
+  }
+
   @media (max-width: $size-portrait-max) {
     flex-direction: row;
     padding: 0 $size-section-padding ($size-scrollbar-flat + $size-section-padding) $size-section-padding;
-  }
 
-  .section {
-    width: 42.5rem;
+    .section {
+      width: auto;
+    }
   }
 }
 
 #sidebar-color-selector {
   display: flex;
   flex-direction: column;
+
+  @media (max-width: $size-portrait-max) {
+    flex: 0;
+  }
 }
 
 #sidebar-calculations {
   display: flex;
   flex-direction: column;
   flex: 1;
+
+  @media (max-width: $size-portrait-max) {
+    flex: 0;
+  }
 }
 
 #sidebar-properties {
@@ -158,12 +166,12 @@ $logo-height: 64px;
   flex-direction: column;
   min-height: 16rem;
   max-height: 24rem;
-  min-width: 40rem;
+  min-width: 42.5rem;
   flex: 2;
 
   @media (max-width: $size-portrait-max) {
     max-height: none;
-    flex: 1;
+    flex: 0;
   }
 }
 
