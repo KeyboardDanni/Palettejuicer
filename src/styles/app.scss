@@ -163,6 +163,7 @@ $logo-height: 64px;
 
   @media (max-width: $size-portrait-max) {
     max-height: none;
+    flex: 1;
   }
 }
 
