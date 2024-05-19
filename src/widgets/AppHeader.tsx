@@ -15,6 +15,7 @@ import { Exporter } from "../storage/exporters/Exporter";
 import { GnuPaletteExporter } from "../storage/exporters/GnuPaletteExporter";
 import { JascPalExporter } from "../storage/exporters/JascPalExporter";
 import { Credits } from "./Credits";
+import { AppOptions } from "../model/AppOptions";
 import { AppOptionsContext, AppOptionsSetterContext } from "../contexts/AppOptionsContext";
 
 const PROJECT_URL = "https://github.com/KeyboardDanni/palettejuicer";
@@ -239,11 +240,11 @@ export function OptionsMenu() {
   const appOptions = useContext(AppOptionsContext);
   const setAppOptions = useContext(AppOptionsSetterContext);
 
-  const handleRuler = useCallback(
-    function () {
+  const handleToggleChecked = useCallback(
+    function (property: string) {
       popupRef?.current?.close();
       setAppOptions((draft) => {
-        draft.paletteRuler = !draft.paletteRuler;
+        draft[property as keyof AppOptions] = !draft[property as keyof AppOptions];
       });
     },
     [popupRef, setAppOptions]
@@ -258,7 +259,16 @@ export function OptionsMenu() {
           name="Show Palette Ruler"
           description="Display coordinates on the sides of the palette grid."
           checked={appOptions.paletteRuler}
-          onItemSelect={handleRuler}
+          onItemSelect={() => handleToggleChecked("paletteRuler")}
+        />
+        <PopupMenuSeparatorItem />
+        <PopupMenuItem
+          key={1}
+          index={1}
+          name={'Auto-Deselect "Edit Base"'}
+          description={'Uncheck "Edit Base" when selecting a different color.'}
+          checked={appOptions.autoDeselectEditBase}
+          onItemSelect={() => handleToggleChecked("autoDeselectEditBase")}
         />
       </DropdownButton>
     </>

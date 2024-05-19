@@ -1,6 +1,6 @@
 import { immerable } from "immer";
 import { useImmer } from "use-immer";
-import { ChangeEvent, useCallback, useEffect, useState } from "react";
+import { ChangeEvent, useCallback, useContext, useEffect, useState } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
 import { Color } from "../model/color/Color";
@@ -15,6 +15,7 @@ import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
 import { ProjectAction } from "../reducers/ProjectReducer";
 import { Project } from "../model/Project";
 import { CelPickerContext, CelPickerData, CelPickerSetterContext } from "../contexts/CelPickerContext";
+import { AppOptionsContext } from "../contexts/AppOptionsContext";
 
 class AppViewState {
   [immerable] = true;
@@ -31,15 +32,18 @@ type AppColorSelectorProps = {
 
 function AppColorSelector(props: AppColorSelectorProps) {
   const [showBase, setShowBase] = useState(false);
+  const appOptions = useContext(AppOptionsContext);
+
+  const hasComputed = props.palette.isComputed(props.activeColorIndex);
 
   useEffect(
     function () {
-      if (showBase) {
+      if (appOptions.autoDeselectEditBase && !hasComputed && showBase) {
         setShowBase(false);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- Intentionally avoiding updates on showBase change
-    [setShowBase, props.activeColorIndex]
+    [appOptions, setShowBase, props.activeColorIndex]
   );
 
   function handleColorChange(color: Color) {
@@ -55,7 +59,6 @@ function AppColorSelector(props: AppColorSelectorProps) {
     setShowBase(!showBase);
   }
 
-  const hasComputed = props.palette.isComputed(props.activeColorIndex);
   const computed = hasComputed && !showBase;
   const colorTypeName = computed ? "Computed" : "Base Color";
 

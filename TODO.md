@@ -23,7 +23,6 @@
 
 ### UI papercuts
 
-- [ ] Allow disabling auto-deselect "Edit Base"
 - [ ] Better tooltip prompt for picking cel
 - [ ] Dark mode
 - [ ] Show color preview of calculations in list to make them easy to find
@@ -58,3 +57,4 @@
 - [x] Consolidate undo steps for calculation properties
 - [x] Click to pick cel
 - [x] Cel coordinate ruler in palette view
+- [x] Allow disabling auto-deselect "Edit Base"
