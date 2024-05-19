@@ -82,6 +82,7 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
             label={colorspaceData.name}
             title={colorspaceData.description}
             items={lerpColorspaceData}
+            current={calc.colorspace}
             onItemSelect={handleColorspaceChange}
           />
         </div>
@@ -93,6 +94,7 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
             label={hueModeData.name}
             title={hueModeData.description}
             items={lerpHueModeData}
+            current={calc.hueMode}
             onItemSelect={handleHueModeChange}
           />
         </div>

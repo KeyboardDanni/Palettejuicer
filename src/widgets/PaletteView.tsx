@@ -11,10 +11,34 @@ import { Color } from "../model/color/Color";
 import { GAMUT_ROUNDING_ERROR } from "../model/color/ColorspaceRgb";
 import { PopupMenu, PopupMenuItem } from "./common/PopupMenu";
 import { CelPickerContext, CelPickerSetterContext } from "../contexts/CelPickerContext";
+import { AppOptionsContext } from "../contexts/AppOptionsContext";
 
 class PaletteViewRefState {
   scrubbing: boolean = false;
 }
+
+type PaletteTopRulerProps = {
+  activeX: number;
+};
+
+const PaletteTopRuler = memo(function (props: PaletteTopRulerProps) {
+  const row = [];
+  const className = "palette-ruler-cel palette-ruler-row-cel";
+
+  for (let x = 0; x < PALETTE_WIDTH; x++) {
+    row.push(
+      <div key={x} className={x === props.activeX ? className + " palette-ruler-active" : className}>
+        {x}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div className="palette-ruler-row">{row}</div>
+    </>
+  );
+});
 
 export type PaletteCelProps = {
   color: Color;
@@ -56,19 +80,6 @@ function PaletteCelMenu(props: PaletteCelMenuProps) {
     [props.index, clipboard, popupRef, onColorChange]
   );
 
-  let paste = null;
-
-  if (onColorChange) {
-    paste = (
-      <PopupMenuItem
-        index={1}
-        name="Paste"
-        description={"Paste the color from the clipboard"}
-        onItemSelect={handlePaste}
-      />
-    );
-  }
-
   return (
     <>
       <PopupMenu
@@ -84,7 +95,14 @@ function PaletteCelMenu(props: PaletteCelMenuProps) {
           description={"Copy the color to the clipboard"}
           onItemSelect={handleCopy}
         />
-        {paste}
+        {onColorChange && (
+          <PopupMenuItem
+            index={1}
+            name="Paste"
+            description={"Paste the color from the clipboard"}
+            onItemSelect={handlePaste}
+          />
+        )}
       </PopupMenu>
     </>
   );
@@ -179,6 +197,7 @@ type PaletteRowProps = {
   palette: Palette;
   y: number;
   activeX: number | null;
+  ruler: boolean;
   refState?: React.MutableRefObject<PaletteViewRefState>;
   onIndexClick: (index: CelIndex) => void;
   onColorChange?: (index: CelIndex, color: Color) => void;
@@ -192,6 +211,15 @@ const PaletteRow = memo(function (props: PaletteRowProps) {
   }, [props.activeX]);
   const ref = useRef<HTMLDivElement>(null);
   const row = [];
+  const className = "palette-ruler-cel palette-ruler-column-cel";
+
+  if (props.ruler) {
+    row.push(
+      <div key={-1} className={props.activeX !== null ? className + " palette-ruler-active" : className}>
+        {props.y}
+      </div>
+    );
+  }
 
   for (let x = 0; x < PALETTE_WIDTH; x++) {
     const active = x === props.activeX;
@@ -234,6 +262,7 @@ export type PaletteViewProps = {
 };
 
 export const PaletteView = memo(function (props: PaletteViewProps) {
+  const appOptions = useContext(AppOptionsContext);
   const clipboard = useContext(ClipboardContext);
   const celPicker = useContext(CelPickerContext);
   const setCelPicker = useContext(CelPickerSetterContext);
@@ -351,6 +380,7 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
       <PaletteRow
         key={y}
         y={y}
+        ruler={appOptions.paletteRuler}
         palette={props.palette}
         activeX={activeX}
         onIndexClick={handleIndexClick}
@@ -360,16 +390,17 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
     );
   }
 
-  let className = "palette";
-
-  if (celPicker) {
-    className += " cel-picker-active";
-  }
-
   return (
     <>
-      <div className={className}>
-        <div className="palette-scroll" ref={ref} tabIndex={0} onKeyDown={handleKey} onMouseDown={handleClick}>
+      {appOptions.paletteRuler && <PaletteTopRuler activeX={props.active.x} />}
+      <div className={celPicker ? "palette cel-picker-active" : "palette"}>
+        <div
+          className={appOptions.paletteRuler ? "palette-scroll palette-scroll-ruler" : "palette-scroll"}
+          ref={ref}
+          tabIndex={0}
+          onKeyDown={handleKey}
+          onMouseDown={handleClick}
+        >
           <OverlayScrollbarsComponent
             options={{ overflow: { x: "hidden", y: "scroll" }, scrollbars: { theme: "raised-scrollbar" } }}
             defer

@@ -82,6 +82,7 @@ function OutputPage(props: CalcPropertiesViewProps) {
           label={colorspaceData.name}
           title={colorspaceData.description}
           items={extrapolateSpaceData}
+          current={calc.colorspace}
           onItemSelect={handleColorspaceChange}
         />
       </div>

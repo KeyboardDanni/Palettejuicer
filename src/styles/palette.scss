@@ -1,7 +1,9 @@
 @use "./_constants.scss" as *;
 @use "./_mixins.scss" as *;
+@use "sass:color";
 
 $size-palette-color-minimum: 2rem;
+$color-ruler-tick: color.mix($color-section-gray-border, $color-section-gray, 50%);
 
 @mixin box-corners($color, $thickness) {
   background-position:
@@ -28,6 +30,59 @@ input[type="text"].palette-rename {
   margin: -0.4rem -0.4rem 0.8rem -0.4rem;
 }
 
+.palette-ruler-row {
+  display: flex;
+  flex-direction: row;
+  margin: -0.4rem ($size-scrollbar-recess + $size-scrollbar-recess-spacing) 0.2rem (2.4rem + $size-widget-outline);
+  overflow: hidden;
+}
+
+.palette-ruler-cel {
+  color: $color-text-gray;
+  font-size: 1.3rem;
+  text-align: center;
+  align-self: stretch;
+  align-content: center;
+  overflow: hidden;
+  border-radius: 0.3rem;
+  z-index: 2;
+
+  &.palette-ruler-active {
+    color: $color-text-selected;
+    background-color: $color-selected;
+    font-weight: bold;
+  }
+}
+
+.palette-ruler-row-cel {
+  min-width: $size-palette-color-minimum;
+  padding: 0.4rem 0 0.2rem 0;
+  flex: 1;
+  position: relative;
+
+  &:not(.palette-ruler-active):after {
+    @include layered-pseudo-element(0.8rem, 0, 0.3rem, 0);
+
+    border-left: 0.05rem solid $color-ruler-tick;
+    border-right: 0.05rem solid $color-ruler-tick;
+  }
+}
+
+.palette-ruler-column-cel {
+  width: 2.6rem;
+  min-width: 2.6rem;
+  margin-right: 0.2rem + $size-widget-outline;
+
+  position: relative;
+
+  &:not(.palette-ruler-active):after {
+    @include layered-pseudo-element(0, 0.3rem, 0, 1.6rem - $size-widget-outline);
+
+    border-top: 0.05rem solid $color-ruler-tick;
+    border-bottom: 0.05rem solid $color-ruler-tick;
+  }
+}
+
 .palette {
   display: flex;
   flex-direction: column;
@@ -52,15 +107,23 @@ input[type="text"].palette-rename {
     padding: 0.5rem;
     outline: none;
 
-    &:after {
-      $right-offset: 0.4rem + ($size-scrollbar-recess + $size-scrollbar-recess-spacing);
+    &.palette-scroll-ruler {
+      padding-left: 0;
+    }
 
+    $right-offset: 0.4rem + $size-scrollbar-recess + $size-scrollbar-recess-spacing - $size-widget-outline;
+
+    &:after {
       @include layered-pseudo-element(0.4rem, $right-offset, 0.4rem, 0.4rem);
       pointer-events: none;
 
       border: $size-widget-outline solid $color-section-border;
       border-radius: $size-button-radius;
-      outline: $color-section-gray $size-button-radius solid;
+      outline: $color-section-gray ($size-button-radius * 0.8 - ($size-widget-outline * 2)) solid;
+    }
+
+    &.palette-scroll-ruler:after {
+      @include layered-pseudo-element(0.4rem, $right-offset, 0.4rem, 2.7rem + $size-widget-outline);
     }
 
     &:focus-visible:before {
@@ -71,6 +134,10 @@ input[type="text"].palette-rename {
       border-radius: $size-button-radius;
       outline: $color-widget-accent 0.2rem solid;
       outline-offset: 0.1rem;
+    }
+
+    &.palette-scroll-ruler:focus-visible:before {
+      @include layered-pseudo-element(0.4rem, 0.4rem, 0.4rem, 2.7rem + $size-widget-outline);
     }
 
     @include scrollbar-with-recess();

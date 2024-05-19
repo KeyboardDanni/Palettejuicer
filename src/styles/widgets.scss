@@ -474,7 +474,6 @@ input[type="text"] {
   border-radius: $size-button-radius;
   touch-action: manipulation;
 
-  &:hover,
   &:focus,
   &:not(.flat-text) {
     background-color: $color-field-background;
@@ -485,6 +484,12 @@ input[type="text"] {
     &:read-only {
       background-color: $color-field-background-disabled;
     }
+  }
+
+  &.flat-text:hover:not(:focus) {
+    background-color: $color-field-background;
+    border-color: $color-section-gray-border;
+    box-shadow: inset 0 0.2rem $color-section-gray-border;
   }
 
   &:disabled,

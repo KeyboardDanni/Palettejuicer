@@ -15,6 +15,7 @@
 
 ### Calculations
 
+- [ ] Fix OkHSL/OkHSV incorrect hue fade
 - [ ] Adjust Color calculation
 - [ ] Gradient Smoothing calculation
 - [ ] Additional interpolation settings
@@ -22,9 +23,9 @@
 
 ### UI papercuts
 
+- [ ] Allow disabling auto-deselect "Edit Base"
 - [ ] Better tooltip prompt for picking cel
 - [ ] Dark mode
-- [ ] Cel coordinates on the sides
 - [ ] Show color preview of calculations in list to make them easy to find
 - [ ] Indicate which cels are affected by a calculation on selection
 - [ ] Inform user if start/end cels don't form a strip
@@ -56,3 +57,4 @@
 - [x] Keyboard shortcut for undo/redo
 - [x] Consolidate undo steps for calculation properties
 - [x] Click to pick cel
+- [x] Cel coordinate ruler in palette view

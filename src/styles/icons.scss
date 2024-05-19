@@ -57,3 +57,8 @@
   @include icon-solid;
   content: "\f05b";
 }
+
+.icon-check::before {
+  @include icon-solid;
+  content: "\f00c";
+}

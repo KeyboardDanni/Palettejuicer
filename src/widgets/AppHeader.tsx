@@ -1,4 +1,4 @@
-import { useCallback, useRef, useState } from "react";
+import { useCallback, useContext, useRef, useState } from "react";
 import { PopupActions } from "reactjs-popup/dist/types";
 import Popup from "reactjs-popup";
 
@@ -15,6 +15,7 @@ import { Exporter } from "../storage/exporters/Exporter";
 import { GnuPaletteExporter } from "../storage/exporters/GnuPaletteExporter";
 import { JascPalExporter } from "../storage/exporters/JascPalExporter";
 import { Credits } from "./Credits";
+import { AppOptionsContext, AppOptionsSetterContext } from "../contexts/AppOptionsContext";
 
 const PROJECT_URL = "https://github.com/KeyboardDanni/palettejuicer";
 
@@ -233,6 +234,37 @@ export function AboutMenu() {
   );
 }
 
+export function OptionsMenu() {
+  const popupRef = useRef<PopupActions>(null);
+  const appOptions = useContext(AppOptionsContext);
+  const setAppOptions = useContext(AppOptionsSetterContext);
+
+  const handleRuler = useCallback(
+    function () {
+      popupRef?.current?.close();
+      setAppOptions((draft) => {
+        draft.paletteRuler = !draft.paletteRuler;
+      });
+    },
+    [popupRef, setAppOptions]
+  );
+
+  return (
+    <>
+      <DropdownButton popupRef={popupRef} label="Options">
+        <PopupMenuItem
+          key={0}
+          index={0}
+          name="Show Palette Ruler"
+          description="Display coordinates on the sides of the palette grid."
+          checked={appOptions.paletteRuler}
+          onItemSelect={handleRuler}
+        />
+      </DropdownButton>
+    </>
+  );
+}
+
 export type AppHeaderProps = {
   history: UndoHistory<Project>;
   onHistoryChange: React.Dispatch<HistoryAction | ProjectAction>;
@@ -277,6 +309,7 @@ export function AppHeader(props: AppHeaderProps) {
               <i className="icon-redo"></i>
             </button>
           </div>
+          <OptionsMenu />
           <button onClick={handleTutorial}>Tutorial</button>
           <AboutMenu />
         </div>

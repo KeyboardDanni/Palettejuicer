@@ -58,18 +58,6 @@ function AppColorSelector(props: AppColorSelectorProps) {
   const hasComputed = props.palette.isComputed(props.activeColorIndex);
   const computed = hasComputed && !showBase;
   const colorTypeName = computed ? "Computed" : "Base Color";
-  let baseSwitchButton;
-
-  if (hasComputed) {
-    baseSwitchButton = (
-      <>
-        <label>
-          <input type="checkbox" checked={showBase} onChange={handleShowBaseClick} />
-          Edit Base
-        </label>
-      </>
-    );
-  }
 
   const color = computed
     ? props.palette.color(props.activeColorIndex)
@@ -85,7 +73,12 @@ function AppColorSelector(props: AppColorSelectorProps) {
             {colorTypeName} [{props.activeColorIndex.x}, {props.activeColorIndex.y}]
           </span>
           <div className="header-bar-spacer" />
-          {baseSwitchButton}
+          {hasComputed && (
+            <label>
+              <input type="checkbox" checked={showBase} onChange={handleShowBaseClick} />
+              Edit Base
+            </label>
+          )}
         </div>
         <ColorSelector color={color} onColorChange={handleColorChange} computed={computed} />
       </div>

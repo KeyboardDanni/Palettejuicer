@@ -310,6 +310,7 @@ export function ColorSelector(props: ColorSelectorProps) {
                 className="thin-button"
                 label="More"
                 items={colorSelectorDropdownItems}
+                current={colorSelectorDropdownItems.findIndex((item) => item.name === page)}
                 onItemSelect={setPageByIndex}
               />
             </div>

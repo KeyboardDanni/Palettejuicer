@@ -33,12 +33,20 @@ export function DropdownButton({ label, children, popupRef, className, ...other 
 export type DropdownChoiceButtonProps = {
   label: string;
   items: readonly PopupMenuChoiceData[];
+  current?: number;
   onItemSelect: (index: number) => void;
   className?: string;
   [key: string]: any;
 };
 
-export function DropdownChoiceButton({ label, items, onItemSelect, className, ...other }: DropdownChoiceButtonProps) {
+export function DropdownChoiceButton({
+  label,
+  items,
+  current,
+  onItemSelect,
+  className,
+  ...other
+}: DropdownChoiceButtonProps) {
   const dropdownButton = (isOpen: boolean) => {
     let dropdownClass = isOpen ? "dropdown selected" : "dropdown";
     if (className) dropdownClass = dropdownClass + " " + className;
@@ -52,7 +60,7 @@ export function DropdownChoiceButton({ label, items, onItemSelect, className, ..
 
   return (
     <>
-      <PopupChoiceMenu button={dropdownButton} items={items} onItemSelect={onItemSelect} />
+      <PopupChoiceMenu button={dropdownButton} items={items} current={current} onItemSelect={onItemSelect} />
     </>
   );
 }

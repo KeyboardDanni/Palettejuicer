@@ -59,6 +59,7 @@ export function CalcGamutMapView(props: CalcPropertiesViewProps) {
             label={gamutData.name}
             title={gamutData.description}
             items={gamutMapData}
+            current={calc.algorithm}
             onItemSelect={handleAlgorithmChange}
           />
         </div>

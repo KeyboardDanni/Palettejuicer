@@ -14,6 +14,7 @@ export type PopupMenuItemProps = {
   index: number;
   name: string;
   description?: string;
+  checked?: boolean;
   children?: React.ReactNode;
   popupRef?: React.RefObject<PopupActions>;
   onItemSelect?: (index: number) => void;
@@ -52,8 +53,14 @@ export function PopupMenuItem(props: PopupMenuItemProps) {
         tabIndex={0}
         onMouseUp={handleSelect}
         onKeyDown={handleKey}
+        aria-checked={props.checked}
       >
         {props.name}
+        {props.checked && (
+          <>
+            &nbsp;&nbsp;<i className="icon-check"></i>
+          </>
+        )}
       </li>
     );
   };
@@ -141,6 +148,7 @@ export function PopupMenu(props: PopupMenuProps) {
 export type PopupChoiceMenuProps = {
   button: (isOpen: boolean) => JSX.Element;
   items: readonly PopupMenuChoiceData[];
+  current?: number;
   onItemSelect: (index: number) => void;
 };
 
@@ -152,9 +160,10 @@ export function PopupChoiceMenu(props: PopupChoiceMenuProps) {
     const menuItem = (
       <PopupMenuItem
         key={id}
+        index={id}
         name={item.name}
         description={item.description}
-        index={id}
+        checked={id === props.current}
         popupRef={popupRef}
         onItemSelect={props.onItemSelect}
       />

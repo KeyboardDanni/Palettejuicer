@@ -113,16 +113,15 @@ export function CelSelector({ index, onIndexChange, relative, disabled, ...other
     }
   }
 
-  let className = "thin-button";
-
-  if (active) {
-    className += " selected";
-  }
-
   return (
     <>
       <div className="cel-selector">
-        <button className={className} title="Click to pick cel" onClick={handleClick} ref={ref}>
+        <button
+          className={active ? "thin-button selected" : "thin-button"}
+          title="Click to pick cel"
+          onClick={handleClick}
+          ref={ref}
+        >
           <i className="icon-pick"></i>
         </button>
         <CelNumberInput
