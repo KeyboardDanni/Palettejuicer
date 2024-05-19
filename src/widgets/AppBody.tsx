@@ -8,7 +8,7 @@ import { Palette } from "../model/Palette";
 import { CelIndex } from "../util/cel";
 import { ColorSelector } from "./common/ColorSelector";
 import { PaletteView } from "./PaletteView";
-import { CalculationsView, CalculationsViewProps } from "./calculations/CalculationsView";
+import { CalculationsView, CalculationsViewProps } from "./CalculationsView";
 import { PropertiesView, PropertiesViewProps } from "./PropertiesView";
 import { Calculation } from "../model/calculation/Calculation";
 import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";

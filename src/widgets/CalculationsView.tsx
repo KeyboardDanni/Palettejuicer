@@ -1,13 +1,13 @@
 import React, { ChangeEvent, memo, useCallback, useEffect, useRef } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
-import { clamp } from "../../util/math";
-import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
-import { PopupMenuChoiceData } from "../common/PopupMenu";
+import { clamp } from "../util/math";
+import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
+import { PopupMenuChoiceData } from "./common/PopupMenu";
 
-import { DropdownChoiceButton } from "../common/DropdownButton";
-import { Calculation } from "../../model/calculation/Calculation";
-import { availableCalcs } from "../../model/Palette";
+import { DropdownChoiceButton } from "./common/DropdownButton";
+import { Calculation } from "../model/calculation/Calculation";
+import { availableCalcs } from "../model/Palette";
 import { produce } from "immer";
 
 class CalculationsListRefState {
