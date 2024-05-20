@@ -31,10 +31,6 @@
 - [ ] Multi-selection in palette
 - [ ] Restore view selections on undo/redo
 
-# Other
-
-- [ ] FAQ section
-
 # Done
 
 - [x] Copy and paste color cels
@@ -58,3 +54,4 @@
 - [x] Click to pick cel
 - [x] Cel coordinate ruler in palette view
 - [x] Allow disabling auto-deselect "Edit Base"
+- [x] FAQ section

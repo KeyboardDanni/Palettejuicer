@@ -8,6 +8,7 @@ import { SelectingColorsPage } from "./SelectingColorsPage";
 import { GeneratingColorsPage } from "./GeneratingColorsPage";
 import { OutOfGamutPage } from "./OutOfGamutPage";
 import { SavingWorkPage } from "./SavingWorkPage";
+import { FAQPage } from "./FAQPage";
 
 enum TutorialPage {
   WhyPalettejuicer = "Why Palettejuicer?",
@@ -15,6 +16,7 @@ enum TutorialPage {
   GeneratingColors = "Generating Colors",
   OutOfGamut = "Keeping Colors in-Gamut",
   SavingWork = "Saving Your Work",
+  FAQ = "FAQ",
 }
 
 type TutorialPageViewProps = {
@@ -33,6 +35,8 @@ function TutorialPageView(props: TutorialPageViewProps) {
       return <OutOfGamutPage />;
     case TutorialPage.SavingWork:
       return <SavingWorkPage />;
+    case TutorialPage.FAQ:
+      return <FAQPage />;
     default:
       throw new Error("Bad enum");
   }
@@ -64,6 +68,7 @@ export function Tutorial(props: TutorialProps) {
             <PageTab pageName={TutorialPage.GeneratingColors} onPageChange={setPage} activePage={page} />
             <PageTab pageName={TutorialPage.OutOfGamut} onPageChange={setPage} activePage={page} />
             <PageTab pageName={TutorialPage.SavingWork} onPageChange={setPage} activePage={page} />
+            <PageTab pageName={TutorialPage.FAQ} onPageChange={setPage} activePage={page} />
           </div>
           <div className="tutorial-scroll" key={page}>
             <OverlayScrollbarsComponent options={{ scrollbars: { theme: "raised-scrollbar" } }}>

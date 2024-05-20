@@ -18,6 +18,12 @@
   src: url("/assets/Lato-Bold.woff2");
 }
 
+@font-face {
+  font-family: "Roboto Mono";
+  font-weight: 400;
+  src: url("/assets/roboto-mono-v23-latin-regular.woff2");
+}
+
 html {
   font: $font-weight-normal $size-pixel-base $font-stack;
   line-height: 1;
@@ -40,8 +46,9 @@ h4,
 h5,
 h6,
 p,
+pre,
 textarea {
-  line-height: 1.4;
+  line-height: 1.5;
   margin: 0;
   outline: none;
   user-select: text;
@@ -114,6 +121,17 @@ ol,
 ul {
   list-style: none;
   padding-inline: 0;
+}
+
+code,
+pre {
+  font-family: "Roboto Mono";
+  font-size: 1.4rem;
+  padding: 0 0.4rem;
+  margin: 0 0.2rem;
+  background-color: $color-field-background;
+  border: 0.1rem solid $color-widget-group-border;
+  border-radius: 0.3rem;
 }
 
 ::selection {
