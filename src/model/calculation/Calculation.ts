@@ -3,7 +3,11 @@ import { immerable, produce } from "immer";
 
 import { CelIndex } from "../../util/cel";
 import { Color } from "../color/Color";
-import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
+
+export type CalcPropertiesViewProps = {
+  calc: Calculation;
+  onCalcChange: (calc: Calculation) => void;
+};
 
 export interface CalculationCel {
   index: CelIndex;

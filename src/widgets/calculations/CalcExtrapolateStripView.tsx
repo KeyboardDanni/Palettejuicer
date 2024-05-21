@@ -8,7 +8,7 @@ import {
   extrapolateSpaceData,
 } from "../../model/calculation/CalcExtrapolateStrip";
 import { CelIndex } from "../../util/cel";
-import { CalcPropertiesViewProps } from "../PropertiesView";
+import { CalcPropertiesViewProps } from "../../model/calculation/Calculation";
 import { CelSelector } from "../common/CelSelector";
 import { NumberSlider } from "../common/NumberSlider";
 import { PageTab } from "../common/PageTab";

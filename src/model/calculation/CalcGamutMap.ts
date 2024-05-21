@@ -1,10 +1,9 @@
 import { immerable } from "immer";
 import { Transform } from "class-transformer";
 
-import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 import { CelIndex } from "../../util/cel";
 import { Color, GamutMapAlgorithm } from "../color/Color";
-import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
+import { Calculation, CalculationCel, CalculationResult, CalcPropertiesViewProps } from "./Calculation";
 import { CalcGamutMapView } from "../../widgets/calculations/CalcGamutMapView";
 
 export class CalcGamutMap extends Calculation {

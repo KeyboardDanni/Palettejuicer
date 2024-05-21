@@ -1,10 +1,9 @@
 import { immerable, produce } from "immer";
 import { Transform, Type } from "class-transformer";
 
-import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 import { CelIndex, celStrip } from "../../util/cel";
 import { Color } from "../color/Color";
-import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
+import { Calculation, CalculationCel, CalculationResult, CalcPropertiesViewProps } from "./Calculation";
 import { CalcExtrapolateStripView } from "../../widgets/calculations/CalcExtrapolateStripView";
 import { positiveMod, steps } from "../../util/math";
 import { ChannelType, Colorspace } from "../color/Colorspace";

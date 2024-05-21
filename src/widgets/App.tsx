@@ -1,12 +1,12 @@
 import { useCallback, useEffect, useState } from "react";
+import { ErrorBoundary } from "react-error-boundary";
 import { useImmer, useImmerReducer } from "use-immer";
 
 import { AppBody } from "./AppBody";
-import { AppHeader } from "./AppHeader";
+import { AppMenubar } from "./menubar/AppMenubar";
 import { ProjectReducer, ProjectConsolidator } from "../reducers/ProjectReducer";
 import { Project } from "../model/Project";
 import { LocalStorage } from "../storage/LocalStorage";
-import { ErrorBoundary } from "react-error-boundary";
 import { OopsView } from "./OopsView";
 import { ClipboardContext } from "../contexts/ClipboardContext";
 import { Clipboard } from "../model/Clipboard";
@@ -114,7 +114,10 @@ export function AppBoundary() {
         <AppOptionsSetterContext.Provider value={setAppOptions}>
           <ClipboardContext.Provider value={clipboard}>
             <div id="app-wrapper">
-              <AppHeader history={history} onHistoryChange={dispatchHistory} />
+              <div id="app-header">
+                <div className="logo" />
+                <AppMenubar history={history} onHistoryChange={dispatchHistory} />
+              </div>
               <AppBody project={history.current()} onProjectChange={dispatchHistory} />
             </div>
           </ClipboardContext.Provider>

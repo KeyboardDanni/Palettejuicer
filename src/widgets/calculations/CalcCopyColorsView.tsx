@@ -2,7 +2,7 @@ import { produce } from "immer";
 
 import { CelIndex } from "../../util/cel";
 import { CalcCopyColors, MAX_COPIES } from "../../model/calculation/CalcCopyColors";
-import { CalcPropertiesViewProps } from "../PropertiesView";
+import { CalcPropertiesViewProps } from "../../model/calculation/Calculation";
 import { CelSelector } from "../common/CelSelector";
 import { ControlledTextInput } from "../common/ControlledTextInput";
 import { ChangeEvent } from "react";

@@ -3,12 +3,12 @@ import { castDraft, produce } from "immer";
 
 import { Color } from "../../model/color/Color";
 import { ChannelInfo, ChannelType, Colorspace } from "../../model/color/Colorspace";
-import { ControlledTextInput } from "./ControlledTextInput";
-import { NumberSlider } from "./NumberSlider";
+import { ControlledTextInput } from "../common/ControlledTextInput";
+import { NumberSlider } from "../common/NumberSlider";
 import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
-import { PageTab } from "./PageTab";
-import { DropdownChoiceButton } from "./DropdownButton";
-import { PopupMenuChoiceData } from "./PopupMenu";
+import { PageTab } from "../common/PageTab";
+import { DropdownChoiceButton } from "../common/DropdownButton";
+import { PopupMenuChoiceData } from "../common/PopupMenu";
 
 enum ColorSelectorPage {
   Oklch = "OkLCH",

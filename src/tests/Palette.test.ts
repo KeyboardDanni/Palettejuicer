@@ -7,8 +7,12 @@ import { PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
 import { CelIndex } from "../util/cel";
 import { Color } from "../model/color/Color";
 import { ColorspaceRgb } from "../model/color/ColorspaceRgb";
-import { Calculation, CalculationCel, CalculationResult } from "../model/calculation/Calculation";
-import { CalcPropertiesViewProps } from "../widgets/PropertiesView";
+import {
+  Calculation,
+  CalculationCel,
+  CalculationResult,
+  CalcPropertiesViewProps,
+} from "../model/calculation/Calculation";
 
 const HEX_RED = "#ff2222";
 const HEX_GREEN = "#22ff22";

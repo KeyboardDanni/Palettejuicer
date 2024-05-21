@@ -1,9 +1,8 @@
 import { immerable } from "immer";
 
-import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 import { CelIndex } from "../../util/cel";
 import { Color } from "../color/Color";
-import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
+import { Calculation, CalculationCel, CalculationResult, CalcPropertiesViewProps } from "./Calculation";
 import { CalcCopyColorsView } from "../../widgets/calculations/CalcCopyColorsView";
 
 export const MAX_COPIES = 1024;

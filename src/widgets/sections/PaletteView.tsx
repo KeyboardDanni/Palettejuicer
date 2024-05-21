@@ -2,16 +2,16 @@ import { memo, useCallback, useContext, useEffect, useRef, useState } from "reac
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { PopupActions } from "reactjs-popup/dist/types";
 
-import { PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../model/Palette";
-import { CelIndex } from "../util/cel";
-import { clamp } from "../util/math";
-import { ClipboardContext } from "../contexts/ClipboardContext";
-import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
-import { Color } from "../model/color/Color";
-import { GAMUT_ROUNDING_ERROR } from "../model/color/ColorspaceRgb";
-import { PopupMenu, PopupMenuItem } from "./common/PopupMenu";
-import { CelPickerContext, CelPickerSetterContext } from "../contexts/CelPickerContext";
-import { AppOptionsContext } from "../contexts/AppOptionsContext";
+import { PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../../model/Palette";
+import { CelIndex } from "../../util/cel";
+import { clamp } from "../../util/math";
+import { ClipboardContext } from "../../contexts/ClipboardContext";
+import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
+import { Color } from "../../model/color/Color";
+import { GAMUT_ROUNDING_ERROR } from "../../model/color/ColorspaceRgb";
+import { PopupMenu, PopupMenuItem } from "../common/PopupMenu";
+import { CelPickerContext, CelPickerSetterContext } from "../../contexts/CelPickerContext";
+import { AppOptionsContext } from "../../contexts/AppOptionsContext";
 
 class PaletteViewRefState {
   scrubbing: boolean = false;

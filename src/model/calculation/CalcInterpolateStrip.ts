@@ -1,9 +1,8 @@
 import { immerable } from "immer";
 
 import { CelIndex, celStrip } from "../../util/cel";
-import { Calculation, CalculationCel, CalculationResult } from "./Calculation";
+import { Calculation, CalculationCel, CalculationResult, CalcPropertiesViewProps } from "./Calculation";
 import { CalcInterpolateStripView } from "../../widgets/calculations/CalcInterpolateStripView";
-import { CalcPropertiesViewProps } from "../../widgets/PropertiesView";
 import { Color } from "../color/Color";
 import { Transform } from "class-transformer";
 import { colorSteps } from "../../util/colorjs";

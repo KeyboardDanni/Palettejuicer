@@ -1,33 +1,21 @@
-import { useCallback, useContext, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { PopupActions } from "reactjs-popup/dist/types";
 import Popup from "reactjs-popup";
-
-import { DropdownButton } from "./common/DropdownButton";
-import { ProjectAction, ProjectFileAction, ProjectFileActionType } from "../reducers/ProjectReducer";
-import { Project } from "../model/Project";
-import { ProjectFile } from "../storage/ProjectFile";
-import { PopupMenuItem, PopupMenuSeparatorItem } from "./common/PopupMenu";
-import { HistoryAction, HistoryActionType } from "../reducers/HistoryReducer";
-import { UndoHistory } from "../model/UndoHistory";
-import { Tutorial } from "./tutorial/Tutorial";
-
-import { Exporter } from "../storage/exporters/Exporter";
-import { GnuPaletteExporter } from "../storage/exporters/GnuPaletteExporter";
-import { JascPalExporter } from "../storage/exporters/JascPalExporter";
-import { Credits } from "./Credits";
-import { AppOptions } from "../model/AppOptions";
-import { AppOptionsContext, AppOptionsSetterContext } from "../contexts/AppOptionsContext";
-
-const PROJECT_URL = "https://github.com/KeyboardDanni/palettejuicer";
+import { DropdownButton } from "../common/DropdownButton";
+import { ProjectAction, ProjectFileAction, ProjectFileActionType } from "../../reducers/ProjectReducer";
+import { Project } from "../../model/Project";
+import { ProjectFile } from "../../storage/ProjectFile";
+import { PopupMenuItem, PopupMenuSeparatorItem } from "../common/PopupMenu";
+import { Exporter } from "../../storage/exporters/Exporter";
+import { GnuPaletteExporter } from "../../storage/exporters/GnuPaletteExporter";
+import { JascPalExporter } from "../../storage/exporters/JascPalExporter";
 
 const availableExporters: (typeof Exporter)[] = [GnuPaletteExporter, JascPalExporter];
-
 type ConfirmPopupProps = {
   confirmOpen: boolean;
   setConfirmOpen: (value: boolean) => void;
   onConfirm: () => void;
 };
-
 function ConfirmPopup(props: ConfirmPopupProps) {
   const acceptConfirm = useCallback(
     function () {
@@ -193,138 +181,6 @@ export function FileMenu(props: FileMenuProps) {
         </PopupMenuItem>
       </DropdownButton>
       <ConfirmPopup confirmOpen={confirmOpen} setConfirmOpen={setConfirmOpen} onConfirm={handleReallyClear} />
-    </>
-  );
-}
-
-export function AboutMenu() {
-  const popupRef = useRef<PopupActions>(null);
-  const [creditsOpen, setCreditsOpen] = useState(false);
-
-  const handleSource = useCallback(
-    function () {
-      popupRef?.current?.close();
-      window.open(PROJECT_URL, "_blank", "noopener,noreferrer");
-    },
-    [popupRef]
-  );
-
-  const handleCredits = useCallback(
-    function () {
-      popupRef?.current?.close();
-      setCreditsOpen(true);
-    },
-    [setCreditsOpen]
-  );
-
-  return (
-    <>
-      <DropdownButton popupRef={popupRef} label="About">
-        <PopupMenuItem
-          key={0}
-          index={0}
-          name="View on GitHub"
-          description="View source code on GitHub."
-          onItemSelect={handleSource}
-        />
-        <PopupMenuSeparatorItem />
-        <PopupMenuItem key={1} index={1} name="Credits" onItemSelect={handleCredits} />
-      </DropdownButton>
-      <Credits popupOpen={creditsOpen} setPopupOpen={setCreditsOpen} />
-    </>
-  );
-}
-
-export function OptionsMenu() {
-  const popupRef = useRef<PopupActions>(null);
-  const appOptions = useContext(AppOptionsContext);
-  const setAppOptions = useContext(AppOptionsSetterContext);
-
-  const handleToggleChecked = useCallback(
-    function (property: string) {
-      popupRef?.current?.close();
-      setAppOptions((draft) => {
-        draft[property as keyof AppOptions] = !draft[property as keyof AppOptions];
-      });
-    },
-    [popupRef, setAppOptions]
-  );
-
-  return (
-    <>
-      <DropdownButton popupRef={popupRef} label="Options">
-        <PopupMenuItem
-          key={0}
-          index={0}
-          name="Show Palette Ruler"
-          description="Display coordinates on the sides of the palette grid."
-          checked={appOptions.paletteRuler}
-          onItemSelect={() => handleToggleChecked("paletteRuler")}
-        />
-        <PopupMenuSeparatorItem />
-        <PopupMenuItem
-          key={1}
-          index={1}
-          name={'Auto-Deselect "Edit Base"'}
-          description={'Uncheck "Edit Base" when selecting a different color.'}
-          checked={appOptions.autoDeselectEditBase}
-          onItemSelect={() => handleToggleChecked("autoDeselectEditBase")}
-        />
-      </DropdownButton>
-    </>
-  );
-}
-
-export type AppHeaderProps = {
-  history: UndoHistory<Project>;
-  onHistoryChange: React.Dispatch<HistoryAction | ProjectAction>;
-};
-
-export function AppHeader(props: AppHeaderProps) {
-  const [tutorialOpen, setTutorialOpen] = useState(false);
-  const onHistoryChange = props.onHistoryChange;
-
-  const handleUndo = useCallback(
-    function () {
-      onHistoryChange(new HistoryAction({ actionType: HistoryActionType.Undo }));
-    },
-    [onHistoryChange]
-  );
-
-  const handleRedo = useCallback(
-    function () {
-      onHistoryChange(new HistoryAction({ actionType: HistoryActionType.Redo }));
-    },
-    [onHistoryChange]
-  );
-
-  const handleTutorial = useCallback(
-    function () {
-      setTutorialOpen(true);
-    },
-    [setTutorialOpen]
-  );
-
-  return (
-    <>
-      <div id="app-header">
-        <div className="logo" />
-        <div id="menubar">
-          <FileMenu project={props.history.current()} onProjectChange={props.onHistoryChange} />
-          <div id="undo-redo-group">
-            <button onClick={handleUndo} disabled={!props.history.hasUndo()} title="Undo">
-              <i className="icon-undo"></i>
-            </button>
-            <button onClick={handleRedo} disabled={!props.history.hasRedo()} title="Redo">
-              <i className="icon-redo"></i>
-            </button>
-          </div>
-          <OptionsMenu />
-          <button onClick={handleTutorial}>Tutorial</button>
-          <AboutMenu />
-        </div>
-      </div>
-      <Tutorial popupOpen={tutorialOpen} setPopupOpen={setTutorialOpen} />
     </>
   );
 }

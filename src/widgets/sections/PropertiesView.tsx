@@ -1,12 +1,7 @@
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
-import { Palette } from "../model/Palette";
-import { Calculation } from "../model/calculation/Calculation";
-import { PaletteAction, PaletteActionType } from "../reducers/PaletteReducer";
-
-export type CalcPropertiesViewProps = {
-  calc: Calculation;
-  onCalcChange: (calc: Calculation) => void;
-};
+import { Palette } from "../../model/Palette";
+import { Calculation } from "../../model/calculation/Calculation";
+import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
 
 export type PropertiesViewProps = {
   palette: Palette;

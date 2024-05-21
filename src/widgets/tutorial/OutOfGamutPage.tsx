@@ -1,8 +1,8 @@
 import { steps } from "../../util/math";
 import { Color, GamutMapAlgorithm } from "../../model/color/Color";
 import { ColorspaceOklch } from "../../model/color/ColorspaceOklch";
-import { PaletteCel } from "../PaletteView";
-import { ColorSelector } from "../common/ColorSelector";
+import { PaletteCel } from "../sections/PaletteView";
+import { ColorSelector } from "../sections/ColorSelector";
 
 const REALLY_OUT_OF_GAMUT_COLOR = new Color(ColorspaceOklch.fromTransformed([76, 36, 285]));
 const OUT_OF_GAMUT_COLOR = new Color(ColorspaceOklch.fromTransformed([70, 22, 285]));

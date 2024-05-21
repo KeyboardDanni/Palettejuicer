@@ -9,7 +9,7 @@ import {
   lerpHueModeData,
 } from "../../model/calculation/CalcInterpolateStrip";
 import { CelIndex } from "../../util/cel";
-import { CalcPropertiesViewProps } from "../PropertiesView";
+import { CalcPropertiesViewProps } from "../../model/calculation/Calculation";
 import { NumberSlider } from "../common/NumberSlider";
 import { DropdownChoiceButton } from "../common/DropdownButton";
 

@@ -1,7 +1,7 @@
 import { produce } from "immer";
 
 import { CelIndex } from "../../util/cel";
-import { CalcPropertiesViewProps } from "../PropertiesView";
+import { CalcPropertiesViewProps } from "../../model/calculation/Calculation";
 import { CelSelector } from "../common/CelSelector";
 import { CalcGamutMap } from "../../model/calculation/CalcGamutMap";
 import { DropdownChoiceButton } from "../common/DropdownButton";

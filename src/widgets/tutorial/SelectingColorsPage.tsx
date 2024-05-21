@@ -1,9 +1,9 @@
 import { useState } from "react";
 
 import { range, steps } from "../../util/math";
-import { ColorSelector } from "../common/ColorSelector";
+import { ColorSelector } from "../sections/ColorSelector";
 import { Color, GamutMapAlgorithm } from "../../model/color/Color";
-import { PaletteCel } from "../PaletteView";
+import { PaletteCel } from "../sections/PaletteView";
 import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
 import { ColorspaceHsl } from "../../model/color/ColorspaceHsl";
 import { ColorspaceLch } from "../../model/color/ColorspaceLch";

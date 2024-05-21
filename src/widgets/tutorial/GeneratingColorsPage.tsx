@@ -2,7 +2,7 @@ import { appendSteps, range, steps } from "../../util/math";
 import { Color } from "../../model/color/Color";
 import { ColorspaceOklch } from "../../model/color/ColorspaceOklch";
 import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
-import { PaletteCel } from "../PaletteView";
+import { PaletteCel } from "../sections/PaletteView";
 
 const COLOR_NULL = new Color(new ColorspaceRgb([0, 0, 0]));
 
