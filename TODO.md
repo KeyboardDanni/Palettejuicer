@@ -55,3 +55,4 @@
 - [x] Cel coordinate ruler in palette view
 - [x] Allow disabling auto-deselect "Edit Base"
 - [x] FAQ section
+- [x] Fix "wobbly" scrolling on mobile

@@ -80,9 +80,13 @@
     flex-direction: column;
     margin: 0 calc(($size-button-padding) * -1);
 
+    @media (min-resolution: 150dpi) {
+      font-size: 2rem;
+    }
+
     li.menu-item {
       display: block;
-      padding: $size-list-padding ($size-list-padding + $size-button-padding);
+      padding: ($size-list-padding + $size-widget-outline) ($size-list-padding + $size-button-padding);
       outline: none;
       touch-action: manipulation;
 
@@ -98,7 +102,7 @@
       }
 
       &.menu-item-submenu {
-        padding-right: 2em;
+        padding-right: 2rem;
         position: relative;
 
         &:after {
@@ -106,10 +110,10 @@
           position: absolute;
           width: 0;
           height: 0;
-          top: 0.6em;
-          right: 0.4em;
+          top: 35%;
+          right: 0.4rem;
           content: "";
-          border: 0.3em solid transparent;
+          border: 0.5rem solid transparent;
           border-left-color: currentColor;
         }
       }
@@ -117,14 +121,23 @@
 
     li.menu-separator {
       display: block;
-      padding: calc($size-list-padding / 2) ($size-list-padding + $size-button-padding);
+      padding: calc($size-list-padding * 0.5) ($size-list-padding + $size-button-padding);
+
+      @media (min-resolution: 150dpi) {
+        padding: calc($size-list-padding * 0.75) ($size-list-padding + $size-button-padding);
+      }
     }
   }
+}
+
+.popup-overlay {
+  touch-action: manipulation;
 }
 
 .modal-popup-overlay {
   background-color: color.adjust($color-background, $alpha: -0.25);
   animation: popup-fade-in 0.5s;
+  touch-action: manipulation;
 
   .section {
     @include raised-box-shadow(
@@ -173,6 +186,7 @@ button {
   margin: $size-widget-outline $size-widget-outline ($size-button-height + $size-widget-outline) $size-widget-outline;
   padding: $size-button-padding;
   text-wrap: nowrap;
+  touch-action: manipulation;
 
   &:disabled {
     color: $color-text-disabled;

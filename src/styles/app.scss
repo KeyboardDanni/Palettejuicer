@@ -6,7 +6,6 @@ $logo-height: 64px;
 
 #root {
   width: 100%;
-  min-height: 100vh;
   margin: 0;
   position: absolute;
   top: 0;
@@ -26,6 +25,12 @@ $logo-height: 64px;
   display: flex;
   flex-direction: column;
   gap: $size-section-padding;
+
+  @media (max-width: $size-portrait-max) {
+    min-height: -moz-available;
+    min-height: -webkit-fill-available;
+    min-height: 100svh;
+  }
 }
 
 .logo {

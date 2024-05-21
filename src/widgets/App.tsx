@@ -45,7 +45,7 @@ function updateViewport() {
   const landscape = window.screen.orientation.type.includes("landscape");
   const viewportSettings = landscape ? "height=850" : "width=500";
 
-  document.querySelector('meta[name="viewport"]')?.setAttribute("content", viewportSettings);
+  document.querySelector('meta[name="viewport"]')?.setAttribute("content", viewportSettings + " initial-scale=1");
 }
 
 updateViewport();
