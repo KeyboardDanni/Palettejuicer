@@ -60,7 +60,7 @@ type CalculationItemProps = {
 
 function CalculationItem(props: CalculationItemProps) {
   useEffect(() => {
-    if (props.index === props.activeIndex) {
+    if (props.index === props.activeIndex && navigator.userActivation.isActive) {
       ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }, [props.index, props.activeIndex]);

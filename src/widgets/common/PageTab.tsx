@@ -9,8 +9,9 @@ export type PageTabProps = {
 
 export function PageTab(props: PageTabProps) {
   const ref = useRef<HTMLLabelElement>(null);
+
   useEffect(() => {
-    if (props.pageName === props.activePage && ref.current) {
+    if (props.pageName === props.activePage && ref.current && navigator.userActivation.isActive) {
       const tabBar = ref.current.parentElement;
 
       if (tabBar && tabBar.scrollWidth > tabBar.clientWidth) {

@@ -205,10 +205,11 @@ type PaletteRowProps = {
 
 const PaletteRow = memo(function (props: PaletteRowProps) {
   useEffect(() => {
-    if (props.activeX !== null) {
+    if (props.activeX !== null && navigator.userActivation.isActive) {
       ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
     }
   }, [props.activeX]);
+
   const ref = useRef<HTMLDivElement>(null);
   const row = [];
   const className = "palette-ruler-cel palette-ruler-column-cel";
