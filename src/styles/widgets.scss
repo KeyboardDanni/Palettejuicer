@@ -18,9 +18,12 @@
 }
 
 @mixin popup-shadow($float-height) {
+  $height-offset: calc($size-button-height * ($float-height + 1));
+
   box-shadow:
-    0 calc($size-button-height * ($float-height + 1)) 0 0.4rem color.adjust($color-section-border, $alpha: -0.8),
-    0 calc($size-button-height * ($float-height + 1)) 0 0.8rem color.adjust($color-section-border, $alpha: -0.9);
+    0 $size-button-height 0 0.1rem $color-section-shadow,
+    0 $height-offset 0 0.4rem color.adjust($color-section-shadow, $alpha: -0.8),
+    0 $height-offset 0 0.8rem color.adjust($color-section-shadow, $alpha: -0.9);
 }
 
 @keyframes popup-fade-in {
@@ -174,7 +177,6 @@
 
 .section-gray-background {
   background-color: $color-section-gray;
-  margin: calc($size-section-padding / -2);
   padding: $size-section-padding;
   border: $size-widget-outline solid $color-section-gray-border;
   border-radius: ($size-section-radius - $size-section-outline);
@@ -263,14 +265,16 @@ button {
     height: 1.6em;
     margin: 0 0.4rem;
 
-    &:hover,
-    &:focus-visible {
-      @include raised-button-thin($color-widget-hover, $color-widget-border-hover, 0);
-    }
+    &:not(:disabled) {
+      &:hover,
+      &:focus-visible {
+        @include raised-button-thin($color-widget-hover, $color-widget-border-hover, 0);
+      }
 
-    &:active,
-    &.selected {
-      @include raised-button-thin($color-widget-accent-hover, $color-widget-accent-border, 1);
+      &:active,
+      &.selected {
+        @include raised-button-thin($color-widget-accent-hover, $color-widget-accent-border, 1);
+      }
     }
   }
 }

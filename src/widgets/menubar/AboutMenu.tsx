@@ -1,6 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { PopupActions } from "reactjs-popup/dist/types";
-import { DropdownButton } from "../common/DropdownButton";
+import { DropdownMenuButton } from "../common/DropdownButton";
 import { PopupMenuItem, PopupMenuSeparatorItem } from "../common/PopupMenu";
 import { Credits } from "../Credits";
 
@@ -28,7 +28,7 @@ export function AboutMenu() {
 
   return (
     <>
-      <DropdownButton popupRef={popupRef} label="About">
+      <DropdownMenuButton popupRef={popupRef} label="About">
         <PopupMenuItem
           key={0}
           index={0}
@@ -38,7 +38,7 @@ export function AboutMenu() {
         />
         <PopupMenuSeparatorItem />
         <PopupMenuItem key={1} index={1} name="Credits" onItemSelect={handleCredits} />
-      </DropdownButton>
+      </DropdownMenuButton>
       <Credits popupOpen={creditsOpen} setPopupOpen={setCreditsOpen} />
     </>
   );

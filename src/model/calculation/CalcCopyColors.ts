@@ -1,4 +1,4 @@
-import { immerable } from "immer";
+import { immerable, produce } from "immer";
 
 import { CelIndex } from "../../util/cel";
 import { Color } from "../color/Color";
@@ -70,6 +70,15 @@ export class CalcCopyColors extends Calculation {
     }
 
     return { cels };
+  }
+
+  nudgeCelIndexes(offsetX: number, offsetY: number): Calculation {
+    return produce(this, (draft) => {
+      draft.startCel.x += offsetX;
+      draft.startCel.y += offsetY;
+      draft.endCel.x += offsetX;
+      draft.endCel.y += offsetY;
+    });
   }
 
   propertiesView(): (props: CalcPropertiesViewProps) => JSX.Element {

@@ -1,6 +1,6 @@
 import { useCallback, useContext, useRef } from "react";
 import { PopupActions } from "reactjs-popup/dist/types";
-import { DropdownButton } from "../common/DropdownButton";
+import { DropdownMenuButton } from "../common/DropdownButton";
 import { PopupMenuItem, PopupMenuSeparatorItem } from "../common/PopupMenu";
 import { AppOptions } from "../../model/AppOptions";
 import { AppOptionsContext, AppOptionsSetterContext } from "../../contexts/AppOptionsContext";
@@ -22,7 +22,7 @@ export function OptionsMenu() {
 
   return (
     <>
-      <DropdownButton popupRef={popupRef} label="Options">
+      <DropdownMenuButton popupRef={popupRef} label="Options">
         <PopupMenuItem
           key={0}
           index={0}
@@ -40,7 +40,7 @@ export function OptionsMenu() {
           checked={appOptions.autoDeselectEditBase}
           onItemSelect={() => handleToggleChecked("autoDeselectEditBase")}
         />
-      </DropdownButton>
+      </DropdownMenuButton>
     </>
   );
 }

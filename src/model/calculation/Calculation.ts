@@ -45,5 +45,6 @@ export abstract class Calculation {
   abstract inputCels(): CelIndex[];
   abstract outputCels(): CelIndex[];
   abstract computeColors(colors: Color[]): CalculationResult;
+  abstract nudgeCelIndexes(offsetX: number, offsetY: number): Calculation;
   abstract propertiesView(): (props: CalcPropertiesViewProps) => JSX.Element;
 }

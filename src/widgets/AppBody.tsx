@@ -1,4 +1,4 @@
-import { immerable } from "immer";
+import { immerable, produce } from "immer";
 import { useImmer } from "use-immer";
 import { useCallback, useState } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
@@ -29,6 +29,14 @@ const initialAppState = new AppViewState();
 export function AppBody(props: AppBodyProps) {
   const [viewState, updateViewState] = useImmer(initialAppState);
   const [celPicker, setCelPicker] = useState<CelPickerData | null>(null);
+  let currentViewState = viewState;
+
+  if (!props.project.palette.indexInBounds(viewState.activeColorIndex)) {
+    currentViewState = produce(currentViewState, (draft) => {
+      draft.activeColorIndex = props.project.palette.clampIndex(draft.activeColorIndex);
+    });
+    updateViewState(currentViewState);
+  }
 
   const setActiveColorIndex = useCallback(
     function (index: CelIndex) {
@@ -60,19 +68,19 @@ export function AppBody(props: AppBodyProps) {
                     <AppColorSelector
                       palette={props.project.palette}
                       onPaletteChange={props.onProjectChange}
-                      activeColorIndex={viewState.activeColorIndex}
+                      activeColorIndex={currentViewState.activeColorIndex}
                     />
                     <AppCalculations
                       useCalculations={props.project.palette.useCalculations}
                       calculations={props.project.palette.calculations}
                       onPaletteChange={props.onProjectChange}
-                      activeCalcIndex={viewState.activeCalcIndex}
+                      activeCalcIndex={currentViewState.activeCalcIndex}
                       onIndexChange={setActiveCalcIndex}
                     />
                     <AppProperties
                       palette={props.project.palette}
                       onPaletteChange={props.onProjectChange}
-                      activeCalcIndex={viewState.activeCalcIndex}
+                      activeCalcIndex={currentViewState.activeCalcIndex}
                     />
                   </div>
                 </OverlayScrollbarsComponent>
@@ -80,7 +88,7 @@ export function AppBody(props: AppBodyProps) {
               <AppPalette
                 palette={props.project.palette}
                 onPaletteChange={props.onProjectChange}
-                activeColorIndex={viewState.activeColorIndex}
+                activeColorIndex={currentViewState.activeColorIndex}
                 onIndexChange={setActiveColorIndex}
               />
             </div>

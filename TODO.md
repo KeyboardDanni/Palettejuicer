@@ -8,13 +8,13 @@
 
 - [ ] Add OkLrCH
 - [ ] Color preview on sliders
-- [ ] Custom palette size
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
 - [ ] Options to see LCH/delta color differences across cels
 
 ### Calculations
 
+- [ ] Gamut Map does whole palette by default
 - [ ] Fix OkHSL/OkHSV incorrect hue fade
 - [ ] Adjust Color calculation
 - [ ] Gradient Smoothing calculation
@@ -30,6 +30,10 @@
 - [ ] Inform user if start/end cels don't form a strip
 - [ ] Multi-selection in palette
 - [ ] Restore view selections on undo/redo
+
+### Other
+
+- [ ] Image preview
 
 # Done
 
@@ -56,3 +60,4 @@
 - [x] Allow disabling auto-deselect "Edit Base"
 - [x] FAQ section
 - [x] Fix "wobbly" scrolling on mobile
+- [x] Custom palette size

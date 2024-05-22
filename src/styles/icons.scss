@@ -43,6 +43,16 @@
   content: "\f01e";
 }
 
+.icon-left::before {
+  @include icon-solid;
+  content: "\f060";
+}
+
+.icon-right::before {
+  @include icon-solid;
+  content: "\f061";
+}
+
 .icon-up::before {
   @include icon-solid;
   content: "\f062";
@@ -51,6 +61,16 @@
 .icon-down::before {
   @include icon-solid;
   content: "\f063";
+}
+
+.icon-plus::before {
+  @include icon-solid;
+  content: "\2b";
+}
+
+.icon-minus::before {
+  @include icon-solid;
+  content: "\f068";
 }
 
 .icon-pick::before {

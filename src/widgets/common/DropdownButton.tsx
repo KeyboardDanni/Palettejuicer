@@ -1,5 +1,24 @@
-import { PopupChoiceMenu, PopupMenu, PopupMenuChoiceData } from "./PopupMenu";
+import { PopupBase, PopupChoiceMenu, PopupMenu, PopupMenuChoiceData } from "./PopupMenu";
 import { PopupActions } from "reactjs-popup/dist/types";
+
+type DropdownButtonTriggerProps = {
+  label: string;
+  className?: string;
+  [key: string]: any;
+};
+
+function DropdownButtonTrigger({ label, className, ...other }: DropdownButtonTriggerProps) {
+  return (isOpen: boolean) => {
+    let dropdownClass = isOpen ? "dropdown selected" : "dropdown";
+    if (className) dropdownClass = dropdownClass + " " + className;
+
+    return (
+      <button className={dropdownClass} {...other}>
+        {label}
+      </button>
+    );
+  };
+}
 
 export type DropdownButtonProps = {
   label: string;
@@ -10,16 +29,19 @@ export type DropdownButtonProps = {
 };
 
 export function DropdownButton({ label, children, popupRef, className, ...other }: DropdownButtonProps) {
-  const dropdownButton = (isOpen: boolean) => {
-    let dropdownClass = isOpen ? "dropdown selected" : "dropdown";
-    if (className) dropdownClass = dropdownClass + " " + className;
+  const dropdownButton = DropdownButtonTrigger({ label, className, ...other });
 
-    return (
-      <button className={dropdownClass} {...other}>
-        {label}
-      </button>
-    );
-  };
+  return (
+    <>
+      <PopupBase button={dropdownButton} popupRef={popupRef}>
+        {children}
+      </PopupBase>
+    </>
+  );
+}
+
+export function DropdownMenuButton({ label, children, popupRef, className, ...other }: DropdownButtonProps) {
+  const dropdownButton = DropdownButtonTrigger({ label, className, ...other });
 
   return (
     <>
@@ -47,16 +69,7 @@ export function DropdownChoiceButton({
   className,
   ...other
 }: DropdownChoiceButtonProps) {
-  const dropdownButton = (isOpen: boolean) => {
-    let dropdownClass = isOpen ? "dropdown selected" : "dropdown";
-    if (className) dropdownClass = dropdownClass + " " + className;
-
-    return (
-      <button className={dropdownClass} {...other}>
-        {label}
-      </button>
-    );
-  };
+  const dropdownButton = DropdownButtonTrigger({ label, className, ...other });
 
   return (
     <>

@@ -1,6 +1,6 @@
 import { castDraft, produce } from "immer";
 
-import { PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../../model/Palette";
+import { DEFAULT_PALETTE_WIDTH, Palette } from "../../model/Palette";
 import { Exporter } from "./Exporter";
 import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
 import { Color } from "../../model/color/Color";
@@ -26,34 +26,37 @@ export class JascPalExporter extends Exporter {
       throw new Error("Not a valid JASC .pal file");
     }
 
-    const palette = produce(new Palette(), (draft) => {
-      let index = 0;
+    const readColors: Color[] = [];
 
-      for (const [i, line] of lines.entries()) {
-        if (i < 2) continue;
+    for (const [i, line] of lines.entries()) {
+      if (i < 2) continue;
 
-        const trimmed = line.trim();
-        const components = trimmed.split(" ");
+      const trimmed = line.trim();
+      const components = trimmed.split(" ");
 
-        if (components.length < 3) continue;
+      if (components.length < 3) continue;
 
-        const values = components.map((text) => parseInt(text));
+      const values = components.map((text) => parseInt(text));
+      readColors.push(new Color(ColorspaceRgb.fromTransformed(values)));
+    }
 
-        // TODO: When we add custom palette sizes, make sure we remove this check
-        if (index < draft.baseColors.length) {
-          draft.baseColors[index] = castDraft(new Color(ColorspaceRgb.fromTransformed(values)));
-          index++;
+    const palette = produce(
+      new Palette(DEFAULT_PALETTE_WIDTH, Math.ceil(Math.max(readColors.length, 1) / DEFAULT_PALETTE_WIDTH)),
+      (draft) => {
+        for (const [i, color] of readColors.entries()) {
+          draft.baseColors[i] = castDraft(color);
         }
       }
-    });
+    );
 
     return palette;
   }
 
   static async export(palette: Palette): Promise<ArrayBuffer> {
-    let contents = `JASC-PAL\r\n0100\r\n${PALETTE_WIDTH * PALETTE_HEIGHT}`;
+    const colors = palette.colors();
+    let contents = `JASC-PAL\r\n0100\r\n${colors.length}`;
 
-    for (const color of palette.colors()) {
+    for (const color of colors) {
       contents += "\r\n" + color.rgb.intNormalized().join(" ");
     }
 

@@ -2,9 +2,8 @@ import { memo, useCallback, useContext, useEffect, useRef, useState } from "reac
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { PopupActions } from "reactjs-popup/dist/types";
 
-import { PALETTE_HEIGHT, PALETTE_WIDTH, Palette } from "../../model/Palette";
+import { Palette } from "../../model/Palette";
 import { CelIndex } from "../../util/cel";
-import { clamp } from "../../util/math";
 import { ClipboardContext } from "../../contexts/ClipboardContext";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
 import { Color } from "../../model/color/Color";
@@ -18,6 +17,7 @@ class PaletteViewRefState {
 }
 
 type PaletteTopRulerProps = {
+  columns: number;
   activeX: number;
 };
 
@@ -25,7 +25,7 @@ const PaletteTopRuler = memo(function (props: PaletteTopRulerProps) {
   const row = [];
   const className = "palette-ruler-cel palette-ruler-row-cel";
 
-  for (let x = 0; x < PALETTE_WIDTH; x++) {
+  for (let x = 0; x < props.columns; x++) {
     row.push(
       <div key={x} className={x === props.activeX ? className + " palette-ruler-active" : className}>
         {x}
@@ -216,13 +216,13 @@ const PaletteRow = memo(function (props: PaletteRowProps) {
 
   if (props.ruler) {
     row.push(
-      <div key={-1} className={props.activeX !== null ? className + " palette-ruler-active" : className}>
-        {props.y}
+      <div key={-1} className="palette-ruler-column">
+        <div className={props.activeX !== null ? className + " palette-ruler-active" : className}>{props.y}</div>
       </div>
     );
   }
 
-  for (let x = 0; x < PALETTE_WIDTH; x++) {
+  for (let x = 0; x < props.palette.width; x++) {
     const active = x === props.activeX;
     const index = { x: x, y: props.y };
     row.push(
@@ -246,13 +246,6 @@ const PaletteRow = memo(function (props: PaletteRowProps) {
     </>
   );
 });
-
-function clampIndex(index: CelIndex): CelIndex {
-  return {
-    x: clamp(index.x, 0, PALETTE_WIDTH - 1),
-    y: clamp(index.y, 0, PALETTE_HEIGHT - 1),
-  };
-}
 
 export type PaletteViewProps = {
   palette: Palette;
@@ -326,19 +319,19 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
     async function (event: React.KeyboardEvent) {
       switch (event.key) {
         case "ArrowLeft":
-          onIndexChange(clampIndex({ x: props.active.x - 1, y: props.active.y }));
+          onIndexChange(props.palette.clampIndex({ x: props.active.x - 1, y: props.active.y }));
           event.preventDefault();
           break;
         case "ArrowRight":
-          onIndexChange(clampIndex({ x: props.active.x + 1, y: props.active.y }));
+          onIndexChange(props.palette.clampIndex({ x: props.active.x + 1, y: props.active.y }));
           event.preventDefault();
           break;
         case "ArrowDown":
-          onIndexChange(clampIndex({ x: props.active.x, y: props.active.y + 1 }));
+          onIndexChange(props.palette.clampIndex({ x: props.active.x, y: props.active.y + 1 }));
           event.preventDefault();
           break;
         case "ArrowUp":
-          onIndexChange(clampIndex({ x: props.active.x, y: props.active.y - 1 }));
+          onIndexChange(props.palette.clampIndex({ x: props.active.x, y: props.active.y - 1 }));
           event.preventDefault();
           break;
         case "c":
@@ -375,7 +368,7 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
 
   const rows = [];
 
-  for (let y = 0; y < PALETTE_HEIGHT; y++) {
+  for (let y = 0; y < props.palette.height; y++) {
     const activeX = y === props.active.y ? props.active.x : null;
     rows.push(
       <PaletteRow
@@ -393,7 +386,7 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
 
   return (
     <>
-      {appOptions.paletteRuler && <PaletteTopRuler activeX={props.active.x} />}
+      {appOptions.paletteRuler && <PaletteTopRuler columns={props.palette.width} activeX={props.active.x} />}
       <div className={celPicker ? "palette cel-picker-active" : "palette"}>
         <div
           className={appOptions.paletteRuler ? "palette-scroll palette-scroll-ruler" : "palette-scroll"}

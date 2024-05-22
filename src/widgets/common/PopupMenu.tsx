@@ -2,6 +2,36 @@ import { useRef } from "react";
 import Popup from "reactjs-popup";
 import { EventType, PopupActions, PopupPosition } from "reactjs-popup/dist/types";
 
+export type PopupProps = {
+  button?: JSX.Element | ((isOpen: boolean) => JSX.Element);
+  on?: EventType | EventType[];
+  open?: boolean;
+  onClose?: () => void;
+  position?: PopupPosition | PopupPosition[];
+  children: React.ReactNode;
+  popupRef: React.RefObject<PopupActions>;
+};
+
+export function PopupBase(props: PopupProps) {
+  return (
+    <>
+      <Popup
+        trigger={props.button}
+        on={props.on}
+        open={props.open}
+        onClose={props.onClose}
+        ref={props.popupRef}
+        position={props.position ?? "bottom left"}
+        arrow={false}
+        keepTooltipInside="#app-wrapper"
+        nested={true}
+      >
+        <div className="popup">{props.children}</div>
+      </Popup>
+    </>
+  );
+}
+
 export function PopupMenuSeparatorItem() {
   return (
     <>
@@ -84,17 +114,7 @@ export type PopupMenuChoiceData = {
   beginGroup?: boolean;
 };
 
-export type PopupMenuProps = {
-  button?: JSX.Element | ((isOpen: boolean) => JSX.Element);
-  on?: EventType | EventType[];
-  open?: boolean;
-  onClose?: () => void;
-  position?: PopupPosition | PopupPosition[];
-  children: React.ReactNode;
-  popupRef: React.RefObject<PopupActions>;
-};
-
-export function PopupMenu(props: PopupMenuProps) {
+export function PopupMenu(props: PopupProps) {
   const ref = useRef<HTMLUListElement>(null);
 
   function handleKey(event: React.KeyboardEvent) {
@@ -124,23 +144,11 @@ export function PopupMenu(props: PopupMenuProps) {
 
   return (
     <>
-      <Popup
-        trigger={props.button}
-        on={props.on}
-        open={props.open}
-        onClose={props.onClose}
-        ref={props.popupRef}
-        position={props.position ?? "bottom left"}
-        arrow={false}
-        keepTooltipInside="#app-wrapper"
-        nested={true}
-      >
-        <div className="popup">
-          <div className="menu" onKeyDown={handleKey}>
-            <ul ref={ref}>{props.children}</ul>
-          </div>
+      <PopupBase {...props}>
+        <div className="menu" onKeyDown={handleKey}>
+          <ul ref={ref}>{props.children}</ul>
         </div>
-      </Popup>
+      </PopupBase>
     </>
   );
 }

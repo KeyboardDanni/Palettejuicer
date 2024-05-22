@@ -1,7 +1,7 @@
 import { useCallback, useRef, useState } from "react";
 import { PopupActions } from "reactjs-popup/dist/types";
 import Popup from "reactjs-popup";
-import { DropdownButton } from "../common/DropdownButton";
+import { DropdownMenuButton } from "../common/DropdownButton";
 import { ProjectAction, ProjectFileAction, ProjectFileActionType } from "../../reducers/ProjectReducer";
 import { Project } from "../../model/Project";
 import { ProjectFile } from "../../storage/ProjectFile";
@@ -149,7 +149,7 @@ export function FileMenu(props: FileMenuProps) {
 
   return (
     <>
-      <DropdownButton popupRef={popupRef} label="File">
+      <DropdownMenuButton popupRef={popupRef} label="File">
         <PopupMenuItem
           key={0}
           index={0}
@@ -179,7 +179,7 @@ export function FileMenu(props: FileMenuProps) {
         <PopupMenuItem key={4} index={4} name="Export">
           {exporters}
         </PopupMenuItem>
-      </DropdownButton>
+      </DropdownMenuButton>
       <ConfirmPopup confirmOpen={confirmOpen} setConfirmOpen={setConfirmOpen} onConfirm={handleReallyClear} />
     </>
   );

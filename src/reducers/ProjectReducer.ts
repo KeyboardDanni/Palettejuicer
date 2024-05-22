@@ -63,8 +63,14 @@ export function ProjectReducer(draft: Draft<Project>, action: ProjectAction) {
     case ProjectFileAction:
       return ProjectFileReducer(draft, action as ProjectFileAction);
 
-    case PaletteAction:
-      return PaletteReducer(draft.palette, action as PaletteAction);
+    case PaletteAction: {
+      const newPalette = PaletteReducer(draft.palette, action as PaletteAction);
+
+      if (newPalette) {
+        draft.palette = castDraft(newPalette);
+      }
+      break;
+    }
 
     default:
       throw new Error("Bad action");

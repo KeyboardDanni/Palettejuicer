@@ -2,7 +2,8 @@
 @use "./_mixins.scss" as *;
 @use "sass:color";
 
-$size-palette-color-minimum: 2rem;
+$size-palette-color-min: 2rem;
+$size-palette-color-max: 8rem;
 $color-ruler-tick: color.mix($color-section-gray-border, $color-section-gray, 50%);
 
 @mixin box-corners($color, $thickness) {
@@ -27,7 +28,16 @@ $color-ruler-tick: color.mix($color-section-gray-border, $color-section-gray, 50
 input[type="text"].palette-rename {
   font-size: 1.8rem;
   max-width: 32rem;
-  margin: -0.4rem -0.4rem 0.8rem -0.4rem;
+  width: 100%;
+}
+
+.palette-header {
+  margin-bottom: calc($size-section-padding / 2);
+
+  button {
+    margin: 0.1rem 0.4rem;
+    vertical-align: top;
+  }
 }
 
 .palette-ruler-row {
@@ -35,6 +45,12 @@ input[type="text"].palette-rename {
   flex-direction: row;
   margin: -0.4rem ($size-scrollbar-recess + $size-scrollbar-recess-spacing) 0.2rem (2.4rem + $size-widget-outline);
   overflow: hidden;
+}
+
+.palette-ruler-column {
+  display: flex;
+  flex-direction: row;
+  background-color: $color-section-gray;
 }
 
 .palette-ruler-cel {
@@ -55,7 +71,8 @@ input[type="text"].palette-rename {
 }
 
 .palette-ruler-row-cel {
-  min-width: $size-palette-color-minimum;
+  min-width: $size-palette-color-min;
+  max-width: $size-palette-color-max;
   padding: 0.4rem 0 0.2rem 0;
   flex: 1;
   position: relative;
@@ -95,10 +112,6 @@ input[type="text"].palette-rename {
   }
 
   .palette-scroll {
-    min-width: (
-      ($size-palette-color-minimum * 16) + $size-widget-outline * 2 + $size-scrollbar-recess +
-        $size-scrollbar-recess-spacing
-    );
     display: flex;
     flex-direction: column;
     overflow-x: visible;
@@ -140,6 +153,10 @@ input[type="text"].palette-rename {
       @include layered-pseudo-element(0.4rem, 0.4rem, 0.4rem, 2.7rem + $size-widget-outline);
     }
 
+    [data-overlayscrollbars-contents] {
+      background-color: $color-section-gray-border;
+    }
+
     @include scrollbar-with-recess();
   }
 
@@ -159,8 +176,10 @@ input[type="text"].palette-rename {
 }
 
 .palette-cel {
-  min-width: $size-palette-color-minimum;
-  min-height: $size-palette-color-minimum;
+  min-width: $size-palette-color-min;
+  min-height: $size-palette-color-min;
+  max-width: $size-palette-color-max;
+  max-height: $size-palette-color-max;
   margin: 0;
   padding: 0;
   aspect-ratio: 1;
@@ -211,5 +230,57 @@ input[type="text"].palette-rename {
     &.really-out-of-gamut:before {
       content: "!!";
     }
+  }
+}
+
+.palette-resizer-outside {
+  display: grid;
+  align-items: stretch;
+  justify-items: stretch;
+  grid-template-rows: 1fr 4fr 1fr;
+  grid-template-columns: 1fr 4fr 1fr;
+
+  .palette-resizer-updown {
+    grid-column: 1 / span 3;
+    text-align: center;
+    align-content: center;
+
+    button {
+      width: 5rem;
+    }
+  }
+
+  .palette-resizer-leftright {
+    text-align: center;
+    align-content: center;
+
+    button {
+      height: 5rem;
+    }
+  }
+
+  .palette-resizer-inside {
+    display: grid;
+    align-items: stretch;
+    justify-items: stretch;
+    grid-template-rows: 1fr 2fr 1fr;
+    grid-template-columns: 1fr 2fr 1fr;
+    background-color: $color-widget-group;
+    border: 0.1rem solid $color-widget-group-border;
+    border-radius: $size-button-radius;
+
+    .palette-resizer-inside-label {
+      width: 8rem;
+      height: 8rem;
+      text-align: center;
+      align-content: center;
+    }
+  }
+
+  button {
+    padding: 0.2rem;
+    margin: 0.2rem 0.2rem 0.4rem 0.2rem;
+    width: 3rem;
+    height: 3rem;
   }
 }

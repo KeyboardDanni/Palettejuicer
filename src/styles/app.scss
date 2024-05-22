@@ -185,6 +185,7 @@ $logo-height: 64px;
   flex-direction: column;
   min-height: 20rem;
   flex: 1;
+  padding: calc($size-section-padding / 2);
 
   #palette-inner-bg {
     display: flex;

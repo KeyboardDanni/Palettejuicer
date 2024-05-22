@@ -1,12 +1,13 @@
-import { immerable } from "immer";
+import { castDraft, immerable, produce } from "immer";
 import { Type } from "class-transformer";
 
+import { throwOnNullIndex } from "../util/checks";
+import { clamp } from "../util/math";
 import { Color } from "./color/Color";
 import { ColorspaceRgb } from "./color/ColorspaceRgb";
-import { Calculation } from "./calculation/Calculation";
-import { throwOnNullIndex } from "../util/checks";
-
 import { CelIndex } from "../util/cel";
+import { Calculation } from "./calculation/Calculation";
+
 import { CalcCopyColors } from "./calculation/CalcCopyColors";
 import { CalcInterpolateStrip } from "./calculation/CalcInterpolateStrip";
 import { CalcExtrapolateStrip } from "./calculation/CalcExtrapolateStrip";
@@ -25,9 +26,12 @@ export const availableCalcs: AvailableCalcItem[] = [
   { value: CalcExtrapolateStrip, name: "CalcExtrapolateStrip" },
 ];
 
-// Fixed at 16x16 for now
-export const PALETTE_WIDTH = 16;
-export const PALETTE_HEIGHT = 16;
+export const DEFAULT_PALETTE_WIDTH = 16;
+export const DEFAULT_PALETTE_HEIGHT = 16;
+export const PALETTE_MIN_WIDTH = 1;
+export const PALETTE_MIN_HEIGHT = 1;
+export const PALETTE_MAX_WIDTH = 32;
+export const PALETTE_MAX_HEIGHT = 64;
 
 const DEFAULT_COLOR = new Color(new ColorspaceRgb().withTransformed(60, 60, 60));
 
@@ -47,23 +51,53 @@ export class Palette {
   readonly calculations: readonly Calculation[];
   readonly useCalculations: boolean = true;
 
+  readonly width: number;
   @Type(() => Color)
   readonly baseColors: readonly Color[];
   @Type(() => Color)
   readonly computedColors: readonly NullableColor[];
 
-  constructor() {
+  constructor(width: number = DEFAULT_PALETTE_WIDTH, height: number = DEFAULT_PALETTE_HEIGHT) {
+    if (
+      width < PALETTE_MIN_WIDTH ||
+      height < PALETTE_MIN_HEIGHT ||
+      width > PALETTE_MAX_WIDTH ||
+      height > PALETTE_MAX_HEIGHT
+    ) {
+      throw new Error("Invalid Palette dimensions");
+    }
+
+    this.width = width;
     this.calculations = [];
-    this.baseColors = new Array(PALETTE_WIDTH * PALETTE_HEIGHT).fill(null).map((_) => DEFAULT_COLOR);
-    this.computedColors = new Array(PALETTE_WIDTH * PALETTE_HEIGHT).fill(null);
+    this.baseColors = new Array(width * height).fill(null).map((_) => DEFAULT_COLOR);
+    this.computedColors = new Array(width * height).fill(null);
+  }
+
+  get height(): number {
+    return Math.floor(this.baseColors.length / this.width);
+  }
+
+  get dimensions(): [number, number] {
+    return [this.width, Math.floor(this.baseColors.length / this.width)];
+  }
+
+  indexInBounds(index: CelIndex): boolean {
+    return index.x >= 0 && index.x < this.width && index.y >= 0 && index.y < this.height;
+  }
+
+  clampIndex(index: CelIndex): CelIndex {
+    return {
+      x: clamp(index.x, 0, this.width - 1),
+      y: clamp(index.y, 0, this.height - 1),
+    };
   }
 
   indexToOffset(index: CelIndex): number | null {
-    if (index.x < 0 || index.x >= PALETTE_WIDTH || index.y < 0 || index.y >= PALETTE_HEIGHT) {
+    if (index.x < 0 || index.x >= this.width || index.y < 0 || index.y >= this.height) {
       return null;
     }
 
-    return index.y * PALETTE_WIDTH + index.x;
+    return index.y * this.width + index.x;
   }
 
   isOffsetComputed(offset: number): boolean {
@@ -111,7 +145,7 @@ export class Palette {
   }
 
   computeColors(): NullableColor[] {
-    const computedColors = new Array(PALETTE_WIDTH * PALETTE_HEIGHT).fill(null);
+    const computedColors = new Array(this.baseColors.length).fill(null);
 
     const getTempColor = (index: CelIndex): Color => {
       const offset = throwOnNullIndex(this.indexToOffset(index));
@@ -142,5 +176,40 @@ export class Palette {
     }
 
     return computedColors;
+  }
+
+  resize(newWidth: number, newHeight: number, offsetX: number, offsetY: number): Palette {
+    if (
+      newWidth < PALETTE_MIN_WIDTH ||
+      newHeight < PALETTE_MIN_HEIGHT ||
+      newWidth > PALETTE_MAX_WIDTH ||
+      newHeight > PALETTE_MAX_HEIGHT
+    ) {
+      throw new Error("Invalid Palette dimensions");
+    }
+
+    return produce(this, (draft) => {
+      const [oldWidth, oldHeight] = draft.dimensions;
+      const newBaseColors = new Array(newWidth * newHeight).fill(null).map((_) => DEFAULT_COLOR);
+
+      for (let y = 0; y < oldHeight; y++) {
+        const newY = y + offsetY;
+
+        if (newY < 0 || newY >= newHeight) continue;
+
+        for (let x = 0; x < oldWidth; x++) {
+          const newX = x + offsetX;
+
+          if (newX < 0 || newX >= newWidth) continue;
+
+          newBaseColors[newY * newWidth + newX] = draft.baseColors[y * oldWidth + x];
+        }
+      }
+
+      draft.width = newWidth;
+      draft.baseColors = castDraft(newBaseColors);
+      draft.calculations = draft.calculations.map((calc) => calc.nudgeCelIndexes(offsetX, offsetY));
+      draft.computedColors = castDraft(draft.computeColors());
+    });
   }
 }

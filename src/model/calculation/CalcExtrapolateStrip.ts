@@ -147,6 +147,17 @@ export class CalcExtrapolateStrip extends Calculation {
     return { cels };
   }
 
+  nudgeCelIndexes(offsetX: number, offsetY: number): Calculation {
+    return produce(this, (draft) => {
+      draft.inputCel.x += offsetX;
+      draft.inputCel.y += offsetY;
+      draft.startCel.x += offsetX;
+      draft.startCel.y += offsetY;
+      draft.endCel.x += offsetX;
+      draft.endCel.y += offsetY;
+    });
+  }
+
   propertiesView(): (props: CalcPropertiesViewProps) => JSX.Element {
     return CalcExtrapolateStripView;
   }

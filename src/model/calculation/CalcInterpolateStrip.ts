@@ -1,4 +1,4 @@
-import { immerable } from "immer";
+import { immerable, produce } from "immer";
 
 import { CelIndex, celStrip } from "../../util/cel";
 import { Calculation, CalculationCel, CalculationResult, CalcPropertiesViewProps } from "./Calculation";
@@ -147,6 +147,15 @@ export class CalcInterpolateStrip extends Calculation {
     }
 
     return { cels };
+  }
+
+  nudgeCelIndexes(offsetX: number, offsetY: number): Calculation {
+    return produce(this, (draft) => {
+      draft.startCel.x += offsetX;
+      draft.startCel.y += offsetY;
+      draft.endCel.x += offsetX;
+      draft.endCel.y += offsetY;
+    });
   }
 
   propertiesView(): (props: CalcPropertiesViewProps) => JSX.Element {
