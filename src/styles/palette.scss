@@ -233,6 +233,13 @@ input[type="text"].palette-rename {
   }
 }
 
+.palette-menu {
+  display: flex;
+  flex-direction: column;
+  gap: 0.4rem;
+  align-items: center;
+}
+
 .palette-resizer-outside {
   display: grid;
   align-items: stretch;
@@ -283,4 +290,15 @@ input[type="text"].palette-rename {
     width: 3rem;
     height: 3rem;
   }
+}
+
+.palette-export-range {
+  display: flex;
+  flex-direction: row;
+  gap: 0.8rem;
+  align-items: baseline;
+  padding: 0.4rem;
+  background-color: $color-widget-group;
+  border: 0.1rem solid $color-widget-group-border;
+  border-radius: $size-button-radius;
 }

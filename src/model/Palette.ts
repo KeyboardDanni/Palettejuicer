@@ -37,6 +37,14 @@ const DEFAULT_COLOR = new Color(new ColorspaceRgb().withTransformed(60, 60, 60))
 
 type NullableColor = Color | null;
 
+function stickyOffsetLessThan(value: number, offset: number, oldBoundary: number, newBoundary: number) {
+  return value <= oldBoundary ? newBoundary : value + offset;
+}
+
+function stickyOffsetGreaterThan(value: number, offset: number, oldBoundary: number, newBoundary: number) {
+  return value >= oldBoundary ? newBoundary : value + offset;
+}
+
 export class Palette {
   [immerable] = true;
 
@@ -52,6 +60,8 @@ export class Palette {
   readonly useCalculations: boolean = true;
 
   readonly width: number;
+  readonly exportStart: CelIndex;
+  readonly exportEnd: CelIndex;
   @Type(() => Color)
   readonly baseColors: readonly Color[];
   @Type(() => Color)
@@ -68,6 +78,8 @@ export class Palette {
     }
 
     this.width = width;
+    this.exportStart = { x: 0, y: 0 };
+    this.exportEnd = { x: width - 1, y: height - 1 };
     this.calculations = [];
     this.baseColors = new Array(width * height).fill(null).map((_) => DEFAULT_COLOR);
     this.computedColors = new Array(width * height).fill(null);
@@ -208,6 +220,12 @@ export class Palette {
       }
 
       draft.width = newWidth;
+
+      draft.exportStart.x = stickyOffsetLessThan(draft.exportStart.x, offsetX, 0, 0);
+      draft.exportStart.y = stickyOffsetLessThan(draft.exportStart.y, offsetY, 0, 0);
+      draft.exportEnd.x = stickyOffsetGreaterThan(draft.exportEnd.x, offsetX, oldWidth - 1, newWidth - 1);
+      draft.exportEnd.y = stickyOffsetGreaterThan(draft.exportEnd.y, offsetY, oldHeight - 1, newHeight - 1);
+
       draft.baseColors = castDraft(newBaseColors);
       draft.calculations = draft.calculations.map((calc) => calc.nudgeCelIndexes(offsetX, offsetY));
       draft.computedColors = castDraft(draft.computeColors());

@@ -68,10 +68,15 @@ export class GnuPaletteExporter extends Exporter {
 
   static async export(palette: Palette): Promise<ArrayBuffer> {
     const name = palette.paletteName.length > 0 ? palette.paletteName : "Untitled Palette";
-    let contents = `GIMP Palette\nName: ${name}\nColumns: ${palette.width}\n#`;
+    const clampStart = palette.clampIndex(palette.exportStart);
+    const clampEnd = palette.clampIndex(palette.exportEnd);
+    const width = clampEnd.x - clampStart.x + 1;
+    let contents = `GIMP Palette\nName: ${name}\nColumns: ${width}\n#`;
 
-    for (const color of palette.colors()) {
-      contents += "\n" + color.rgb.intNormalized().join(" ");
+    for (let y = clampStart.y; y <= clampEnd.y; y++) {
+      for (let x = clampStart.x; x <= clampEnd.x; x++) {
+        contents += "\n" + palette.color({ x, y }).rgb.intNormalized().join(" ");
+      }
     }
 
     const encoder = new TextEncoder();

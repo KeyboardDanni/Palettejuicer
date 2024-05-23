@@ -2,6 +2,10 @@ import { FilePicker, FiletypeInfo } from "../FilePicker";
 import { Palette } from "../../model/Palette";
 
 export abstract class Exporter {
+  static toString() {
+    return this.name;
+  }
+
   static filetypeInfo(): FiletypeInfo {
     throw new Error("Method not implemented.");
   }

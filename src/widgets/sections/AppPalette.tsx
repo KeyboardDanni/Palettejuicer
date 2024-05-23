@@ -12,6 +12,7 @@ import { CelIndex } from "../../util/cel";
 import { PaletteView } from "./PaletteView";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
 import { DropdownButton } from "../common/DropdownButton";
+import { CelSelector } from "../common/CelSelector";
 
 type AppPaletteProps = {
   palette: Palette;
@@ -117,6 +118,43 @@ function PaletteResizer(props: AppPaletteProps) {
   );
 }
 
+function PaletteExportRange(props: AppPaletteProps) {
+  function startChanged(index: CelIndex) {
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.SetExportRange,
+        args: {
+          exportStart: index,
+          exportEnd: props.palette.exportEnd,
+        },
+      })
+    );
+  }
+
+  function endChanged(index: CelIndex) {
+    props.onPaletteChange(
+      new PaletteAction({
+        actionType: PaletteActionType.SetExportRange,
+        args: {
+          exportStart: props.palette.exportStart,
+          exportEnd: index,
+        },
+      })
+    );
+  }
+
+  return (
+    <>
+      <div className="palette-export-range">
+        Export range
+        <CelSelector noPicker={true} index={props.palette.exportStart} onIndexChange={startChanged} />
+        to
+        <CelSelector noPicker={true} index={props.palette.exportEnd} onIndexChange={endChanged} />
+      </div>
+    </>
+  );
+}
+
 export function AppPalette(props: AppPaletteProps) {
   const popupRef = useRef<PopupActions>(null);
   const onIndexChange = props.onIndexChange;
@@ -146,7 +184,10 @@ export function AppPalette(props: AppPaletteProps) {
       <div id="document-palette" className="section">
         <div className="palette-header">
           <DropdownButton label="Palette" className="thin-button" popupRef={popupRef}>
-            <PaletteResizer {...props} />
+            <div className="palette-menu">
+              <PaletteResizer {...props} />
+              <PaletteExportRange {...props} />
+            </div>
           </DropdownButton>
           <input
             className="palette-rename flat-text"

@@ -42,11 +42,12 @@ export type CelSelectorProps = {
   index: CelIndex;
   onIndexChange: (index: CelIndex) => void;
   relative?: boolean;
+  noPicker?: boolean;
   disabled?: boolean;
   [key: string]: any;
 };
 
-export function CelSelector({ index, onIndexChange, relative, disabled, ...other }: CelSelectorProps) {
+export function CelSelector({ index, onIndexChange, relative, noPicker, disabled, ...other }: CelSelectorProps) {
   const [active, setActive] = useState(false);
   const ref = useRef<HTMLButtonElement>(null);
   const celPicker = useContext(CelPickerContext);
@@ -116,7 +117,7 @@ export function CelSelector({ index, onIndexChange, relative, disabled, ...other
   return (
     <>
       <div className="cel-selector">
-        {!relative && (
+        {!relative && !noPicker && (
           <button
             className={active ? "thin-button selected" : "thin-button"}
             title="Click to pick cel"

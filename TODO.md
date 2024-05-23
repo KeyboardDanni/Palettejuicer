@@ -1,9 +1,5 @@
 # Palettejuicer TODOs
 
-### I/O
-
-- [ ] Select export region
-
 ### Color Selection
 
 - [ ] Add OkLrCH
@@ -61,3 +57,4 @@
 - [x] Fix "wobbly" scrolling on mobile
 - [x] Custom palette size
 - [x] Gamut Map range over whole palette by default
+- [x] Select export region

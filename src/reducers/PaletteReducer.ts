@@ -8,6 +8,7 @@ import { Color } from "../model/color/Color";
 export const enum PaletteActionType {
   RenamePalette,
   ResizePalette,
+  SetExportRange,
   SetBaseColor,
   EnableCalculations,
   AddCalculation,
@@ -29,6 +30,11 @@ export interface ResizePaletteArgs extends PaletteActionArgs {
   newHeight: number;
   offsetX: number;
   offsetY: number;
+}
+
+export interface SetExportRangeArgs extends PaletteActionArgs {
+  exportStart: CelIndex;
+  exportEnd: CelIndex;
 }
 
 export interface IndexArgs extends PaletteActionArgs {
@@ -113,6 +119,14 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
       if (offset === null) return;
 
       draft.baseColors[offset] = castDraft(args.color);
+      break;
+    }
+
+    case PaletteActionType.SetExportRange: {
+      const args = action.args as SetExportRangeArgs;
+
+      draft.exportStart = args.exportStart;
+      draft.exportEnd = args.exportEnd;
       break;
     }
 

@@ -54,10 +54,14 @@ export class JascPalExporter extends Exporter {
 
   static async export(palette: Palette): Promise<ArrayBuffer> {
     const colors = palette.colors();
+    const clampStart = palette.clampIndex(palette.exportStart);
+    const clampEnd = palette.clampIndex(palette.exportEnd);
     let contents = `JASC-PAL\r\n0100\r\n${colors.length}`;
 
-    for (const color of colors) {
-      contents += "\r\n" + color.rgb.intNormalized().join(" ");
+    for (let y = clampStart.y; y <= clampEnd.y; y++) {
+      for (let x = clampStart.x; x <= clampEnd.x; x++) {
+        contents += "\r\n" + palette.color({ x, y }).rgb.intNormalized().join(" ");
+      }
     }
 
     const encoder = new TextEncoder();
