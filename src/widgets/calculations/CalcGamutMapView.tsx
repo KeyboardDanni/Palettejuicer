@@ -64,9 +64,9 @@ export function CalcGamutMapView(props: CalcPropertiesViewProps) {
           <span>Custom range</span>
         </div>
         <div>
-          <CelSelector index={calc.startCel} onIndexChange={handleStartChange} />
+          <CelSelector index={calc.startCel} disabled={calc.fullRange} onIndexChange={handleStartChange} />
           <span className="label-mid">to</span>
-          <CelSelector index={calc.endCel} onIndexChange={handleEndChange} />
+          <CelSelector index={calc.endCel} disabled={calc.fullRange} onIndexChange={handleEndChange} />
         </div>
         <div className="grid-label">
           <span>Algorithm</span>

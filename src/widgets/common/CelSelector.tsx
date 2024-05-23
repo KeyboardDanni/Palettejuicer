@@ -116,14 +116,17 @@ export function CelSelector({ index, onIndexChange, relative, disabled, ...other
   return (
     <>
       <div className="cel-selector">
-        <button
-          className={active ? "thin-button selected" : "thin-button"}
-          title="Click to pick cel"
-          onClick={handleClick}
-          ref={ref}
-        >
-          <i className="icon-pick"></i>
-        </button>
+        {!relative && (
+          <button
+            className={active ? "thin-button selected" : "thin-button"}
+            title="Click to pick cel"
+            onClick={handleClick}
+            disabled={disabled ?? false}
+            ref={ref}
+          >
+            <i className="icon-pick"></i>
+          </button>
+        )}
         <CelNumberInput
           {...other}
           name="x"

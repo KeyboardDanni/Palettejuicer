@@ -61,7 +61,7 @@ export function CalcCopyColorsView(props: CalcPropertiesViewProps) {
           <CelSelector index={calc.endCel} onIndexChange={handleEndChange} />
         </div>
         <div className="grid-label">
-          <span>Destination offset</span>
+          <span>Target offset</span>
         </div>
         <div>
           <CelSelector index={calc.offset} relative={true} onIndexChange={handleOffsetChange} />

@@ -2,13 +2,9 @@
 @use "./_mixins.scss" as *;
 
 .cel-selector {
-  background-color: $color-widget-group;
-  border: $size-widget-outline solid $color-widget-group-border;
-  border-radius: $size-button-radius;
-
   width: fit-content;
-  margin: 0.1rem;
-  padding: 0.2rem;
+  margin: 0.1rem 0;
+  padding: 0.2rem 0;
   display: inline-block;
 
   label {
@@ -29,7 +25,7 @@
   }
 
   button {
-    margin: -0.1rem 0.2rem -0.3rem 0.1rem;
+    margin: -0.1rem 0.1rem (-0.1rem - $size-chip-height) 0.1rem;
     height: calc(100% + 0.4rem);
     padding: 0.4rem 0.6rem;
     vertical-align: top;
