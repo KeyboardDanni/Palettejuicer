@@ -2,7 +2,7 @@ import { castDraft, immerable, produce } from "immer";
 
 import { clamp } from "../util/math";
 
-const HISTORY_MAX = 100;
+const HISTORY_MAX = 1000;
 const CONSOLIDATE_MAX_TIME_MS = 2000;
 
 export type Consolidator<A> = (previousAction: A, currentAction: A) => boolean;
