@@ -145,6 +145,7 @@ export class Palette {
   }
 
   computeColors(): NullableColor[] {
+    const dimensions = this.dimensions;
     const computedColors = new Array(this.baseColors.length).fill(null);
 
     const getTempColor = (index: CelIndex): Color => {
@@ -157,10 +158,10 @@ export class Palette {
       if (!calc.enabled) continue;
 
       try {
-        const inputIndexes = calc.inputCels();
+        const inputIndexes = calc.inputCels(dimensions);
         const colors = inputIndexes.map((index) => getTempColor(index));
 
-        const result = calc.computeColors(colors);
+        const result = calc.computeColors(colors, dimensions);
 
         for (const cel of result.cels) {
           const offset = this.indexToOffset(cel.index);

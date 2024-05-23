@@ -92,13 +92,13 @@ class TestCalculation extends Calculation {
   listDescription(): string {
     return "Test Calculation";
   }
-  inputCels(): CelIndex[] {
+  inputCels(_dimensions: [number, number]): CelIndex[] {
     return [this.source];
   }
-  outputCels(): CelIndex[] {
+  outputCels(_dimensions: [number, number]): CelIndex[] {
     return [...this.destinations];
   }
-  computeColors(colors: Color[]): CalculationResult {
+  computeColors(colors: Color[], _dimensions: [number, number]): CalculationResult {
     const cels: CalculationCel[] = [];
 
     for (const index of this.destinations) {

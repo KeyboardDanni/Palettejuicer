@@ -42,9 +42,9 @@ export abstract class Calculation {
     return "";
   }
   abstract listDescription(): string;
-  abstract inputCels(): CelIndex[];
-  abstract outputCels(): CelIndex[];
-  abstract computeColors(colors: Color[]): CalculationResult;
+  abstract inputCels(dimensions: [number, number]): CelIndex[];
+  abstract outputCels(dimensions: [number, number]): CelIndex[];
+  abstract computeColors(colors: Color[], dimensions: [number, number]): CalculationResult;
   abstract nudgeCelIndexes(offsetX: number, offsetY: number): Calculation;
   abstract propertiesView(): (props: CalcPropertiesViewProps) => JSX.Element;
 }

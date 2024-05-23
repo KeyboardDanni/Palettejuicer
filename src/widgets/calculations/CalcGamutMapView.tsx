@@ -1,4 +1,5 @@
 import { produce } from "immer";
+import { ChangeEvent } from "react";
 
 import { CelIndex } from "../../util/cel";
 import { CalcPropertiesViewProps } from "../../model/calculation/Calculation";
@@ -13,6 +14,14 @@ export function CalcGamutMapView(props: CalcPropertiesViewProps) {
   }
 
   const calc = props.calc as CalcGamutMap;
+
+  function handleFullChange(event: ChangeEvent<HTMLInputElement>) {
+    props.onCalcChange(
+      produce(calc, (draft) => {
+        draft.fullRange = event.target.checked;
+      })
+    );
+  }
 
   function handleStartChange(index: CelIndex) {
     props.onCalcChange(
@@ -44,7 +53,15 @@ export function CalcGamutMapView(props: CalcPropertiesViewProps) {
     <>
       <div className="calc-grid">
         <div className="grid-label">
-          <span>Range</span>
+          <span>Full range</span>
+        </div>
+        <div>
+          <label>
+            <input type="checkbox" checked={calc.fullRange} onChange={handleFullChange} />
+          </label>
+        </div>
+        <div className="grid-label">
+          <span>Custom range</span>
         </div>
         <div>
           <CelSelector index={calc.startCel} onIndexChange={handleStartChange} />

@@ -27,7 +27,7 @@ export class CalcCopyColors extends Calculation {
     return `Copy Colors - [${this.startCel.x}, ${this.startCel.y}] [${this.endCel.x}, ${this.endCel.y}] offset [${this.offset.x}, ${this.offset.y}] x${this.copies}`;
   }
 
-  inputCels(): CelIndex[] {
+  inputCels(_dimensions: [number, number]): CelIndex[] {
     const cels = [];
 
     for (let y = this.startCel.y; y <= this.endCel.y; y++) {
@@ -39,7 +39,7 @@ export class CalcCopyColors extends Calculation {
     return cels;
   }
 
-  outputCels(): CelIndex[] {
+  outputCels(_dimensions: [number, number]): CelIndex[] {
     const cels = [];
 
     for (let copy = 1; copy <= this.copies; copy++) {
@@ -53,9 +53,9 @@ export class CalcCopyColors extends Calculation {
     return cels;
   }
 
-  computeColors(colors: Color[]): CalculationResult {
+  computeColors(colors: Color[], dimensions: [number, number]): CalculationResult {
     const cels: CalculationCel[] = [];
-    const outputs = this.outputCels();
+    const outputs = this.outputCels(dimensions);
     let i = 0;
 
     for (let copy = 0; copy < Math.min(this.copies, MAX_COPIES); copy++) {

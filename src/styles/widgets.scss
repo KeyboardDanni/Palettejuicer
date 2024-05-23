@@ -392,6 +392,7 @@ label:not(.flat-checkbox) {
     appearance: none;
     width: $size-checkbox;
     height: $size-checkbox;
+    margin-left: 0.1rem;
     margin-bottom: $size-button-height + 0.2rem;
     margin-right: 0.4rem;
     vertical-align: middle;

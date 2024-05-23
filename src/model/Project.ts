@@ -3,7 +3,7 @@ import { immerable } from "immer";
 import { Palette } from "./Palette";
 import { Type } from "class-transformer";
 
-const PROJECT_VERSION = 1;
+const PROJECT_VERSION = 3;
 
 function migrateVersion1(data: any) {
   const TRANSFORM_COLORSPACE: { [key: string]: string } = {
@@ -22,6 +22,16 @@ function migrateVersion1(data: any) {
   data.version = 2;
 }
 
+function migrateVersion2(data: any) {
+  for (const calculation of data.palette.calculations) {
+    if (calculation.calcType === "CalcGamutMap") {
+      calculation.fullRange = false;
+    }
+  }
+
+  data.version = 3;
+}
+
 export class Project {
   [immerable] = true;
 
@@ -38,6 +48,9 @@ export class Project {
     switch (data.version) {
       case 1:
         migrateVersion1(data);
+        break;
+      case 2:
+        migrateVersion2(data);
         break;
     }
   }

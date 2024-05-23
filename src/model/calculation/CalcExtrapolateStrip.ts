@@ -82,17 +82,17 @@ export class CalcExtrapolateStrip extends Calculation {
     return `Extrapolate Strip - [${this.inputCel.x}, ${this.inputCel.y}] over [${this.startCel.x}, ${this.startCel.y}] to [${this.endCel.x}, ${this.endCel.y}]`;
   }
 
-  inputCels(): CelIndex[] {
+  inputCels(_dimensions: [number, number]): CelIndex[] {
     return [{ x: this.inputCel.x, y: this.inputCel.y }];
   }
 
-  outputCels(): CelIndex[] {
+  outputCels(_dimensions: [number, number]): CelIndex[] {
     return celStrip(this.startCel, this.endCel);
   }
 
-  computeColors(colors: Color[]): CalculationResult {
+  computeColors(colors: Color[], dimensions: [number, number]): CalculationResult {
     const cels: CalculationCel[] = [];
-    const indexes = this.outputCels();
+    const indexes = this.outputCels(dimensions);
     const numSteps = indexes.length;
 
     if (numSteps === 0) {

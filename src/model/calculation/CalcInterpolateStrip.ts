@@ -110,22 +110,22 @@ export class CalcInterpolateStrip extends Calculation {
     return `Interpolate Strip - [${this.startCel.x}, ${this.startCel.y}] to [${this.endCel.x}, ${this.endCel.y}] over ${lerpColorspaceData[this.colorspace].name}`;
   }
 
-  inputCels(): CelIndex[] {
+  inputCels(_dimensions: [number, number]): CelIndex[] {
     return [
       { x: this.startCel.x, y: this.startCel.y },
       { x: this.endCel.x, y: this.endCel.y },
     ];
   }
 
-  outputCels(): CelIndex[] {
+  outputCels(_dimensions: [number, number]): CelIndex[] {
     const fullStrip = celStrip(this.startCel, this.endCel);
 
     return fullStrip.slice(1, -1);
   }
 
-  computeColors(colors: Color[]): CalculationResult {
+  computeColors(colors: Color[], dimensions: [number, number]): CalculationResult {
     const cels: CalculationCel[] = [];
-    const indexes = this.outputCels();
+    const indexes = this.outputCels(dimensions);
     const startColor = colors[0];
     const endColor = colors[1];
     const colorspace = lerpColorspaceData[this.colorspace].colorspace;

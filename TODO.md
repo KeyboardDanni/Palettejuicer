@@ -14,7 +14,6 @@
 
 ### Calculations
 
-- [ ] Gamut Map does whole palette by default
 - [ ] Fix OkHSL/OkHSV incorrect hue fade
 - [ ] Adjust Color calculation
 - [ ] Gradient Smoothing calculation
@@ -61,3 +60,4 @@
 - [x] FAQ section
 - [x] Fix "wobbly" scrolling on mobile
 - [x] Custom palette size
+- [x] Gamut Map range over whole palette by default
