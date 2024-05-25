@@ -2,17 +2,22 @@ import { immerable, produce } from "immer";
 import hexRgb from "hex-rgb";
 import rgbHex from "rgb-hex";
 
-import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
+import {
+  ChannelInfo,
+  Colorspace,
+  ChannelType,
+  GAMUT_ROUNDING_ERROR,
+  SliderPreviewInfo,
+  checkStopOutOfRgbGamut,
+} from "./Colorspace";
 import { clamp, fixArraySize, outOfRange } from "../../util/math";
-
-export const GAMUT_ROUNDING_ERROR = 0.0001;
 
 const MAX_HEX_LENGTH = 16;
 
 const CHANNEL_INFO: ChannelInfo[] = [
-  { channel: "red", label: "R", channelType: ChannelType.None, range: [0, 255], step: 5 },
-  { channel: "green", label: "G", channelType: ChannelType.None, range: [0, 255], step: 5 },
-  { channel: "blue", label: "B", channelType: ChannelType.None, range: [0, 255], step: 5 },
+  { channel: "red", label: "R", channelType: ChannelType.None, range: [0, 1], rangeTransformed: [0, 255], step: 5 },
+  { channel: "green", label: "G", channelType: ChannelType.None, range: [0, 1], rangeTransformed: [0, 255], step: 5 },
+  { channel: "blue", label: "B", channelType: ChannelType.None, range: [0, 1], rangeTransformed: [0, 255], step: 5 },
 ];
 
 export class ColorspaceRgb extends Colorspace {
@@ -95,6 +100,29 @@ export class ColorspaceRgb extends Colorspace {
     const blue = clamp(Math.round(this.blue * 255), 0, 255);
 
     return [red, green, blue];
+  }
+
+  sliderPreview(): SliderPreviewInfo {
+    const sliderInfo: SliderPreviewInfo = {
+      channelGradients: [],
+    };
+
+    for (let i = 0; i < this.values.length; i++) {
+      const channel: number[][] = [];
+
+      for (const step of [0, 1]) {
+        const channelValues = [...this.values];
+        channelValues[i] = step;
+
+        const checked = checkStopOutOfRgbGamut(channelValues);
+
+        channel.push(checked);
+      }
+
+      sliderInfo.channelGradients.push(channel);
+    }
+
+    return sliderInfo;
   }
 
   static channelInfo(): ChannelInfo[] {

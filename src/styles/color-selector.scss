@@ -1,22 +1,5 @@
 @use "./_constants.scss" as *;
 
-@keyframes out-of-range-pulse {
-  from {
-    outline-width: 0;
-    outline-offset: 0;
-  }
-
-  50% {
-    outline-width: 0.4rem;
-    outline-offset: 0.4rem;
-  }
-
-  to {
-    outline-width: 0;
-    outline-offset: 0;
-  }
-}
-
 .color-preview {
   display: inline-block;
   vertical-align: middle;

@@ -197,13 +197,15 @@ $logo-height: 64px;
 .section-header {
   font-size: 2.2rem;
   font-weight: $font-weight-heading;
-  margin-bottom: 1rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.9rem;
 }
 
 .section-subheader {
   font-size: 1.8rem;
   font-weight: $font-weight-heading;
-  margin-bottom: 1rem;
+  margin-top: 0.1rem;
+  margin-bottom: 0.9rem;
 }
 
 input[type="text"].section-header-rename {

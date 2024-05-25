@@ -491,6 +491,7 @@ input[type="text"] {
   background-color: transparent;
   border: $size-widget-outline solid transparent;
   border-radius: $size-button-radius;
+  outline: none;
   touch-action: manipulation;
 
   &:focus,
@@ -520,7 +521,6 @@ input[type="text"] {
 @mixin range-thumb {
   width: 1.6rem;
   height: 2rem;
-  margin-top: -0.9rem;
   cursor: default;
 }
 
@@ -564,21 +564,27 @@ input[type="text"] {
   cursor: default;
   margin: 0.6rem 0.1rem 0.6rem 0.1rem;
 
-  background-color: $color-slider-recess;
+  background: var(--slider-track-background);
   border: $size-widget-outline solid $color-section-border;
   box-shadow: inset 0 0.2rem $color-section-border;
   border-radius: $size-button-radius;
 }
 
+@mixin range-track-thick {
+  height: 1.2rem;
+}
+
 @mixin range-track-disabled {
-  background-color: $color-widget-disabled;
+  background: var(--slider-track-background);
   border: $size-widget-outline solid $color-widget-disabled-border;
   box-shadow: inset 0 0.2rem $color-widget-disabled-border;
 }
 
 input[type="range"] {
+  --slider-track-background: #{$color-slider-recess};
   -webkit-appearance: none;
   width: 100%;
+  height: 2.4rem;
   background: transparent;
 
   &:not(:disabled) {
@@ -589,10 +595,14 @@ input[type="range"] {
     @include range-thumb-normal;
 
     -webkit-appearance: none;
+    margin-top: -0.9rem;
   }
 
   &::-moz-range-thumb {
     @include range-thumb-normal;
+
+    transform: translateY(-0.2rem);
+    box-sizing: border-box;
   }
 
   &::-ms-thumb {
@@ -607,6 +617,7 @@ input[type="range"] {
 
   &::-moz-range-track {
     @include range-track;
+    box-sizing: border-box;
   }
 
   &::-ms-track {
@@ -627,7 +638,27 @@ input[type="range"] {
     }
   }
 
+  &.thick-slider {
+    &::-webkit-slider-runnable-track {
+      @include range-track-thick;
+    }
+
+    &::-moz-range-track {
+      @include range-track-thick;
+    }
+
+    &::-ms-track {
+      @include range-track-thick;
+    }
+
+    &::-webkit-slider-thumb {
+      margin-top: -0.7rem;
+    }
+  }
+
   &:disabled {
+    --slider-track-background: #{$color-widget-disabled};
+
     &::-webkit-slider-runnable-track {
       @include range-track-disabled;
     }
@@ -666,6 +697,28 @@ input[type="range"] {
       @include widget-focus($color-text-selected);
     }
   }
+
+  &::-moz-range-progress,
+  &::slider-fill {
+    display: none !important;
+  }
+}
+
+@keyframes out-of-range-pulse {
+  from {
+    outline-width: 0;
+    outline-offset: 0;
+  }
+
+  50% {
+    outline-width: 0.4rem;
+    outline-offset: 0.4rem;
+  }
+
+  to {
+    outline-width: 0;
+    outline-offset: 0;
+  }
 }
 
 .number-slider {
@@ -676,13 +729,11 @@ input[type="range"] {
     content: "\2060"; // Hack to allow aligning with baseline
   }
 
-  input[type="range"] {
+  .slider-container {
     margin-right: $size-label-spacing;
-    min-width: (2rem + 14.4rem);
-    max-width: (2rem + 25.6rem);
-    background: none;
     border-radius: $size-button-radius;
     position: relative;
+    flex: 1;
 
     &.out-of-range {
       @include striped-background($color-section-warning, $color-section-warning-alt);
@@ -696,6 +747,12 @@ input[type="range"] {
         animation: out-of-range-pulse 0.25s;
       }
     }
+  }
+
+  input[type="range"] {
+    min-width: (2rem + 14.4rem);
+    max-width: (2rem + 25.6rem);
+    vertical-align: middle;
   }
 
   input[type="text"] {

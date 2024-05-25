@@ -12,15 +12,16 @@
   background-color: $color;
   border: $size-widget-outline solid $color-border;
   border-radius: $radius;
-  transform: translateY($height * $pressed);
-  position: relative;
   transition:
     0.05s box-shadow ease-out,
     0.05s transform ease-out,
     0.15s background ease-in-out;
 }
 
-@mixin raised-widget-bounds($height, $pressed) {
+@mixin raised-button-bounds($height, $pressed) {
+  transform: translateY($height * $pressed);
+  position: relative;
+
   &:before {
     $top-offset: (-$height - $size-widget-outline) * $pressed;
     $bottom-offset: (-$height - $size-widget-outline) * (1 - $pressed);
@@ -43,7 +44,7 @@
     $size-button-height,
     $pressed
   );
-  @include raised-widget-bounds($size-button-height, $pressed);
+  @include raised-button-bounds($size-button-height, $pressed);
 }
 
 @mixin raised-button-thin($color, $color-border, $pressed) {
@@ -55,7 +56,7 @@
     $size-chip-height,
     $pressed
   );
-  @include raised-widget-bounds($size-button-height, $pressed);
+  @include raised-button-bounds($size-button-height, $pressed);
 }
 
 @mixin striped-background($color, $color-alt) {

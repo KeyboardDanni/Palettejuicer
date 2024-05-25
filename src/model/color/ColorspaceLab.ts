@@ -4,9 +4,30 @@ import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
 import { fixArraySize } from "../../util/math";
 
 const CHANNEL_INFO: ChannelInfo[] = [
-  { channel: "lightness", label: "L", channelType: ChannelType.IsLightness, range: [0, 100], step: 2 },
-  { channel: "a", label: "A", channelType: ChannelType.None, range: [-125, 125], step: 5 },
-  { channel: "b", label: "B", channelType: ChannelType.None, range: [-125, 125], step: 5 },
+  {
+    channel: "lightness",
+    label: "L",
+    channelType: ChannelType.IsLightness,
+    range: [0, 100],
+    rangeTransformed: [0, 100],
+    step: 2,
+  },
+  {
+    channel: "a",
+    label: "A",
+    channelType: ChannelType.None,
+    range: [-125, 125],
+    rangeTransformed: [-125, 125],
+    step: 5,
+  },
+  {
+    channel: "b",
+    label: "B",
+    channelType: ChannelType.None,
+    range: [-125, 125],
+    rangeTransformed: [-125, 125],
+    step: 5,
+  },
 ];
 
 export class ColorspaceLab extends Colorspace {

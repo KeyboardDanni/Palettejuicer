@@ -7,10 +7,10 @@ import { CelIndex } from "../../util/cel";
 import { ClipboardContext } from "../../contexts/ClipboardContext";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
 import { Color } from "../../model/color/Color";
-import { GAMUT_ROUNDING_ERROR } from "../../model/color/ColorspaceRgb";
 import { PopupMenu, PopupMenuItem } from "../common/PopupMenu";
 import { CelPickerContext, CelPickerSetterContext } from "../../contexts/CelPickerContext";
 import { AppOptionsContext } from "../../contexts/AppOptionsContext";
+import { GAMUT_ROUNDING_ERROR } from "../../model/color/Colorspace";
 
 class PaletteViewRefState {
   scrubbing: boolean = false;

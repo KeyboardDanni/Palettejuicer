@@ -3,7 +3,6 @@
 ### Color Selection
 
 - [ ] Add OkLrCH
-- [ ] Color preview on sliders
 - [ ] Button to bring color in-gamut
 - [ ] Button to pick color from screen
 - [ ] Options to see LCH/delta color differences across cels
@@ -58,3 +57,4 @@
 - [x] Custom palette size
 - [x] Gamut Map range over whole palette by default
 - [x] Select export region
+- [x] Color preview on sliders

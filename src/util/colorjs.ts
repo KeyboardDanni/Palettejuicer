@@ -65,6 +65,18 @@ export function spaceToSpace(colorspace: Colorspace, newSpaceName: string): Colo
   return colorjsToSpace(converted);
 }
 
+export function spaceToSpaceValues(values: number[], oldSpaceName: string, newSpaceName: string): number[] {
+  const oldColorJsSpace = spaceNameToColorjs[oldSpaceName] ?? oldSpaceName;
+  const newColorJsSpace = spaceNameToColorjs[newSpaceName] ?? newSpaceName;
+  const converter: ColorObject = {
+    space: oldColorJsSpace,
+    coords: [values[0], values[1], values[2]],
+  };
+  const converted = colorjsTo(converter, newColorJsSpace);
+
+  return converted.coords;
+}
+
 export function toGamut(colorspace: Colorspace, algorithm: string): Colorspace {
   const source = spaceToColorjs(colorspace);
   const inGamut = colorjsToGamut(source, { space: "srgb", method: algorithm });

@@ -2,7 +2,7 @@ import { ChangeEvent, useState } from "react";
 import { castDraft, produce } from "immer";
 
 import { Color } from "../../model/color/Color";
-import { ChannelInfo, ChannelType, Colorspace } from "../../model/color/Colorspace";
+import { ChannelInfo, ChannelType, Colorspace, sliderInfoToCss } from "../../model/color/Colorspace";
 import { ControlledTextInput } from "../common/ControlledTextInput";
 import { NumberSlider } from "../common/NumberSlider";
 import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
@@ -68,6 +68,7 @@ type ChannelSliderProps = {
   max: number;
   step: number;
   allowNone?: boolean;
+  backgroundStyle?: string;
 };
 
 function ChannelSlider(props: ChannelSliderProps) {
@@ -83,6 +84,7 @@ function ChannelSlider(props: ChannelSliderProps) {
           step={props.step}
           disabled={props.disabled}
           allowNone={props.allowNone}
+          backgroundStyle={props.backgroundStyle}
         />
       </div>
     </>
@@ -121,6 +123,8 @@ type ColorspaceSlidersProps = {
 
 function ColorspaceSliders(props: ColorspaceSlidersProps) {
   const converted = props.color.converted(props.colorspace).data;
+  const sliderInfo = converted.sliderPreview();
+  const sliderStyles = sliderInfoToCss(sliderInfo);
   const transformed = converted.transformed();
 
   function handleChannelChange(channel: number, value: number) {
@@ -151,11 +155,12 @@ function ColorspaceSliders(props: ColorspaceSlidersProps) {
         value={transformed[i]}
         onChange={(value) => handleChannelChange(i, value)}
         label={channel.label}
-        min={channel.range[0]}
-        max={channel.range[1]}
+        min={channel.rangeTransformed[0]}
+        max={channel.rangeTransformed[1]}
         step={channel.step}
         disabled={props.disabled}
         allowNone={channel.channelType === ChannelType.IsHue}
+        backgroundStyle={sliderStyles[i]}
       />
     );
   }

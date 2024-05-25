@@ -1,6 +1,10 @@
 import { immerable } from "immer";
-import { spaceToSpace } from "../../util/colorjs";
+import { spaceToSpace, spaceToSpaceValues } from "../../util/colorjs";
 import { Transform } from "class-transformer";
+import { steps } from "../../util/math";
+
+export const GAMUT_ROUNDING_ERROR = 0.0005;
+const SLIDER_INFO_RESOLUTION = 128;
 
 export enum ChannelType {
   None,
@@ -10,11 +14,48 @@ export enum ChannelType {
   IsHue,
 }
 
+export interface SliderPreviewInfo {
+  channelGradients: number[][][];
+}
+
+export function checkStopOutOfRgbGamut(stop: number[]): number[] {
+  for (const value of stop) {
+    if (value < -GAMUT_ROUNDING_ERROR || value > 1 + GAMUT_ROUNDING_ERROR) {
+      return [1, 0, 1];
+    }
+  }
+
+  return stop;
+}
+
+function mapRgbStopToCss(stop: number[]) {
+  const colors = stop.map((value) => `${Math.floor(value * 255)}`).join(" ");
+  return `rgb(${colors})`;
+}
+
+export function sliderInfoToCss(info: SliderPreviewInfo): string[] {
+  const channelStyles: string[] = [];
+
+  for (const channel of info.channelGradients) {
+    const stops = [];
+
+    for (const stop of channel) {
+      stops.push(mapRgbStopToCss(stop));
+    }
+
+    const stopString = stops.join(", ");
+    channelStyles.push(`linear-gradient(90deg, ${stopString})`);
+  }
+
+  return channelStyles;
+}
+
 export interface ChannelInfo {
   channel: string;
   label: string;
   channelType: ChannelType;
   range: [number, number];
+  rangeTransformed: [number, number];
   step: number;
 }
 
@@ -68,6 +109,34 @@ export abstract class Colorspace {
     const valuesString = values.join(", ");
 
     return `${name}(${valuesString})`;
+  }
+
+  sliderPreview(): SliderPreviewInfo {
+    const colorspaceClass = this.constructor as typeof Colorspace;
+    const channelInfo = colorspaceClass.channelInfo();
+    const sliderInfo: SliderPreviewInfo = {
+      channelGradients: [],
+    };
+
+    for (let i = 0; i < this.values.length; i++) {
+      const channel: number[][] = [];
+      const range = channelInfo[i].range;
+      const channelSteps = steps(range[0], range[1], SLIDER_INFO_RESOLUTION);
+
+      for (const step of channelSteps) {
+        const channelValues = [...this.values];
+        channelValues[i] = step;
+
+        const converted = spaceToSpaceValues(channelValues, colorspaceClass.colorspaceName(), "rgb");
+        const checked = checkStopOutOfRgbGamut(converted);
+
+        channel.push(checked);
+      }
+
+      sliderInfo.channelGradients.push(channel);
+    }
+
+    return sliderInfo;
   }
 
   static channelInfo(): ChannelInfo[] {

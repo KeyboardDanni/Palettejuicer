@@ -4,9 +4,23 @@ import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
 import { fixArraySize } from "../../util/math";
 
 const CHANNEL_INFO: ChannelInfo[] = [
-  { channel: "hue", label: "H", channelType: ChannelType.IsHue, range: [0, 360], step: 5 },
-  { channel: "saturation", label: "S", channelType: ChannelType.IsSaturation, range: [0, 100], step: 2 },
-  { channel: "value", label: "V", channelType: ChannelType.IsLightness, range: [0, 100], step: 2 },
+  { channel: "hue", label: "H", channelType: ChannelType.IsHue, range: [0, 360], rangeTransformed: [0, 360], step: 5 },
+  {
+    channel: "saturation",
+    label: "S",
+    channelType: ChannelType.IsSaturation,
+    range: [0, 100],
+    rangeTransformed: [0, 100],
+    step: 2,
+  },
+  {
+    channel: "value",
+    label: "V",
+    channelType: ChannelType.IsLightness,
+    range: [0, 100],
+    rangeTransformed: [0, 100],
+    step: 2,
+  },
 ];
 
 export class ColorspaceHsv extends Colorspace {

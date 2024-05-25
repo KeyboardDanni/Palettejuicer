@@ -9,9 +9,10 @@ export type NumberSliderProps = {
   max: number;
   step: number;
   allowNone?: boolean;
+  backgroundStyle?: string;
 };
 
-const LIMIT_ROUNDING_ERROR = 0.0001;
+const LIMIT_ROUNDING_ERROR = 0.0005;
 
 export function NumberSlider(props: NumberSliderProps) {
   const sliderValue = !Number.isNaN(props.value) ? props.value : 0;
@@ -21,7 +22,8 @@ export function NumberSlider(props: NumberSliderProps) {
   const limitDistance = Math.abs(props.max - props.min);
   const limitMin = props.min - LIMIT_ROUNDING_ERROR * limitDistance;
   const limitMax = props.max + LIMIT_ROUNDING_ERROR * limitDistance;
-  const className = props.value < limitMin || props.value > limitMax ? "out-of-range" : "";
+  const className =
+    props.value < limitMin || props.value > limitMax ? "slider-container out-of-range" : "slider-container";
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
     let value = parseFloat(event.target.value);
@@ -32,19 +34,26 @@ export function NumberSlider(props: NumberSliderProps) {
     props.onChange(value);
   }
 
+  const style = props.backgroundStyle
+    ? ({ "--slider-track-background": props.backgroundStyle } as React.CSSProperties)
+    : undefined;
+
   return (
     <>
       <div className="number-slider">
-        <input
-          type="range"
-          className={className}
-          value={sliderValue}
-          onChange={handleChange}
-          min={props.min}
-          max={props.max}
-          step={props.step}
-          disabled={props.disabled}
-        />
+        <div className={className}>
+          <input
+            type="range"
+            className={props.backgroundStyle ? "thick-slider" : undefined}
+            value={sliderValue}
+            onChange={handleChange}
+            min={props.min}
+            max={props.max}
+            step={props.step}
+            disabled={props.disabled}
+            style={style}
+          />
+        </div>
         <ControlledTextInput
           value={textValue}
           title={textValue}

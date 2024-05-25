@@ -4,9 +4,16 @@ import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
 import { fixArraySize } from "../../util/math";
 
 const CHANNEL_INFO: ChannelInfo[] = [
-  { channel: "lightness", label: "L", channelType: ChannelType.IsLightness, range: [0, 100], step: 2 },
-  { channel: "a", label: "A", channelType: ChannelType.None, range: [-40, 40], step: 2 },
-  { channel: "b", label: "B", channelType: ChannelType.None, range: [-40, 40], step: 2 },
+  {
+    channel: "lightness",
+    label: "L",
+    channelType: ChannelType.IsLightness,
+    range: [0, 1],
+    rangeTransformed: [0, 100],
+    step: 2,
+  },
+  { channel: "a", label: "A", channelType: ChannelType.None, range: [-0.4, 0.4], rangeTransformed: [-40, 40], step: 2 },
+  { channel: "b", label: "B", channelType: ChannelType.None, range: [-0.4, 0.4], rangeTransformed: [-40, 40], step: 2 },
 ];
 
 export class ColorspaceOklab extends Colorspace {
