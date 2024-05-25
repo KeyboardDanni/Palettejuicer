@@ -745,6 +745,7 @@ input[type="range"] {
         border-radius: $size-button-radius;
         outline: $color-section-warning-outline solid 0;
         animation: out-of-range-pulse 0.25s;
+        pointer-events: none;
       }
     }
   }
