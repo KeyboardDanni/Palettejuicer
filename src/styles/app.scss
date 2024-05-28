@@ -70,7 +70,7 @@ $logo-height: 64px;
       padding: 1rem;
 
       &:disabled {
-        background-color: $color-background-widget-disabled;
+        @include raised-button($color-background-widget-disabled, $color-background-widget-disabled-border, 0);
       }
 
       &:not(:disabled) {

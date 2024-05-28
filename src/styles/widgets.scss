@@ -192,7 +192,7 @@ button {
 
   &:disabled {
     color: $color-text-disabled;
-    background-color: $color-widget-disabled;
+    @include raised-button-thin($color-widget-disabled, $color-widget-disabled-border, 0);
   }
 
   &:not(:disabled) {
@@ -264,6 +264,10 @@ button {
     padding: 0.2em $size-button-padding;
     height: 1.6em;
     margin: 0 0.4rem;
+
+    &:disabled {
+      @include raised-button-thin($color-widget-disabled, $color-widget-disabled-border, 0);
+    }
 
     &:not(:disabled) {
       &:hover,
