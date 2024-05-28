@@ -56,7 +56,7 @@
     $size-chip-height,
     $pressed
   );
-  @include raised-button-bounds($size-button-height, $pressed);
+  @include raised-button-bounds($size-chip-height, $pressed);
 }
 
 @mixin striped-background($color, $color-alt) {
