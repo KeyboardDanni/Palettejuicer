@@ -40,7 +40,10 @@ export class ProjectFile {
   }
 
   static async saveWithPicker(item: Project) {
-    const handle = await FilePicker.savePicker(projectFiletypeInfo);
+    const info = { ...projectFiletypeInfo };
+    info.suggestedName = `${item.palette.paletteName}.palettejuice`;
+
+    const handle = await FilePicker.savePicker(info);
 
     await ProjectFile.save(item, handle);
   }

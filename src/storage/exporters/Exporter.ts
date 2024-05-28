@@ -27,7 +27,10 @@ export abstract class Exporter {
   }
 
   static async exportWithPicker(item: Palette) {
-    const handle = await FilePicker.savePicker(this.filetypeInfo());
+    const info = { ...this.filetypeInfo() };
+    info.suggestedName = info.extensions.length > 0 ? `${item.paletteName}.${info.extensions[0]}` : item.paletteName;
+
+    const handle = await FilePicker.savePicker(info);
     const writable = await handle.createWritable();
 
     const buffer = await this.export(item);
