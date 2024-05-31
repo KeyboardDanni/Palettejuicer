@@ -25,9 +25,11 @@ ColorjsSpace.register(OKLCH);
 ColorjsSpace.register(Okhsl);
 ColorjsSpace.register(Okhsv);
 
+import { produce } from "immer";
+
 import { Colorspace } from "../model/color/Colorspace";
 import { Color, availableSpaceNames } from "../model/color/Color";
-import { produce } from "immer";
+import { NullableNumber } from "./math";
 
 const spaceNameToColorjs: { [key: string]: string } = {
   rgb: "srgb",
@@ -65,7 +67,11 @@ export function spaceToSpace(colorspace: Colorspace, newSpaceName: string): Colo
   return colorjsToSpace(converted);
 }
 
-export function spaceToSpaceValues(values: number[], oldSpaceName: string, newSpaceName: string): number[] {
+export function spaceToSpaceValues(
+  values: NullableNumber[],
+  oldSpaceName: string,
+  newSpaceName: string
+): NullableNumber[] {
   const oldColorJsSpace = spaceNameToColorjs[oldSpaceName] ?? oldSpaceName;
   const newColorJsSpace = spaceNameToColorjs[newSpaceName] ?? newSpaceName;
   const converter: ColorObject = {

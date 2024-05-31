@@ -1,7 +1,7 @@
 import { immerable, produce } from "immer";
 
 import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
-import { fixArraySize } from "../../util/math";
+import { NullableNumber, fixArraySize } from "../../util/math";
 
 const CHANNEL_INFO: ChannelInfo[] = [
   { channel: "hue", label: "H", channelType: ChannelType.IsHue, range: [0, 360], rangeTransformed: [0, 360], step: 5 },
@@ -40,7 +40,7 @@ export class ColorspaceHsv extends Colorspace {
     return "hsv";
   }
 
-  constructor(values?: number[]) {
+  constructor(values?: NullableNumber[]) {
     super(fixArraySize(values ?? [], 3));
   }
 

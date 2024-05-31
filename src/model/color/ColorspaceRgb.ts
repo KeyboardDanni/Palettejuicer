@@ -10,7 +10,7 @@ import {
   SliderPreviewInfo,
   checkStopOutOfRgbGamut,
 } from "./Colorspace";
-import { clamp, fixArraySize, outOfRange } from "../../util/math";
+import { NullableNumber, clamp, divideOrNull, fixArraySize, multiplyOrNull, outOfRange } from "../../util/math";
 
 const MAX_HEX_LENGTH = 16;
 
@@ -42,7 +42,7 @@ export class ColorspaceRgb extends Colorspace {
     return "rgb";
   }
 
-  constructor(values?: number[]) {
+  constructor(values?: NullableNumber[]) {
     super(fixArraySize(values ?? [], 3));
   }
 
@@ -61,11 +61,11 @@ export class ColorspaceRgb extends Colorspace {
     return new ColorspaceRgb([rgb.red / 255, rgb.green / 255, rgb.blue / 255]);
   }
 
-  static rawToTransformed(raw: readonly number[]): number[] {
-    return raw.map((rawValue) => rawValue * 255);
+  static rawToTransformed(raw: readonly NullableNumber[]): NullableNumber[] {
+    return raw.map((rawValue) => multiplyOrNull(rawValue, 255));
   }
-  static transformedToRaw(transformed: readonly number[]): number[] {
-    return transformed.map((transformedValue) => transformedValue / 255);
+  static transformedToRaw(transformed: readonly NullableNumber[]): NullableNumber[] {
+    return transformed.map((transformedValue) => divideOrNull(transformedValue, 255));
   }
 
   with(red: number, green: number, blue: number): ColorspaceRgb {
@@ -88,16 +88,16 @@ export class ColorspaceRgb extends Colorspace {
     let distance = 0;
 
     for (let i = 0; i < 3; i++) {
-      distance = Math.max(distance, outOfRange(this.values[i], 0, 1));
+      distance = Math.max(distance, outOfRange(this.values[i] ?? 0, 0, 1));
     }
 
     return distance;
   }
 
   intNormalized() {
-    const red = clamp(Math.round(this.red * 255), 0, 255);
-    const green = clamp(Math.round(this.green * 255), 0, 255);
-    const blue = clamp(Math.round(this.blue * 255), 0, 255);
+    const red = clamp(Math.round((this.red ?? 0) * 255), 0, 255);
+    const green = clamp(Math.round((this.green ?? 0) * 255), 0, 255);
+    const blue = clamp(Math.round((this.blue ?? 0) * 255), 0, 255);
 
     return [red, green, blue];
   }

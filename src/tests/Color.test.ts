@@ -16,13 +16,14 @@ import { ColorspaceOklch } from "../model/color/ColorspaceOklch";
 import { Colorspace } from "../model/color/Colorspace";
 import { ColorspaceOkhsl } from "../model/color/ColorspaceOkhsl";
 import { ColorspaceOkhsv } from "../model/color/ColorspaceOkhsv";
+import { NullableNumber } from "../util/math";
 
 const ROUNDING_ERROR = 0.001;
 const CLOSE_TO_0 = 0 + ROUNDING_ERROR;
 const CLOSE_TO_1 = 1 - ROUNDING_ERROR;
 
-function massageHue(value: number) {
-  if (Number.isNaN(value)) {
+function massageHue(value: NullableNumber) {
+  if (value === null) {
     return 0;
   }
   if (value + ROUNDING_ERROR > 360) {
@@ -60,15 +61,21 @@ const testHexNames: TestHex[] = [
 
 const testBadHexNames = ["", "#aa", "#aaaaa", "#aaaaaaa"];
 
-function expectNumericArraysClose(actual: readonly number[], expected: readonly number[]) {
+function expectNullableClose(actual: NullableNumber, expected: NullableNumber, numDigits?: number) {
+  if (expected === null) {
+    expect(actual).toBeNull();
+  } else if (Number.isNaN(expected)) {
+    expect(actual).toBeNaN();
+  } else {
+    expect(actual).toBeCloseTo(expected, numDigits);
+  }
+}
+
+function expectNumericArraysClose(actual: readonly NullableNumber[], expected: readonly NullableNumber[]) {
   expect(actual.length).toBe(expected.length);
 
   for (const [i, value] of actual.entries()) {
-    if (Number.isNaN(expected[i])) {
-      expect(value).toBeNaN();
-    } else {
-      expect(value).toBeCloseTo(expected[i]);
-    }
+    expectNullableClose(value, expected[i]);
   }
 }
 
@@ -103,23 +110,26 @@ function expectTestColorRgbEqual(actual: Color, expected: TestColor) {
 function expectTestColorHslEqual(actual: Color, expected: TestColor) {
   const hsl = actual.hsl;
 
-  if (hsl.lightness > CLOSE_TO_0 && hsl.lightness < CLOSE_TO_1) {
-    if (hsl.saturation > CLOSE_TO_0) {
-      expect(massageHue(hsl.hue)).toBeCloseTo(massageHue(expected.hue), 1);
-    }
-    expect(hsl.saturation).toBeCloseTo(expected.saturationL, 1);
-  }
   expect(hsl.lightness).toBeCloseTo(expected.lightness, 1);
+
+  if (hsl.lightness! > CLOSE_TO_0 && hsl.lightness! < CLOSE_TO_1) {
+    expect(hsl.saturation).toBeCloseTo(expected.saturationL, 1);
+
+    if (hsl.saturation! > CLOSE_TO_0) {
+      expectNullableClose(massageHue(hsl.hue), massageHue(expected.hue), 1);
+    }
+  }
 }
 
 function expectTestColorHsvEqual(actual: Color, expected: TestColor) {
   const hsv = actual.hsv;
 
-  if (hsv.saturation > CLOSE_TO_0) {
-    expect(massageHue(hsv.hue)).toBeCloseTo(massageHue(expected.hue), 1);
-  }
   expect(hsv.saturation).toBeCloseTo(expected.saturationV, 1);
   expect(hsv.value).toBeCloseTo(expected.value, 1);
+
+  if (hsv.saturation! > CLOSE_TO_0) {
+    expectNullableClose(massageHue(hsv.hue), massageHue(expected.hue), 1);
+  }
 }
 
 function expectTestColorLabEqual(actual: Color, expected: TestColor) {
@@ -136,8 +146,8 @@ function expectTestColorLchEqual(actual: Color, expected: TestColor) {
   expect(lch.lightness).toBeCloseTo(expected.labLightness, 1);
   expect(lch.chroma).toBeCloseTo(expected.lchChroma, 1);
 
-  if (lch.chroma > 0) {
-    expect(massageHue(lch.hue)).toBeCloseTo(massageHue(expected.lchHue), 1);
+  if (lch.chroma! > 0) {
+    expectNullableClose(massageHue(lch.hue), massageHue(expected.lchHue), 1);
   }
 }
 
@@ -157,8 +167,8 @@ function expectTestColorOklchEqual(actual: Color, expected: TestColor) {
   expect(lightness).toBeCloseTo(expected.oklabLightness, 1);
   expect(chroma).toBeCloseTo(expected.oklchChroma, 1);
 
-  if (chroma > 0) {
-    expect(massageHue(hue)).toBeCloseTo(massageHue(expected.oklchHue), 1);
+  if (chroma! > 0) {
+    expectNullableClose(massageHue(hue), massageHue(expected.oklchHue), 1);
   }
 }
 
@@ -166,24 +176,27 @@ function expectTestColorOkhslEqual(actual: Color, expected: TestColor) {
   const okhsl = actual.okhsl;
   const [hue, saturation, lightness] = okhsl.transformed();
 
-  if (lightness > CLOSE_TO_0 && lightness < CLOSE_TO_1) {
-    if (saturation > CLOSE_TO_0) {
-      expect(massageHue(hue)).toBeCloseTo(massageHue(expected.okhslHue), 1);
-    }
-    expect(saturation).toBeCloseTo(expected.okhslSaturation, 1);
-  }
   expect(lightness).toBeCloseTo(expected.okhslLightness, 1);
+
+  if (lightness! > CLOSE_TO_0 && lightness! < CLOSE_TO_1) {
+    expect(saturation).toBeCloseTo(expected.okhslSaturation, 1);
+
+    if (saturation! > CLOSE_TO_0) {
+      expectNullableClose(massageHue(hue), massageHue(expected.okhslHue), 1);
+    }
+  }
 }
 
 function expectTestColorOkhsvEqual(actual: Color, expected: TestColor) {
   const okhsv = actual.okhsv;
   const [hue, saturation, value] = okhsv.transformed();
 
-  if (saturation > CLOSE_TO_0) {
-    expect(massageHue(hue)).toBeCloseTo(massageHue(expected.okhslHue), 1);
-  }
   expect(saturation).toBeCloseTo(expected.okhsvSaturation, 1);
   expect(value).toBeCloseTo(expected.okhsvValue, 1);
+
+  if (saturation! > CLOSE_TO_0) {
+    expectNullableClose(massageHue(hue), massageHue(expected.okhslHue), 1);
+  }
 }
 
 function expectTestColorAllEqual(actual: Color, expected: TestColor) {

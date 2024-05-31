@@ -1,3 +1,5 @@
+export type NullableNumber = number | null;
+
 export function clamp(value: number, min: number, max: number): number {
   return Math.max(min, Math.min(value, max));
 }
@@ -65,11 +67,25 @@ export function appendSteps(first: number[], max: number, numSteps: number): num
   return first.concat(output);
 }
 
-export function handleNaN(value: number, defaultValue: number) {
-  return !Number.isNaN(value) ? value : defaultValue;
+export function addOrNull(value: NullableNumber, op: NullableNumber): NullableNumber {
+  if (value === null || op === null) return null;
+
+  return value + op;
 }
 
-export function fixArraySize(values: number[], length: number): number[] {
+export function multiplyOrNull(value: NullableNumber, op: NullableNumber): NullableNumber {
+  if (value === null || op === null) return null;
+
+  return value * op;
+}
+
+export function divideOrNull(value: NullableNumber, op: NullableNumber): NullableNumber {
+  if (value === null || op === null) return null;
+
+  return value / op;
+}
+
+export function fixArraySize(values: NullableNumber[], length: number): NullableNumber[] {
   if (values.length === length) {
     return values;
   }

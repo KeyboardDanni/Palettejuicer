@@ -9,7 +9,6 @@
 
 ### Calculations
 
-- [ ] Fix OkHSL/OkHSV incorrect hue fade
 - [ ] Adjust Color calculation
 - [ ] Gradient Smoothing calculation
 - [ ] Additional interpolation settings
@@ -58,3 +57,4 @@
 - [x] Gamut Map range over whole palette by default
 - [x] Select export region
 - [x] Color preview on sliders
+- [x] Fix OkHSL/OkHSV incorrect hue fade

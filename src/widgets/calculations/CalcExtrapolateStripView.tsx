@@ -13,6 +13,7 @@ import { CelSelector } from "../common/CelSelector";
 import { NumberSlider } from "../common/NumberSlider";
 import { PageTab } from "../common/PageTab";
 import { DropdownChoiceButton } from "../common/DropdownButton";
+import { NullableNumber } from "../../util/math";
 
 enum ExtrapolatePage {
   Output = "Strip Options",
@@ -99,7 +100,7 @@ function AdjustmentPage(props: AdjustmentPageProps) {
   const calc = props.viewProps.calc as CalcExtrapolateStrip;
   const activeAdjustment = calc[props.adjustment as keyof CalcExtrapolateStrip] as StripAdjustment;
 
-  function handleAdjustmentChange(channel: string, property: string, value: number) {
+  function handleAdjustmentChange(channel: string, property: string, value: NullableNumber) {
     props.viewProps.onCalcChange(
       produce(calc, (draft) => {
         const adjustment = draft[channel as keyof CalcExtrapolateStrip] as StripAdjustment;

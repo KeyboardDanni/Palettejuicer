@@ -12,6 +12,7 @@ import { CelIndex } from "../../util/cel";
 import { CalcPropertiesViewProps } from "../../model/calculation/Calculation";
 import { NumberSlider } from "../common/NumberSlider";
 import { DropdownChoiceButton } from "../common/DropdownButton";
+import { NullableNumber } from "../../util/math";
 
 export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
   if (!(props.calc instanceof CalcInterpolateStrip)) {
@@ -52,10 +53,10 @@ export function CalcInterpolateStripView(props: CalcPropertiesViewProps) {
     );
   }
 
-  function handleCurveChange(curve: number) {
+  function handleCurveChange(curve: NullableNumber) {
     props.onCalcChange(
       produce(calc, (draft) => {
-        draft.curve = curve;
+        draft.curve = curve ?? 1;
       })
     );
   }

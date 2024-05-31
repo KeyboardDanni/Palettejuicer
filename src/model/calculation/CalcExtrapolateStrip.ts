@@ -127,7 +127,13 @@ export class CalcExtrapolateStrip extends Calculation {
 
       const transformed = spaceClass.transformedToRaw(deltas);
       const newValues = sourceColor.data.values.map((value, i) => {
-        let newValue = value + transformed[i];
+        const delta = transformed[i];
+
+        if (value === null || delta === null) {
+          return null;
+        }
+
+        let newValue = value + delta;
         if (info[i]?.channelType === ChannelType.IsHue) {
           newValue = positiveMod(newValue, info[i].rangeTransformed[1]);
         }

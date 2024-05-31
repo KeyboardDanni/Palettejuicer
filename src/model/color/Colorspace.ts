@@ -1,7 +1,6 @@
 import { immerable } from "immer";
 import { spaceToSpace, spaceToSpaceValues } from "../../util/colorjs";
-import { Transform } from "class-transformer";
-import { steps } from "../../util/math";
+import { NullableNumber, steps } from "../../util/math";
 
 export const GAMUT_ROUNDING_ERROR = 0.0005;
 const SLIDER_INFO_RESOLUTION = 128;
@@ -18,14 +17,14 @@ export interface SliderPreviewInfo {
   channelGradients: number[][][];
 }
 
-export function checkStopOutOfRgbGamut(stop: number[]): number[] {
+export function checkStopOutOfRgbGamut(stop: NullableNumber[]): number[] {
   for (const value of stop) {
-    if (value < -GAMUT_ROUNDING_ERROR || value > 1 + GAMUT_ROUNDING_ERROR) {
+    if (value === null || value < -GAMUT_ROUNDING_ERROR || value > 1 + GAMUT_ROUNDING_ERROR) {
       return [1, 0, 1];
     }
   }
 
-  return stop;
+  return stop as number[];
 }
 
 function mapRgbStopToCss(stop: number[]) {
@@ -62,10 +61,9 @@ export interface ChannelInfo {
 export abstract class Colorspace {
   [immerable] = true;
 
-  @Transform((options) => options.value.map((value: any) => (value !== null ? value : Number.NaN)))
-  readonly values: readonly number[] = [];
+  readonly values: readonly NullableNumber[] = [];
 
-  protected constructor(values: number[]) {
+  protected constructor(values: NullableNumber[]) {
     this.values = values;
   }
 
@@ -73,26 +71,26 @@ export abstract class Colorspace {
     throw new Error("Method not implemented.");
   }
 
-  static rawToTransformed(raw: readonly number[]): number[] {
+  static rawToTransformed(raw: readonly NullableNumber[]): NullableNumber[] {
     return [...raw];
   }
 
-  static transformedToRaw(transformed: readonly number[]): number[] {
+  static transformedToRaw(transformed: readonly NullableNumber[]): NullableNumber[] {
     return [...transformed];
   }
 
-  static fromTransformed(transformed: readonly number[]): Colorspace {
+  static fromTransformed(transformed: readonly NullableNumber[]): Colorspace {
     const raw = this.transformedToRaw(transformed);
 
     return new (this as any)(raw);
   }
 
-  transformed(): number[] {
+  transformed(): NullableNumber[] {
     const colorspaceClass = this.constructor as typeof Colorspace;
     return colorspaceClass.rawToTransformed(this.values);
   }
 
-  converted<T extends Colorspace>(classType: { new (values: number[]): T; colorspaceName(): string }): T {
+  converted<T extends Colorspace>(classType: { new (values: NullableNumber[]): T; colorspaceName(): string }): T {
     if (classType === this.constructor) {
       return this as unknown as T;
     }
@@ -105,7 +103,7 @@ export abstract class Colorspace {
     const name = colorspaceClass.colorspaceName();
     const values = colorspaceClass
       .rawToTransformed(this.values)
-      .map((value) => (!Number.isNaN(value) ? parseFloat(value.toPrecision(4)) : "None"));
+      .map((value) => (value !== null ? parseFloat(value.toPrecision(4)) : "None"));
     const valuesString = values.join(", ");
 
     return `${name}(${valuesString})`;

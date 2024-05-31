@@ -258,7 +258,7 @@ let newColors = testColors.map((color) => {
     const [hue, saturationL, lightness] = colorjsTo(converter, "hsl").coords;
     const [, saturationV, value] = colorjsTo(converter, "hsv").coords;
 
-    newColor.hue = !Number.isNaN(hue) ? hue : 0;
+    newColor.hue = hue ?? 0;
     newColor.saturationL = saturationL;
     newColor.lightness = lightness;
     newColor.saturationV = saturationV;
@@ -271,7 +271,7 @@ let newColors = testColors.map((color) => {
     newColor.labA = labA;
     newColor.labB = labB;
     newColor.lchChroma = lchChroma;
-    newColor.lchHue = !Number.isNaN(lchHue) ? lchHue : 0;
+    newColor.lchHue = lchHue ?? 0;
 
     const [oklabLightness, oklabA, oklabB] = colorjsTo(converter, "oklab").coords;
     const [, oklchChroma, oklchHue] = colorjsTo(converter, "oklch").coords;
@@ -280,12 +280,12 @@ let newColors = testColors.map((color) => {
     newColor.oklabA = oklabA * 100;
     newColor.oklabB = oklabB * 100;
     newColor.oklchChroma = oklchChroma * 100;
-    newColor.oklchHue = !Number.isNaN(oklchHue) ? oklchHue : 0;
+    newColor.oklchHue = oklchHue ?? 0;
 
     const [okhslHue, okhslSaturation, okhslLightness] = colorjsTo(converter, "okhsl").coords;
     const [, okhsvSaturation, okhsvValue] = colorjsTo(converter, "okhsv").coords;
     
-    newColor.okhslHue = !Number.isNaN(okhslHue) ? okhslHue : 0;
+    newColor.okhslHue = okhslHue ?? 0;
     newColor.okhslSaturation = okhslSaturation * 100;
     newColor.okhslLightness = okhslLightness * 100;
     newColor.okhsvSaturation = okhsvSaturation * 100;

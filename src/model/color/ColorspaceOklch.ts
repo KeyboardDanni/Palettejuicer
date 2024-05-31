@@ -1,7 +1,7 @@
 import { immerable, produce } from "immer";
 
 import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
-import { fixArraySize } from "../../util/math";
+import { NullableNumber, divideOrNull, fixArraySize, multiplyOrNull } from "../../util/math";
 
 const CHANNEL_INFO: ChannelInfo[] = [
   {
@@ -40,15 +40,15 @@ export class ColorspaceOklch extends Colorspace {
     return "oklch";
   }
 
-  constructor(values?: number[]) {
+  constructor(values?: NullableNumber[]) {
     super(fixArraySize(values ?? [], 3));
   }
 
-  static rawToTransformed(raw: readonly number[]): number[] {
-    return [raw[0] * 100, raw[1] * 100, raw[2]];
+  static rawToTransformed(raw: readonly NullableNumber[]): NullableNumber[] {
+    return [multiplyOrNull(raw[0], 100), multiplyOrNull(raw[1], 100), raw[2]];
   }
-  static transformedToRaw(transformed: readonly number[]): number[] {
-    return [transformed[0] / 100, transformed[1] / 100, transformed[2]];
+  static transformedToRaw(transformed: readonly NullableNumber[]): NullableNumber[] {
+    return [divideOrNull(transformed[0], 100), divideOrNull(transformed[1], 100), transformed[2]];
   }
 
   with(lightness: number, chroma: number, hue: number): ColorspaceOklch {

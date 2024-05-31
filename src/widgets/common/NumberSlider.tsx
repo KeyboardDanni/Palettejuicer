@@ -1,9 +1,10 @@
 import { ChangeEvent } from "react";
 import { ControlledTextInput } from "./ControlledTextInput";
+import { NullableNumber } from "../../util/math";
 
 export type NumberSliderProps = {
-  value: number;
-  onChange: (value: number) => void;
+  value: NullableNumber;
+  onChange: (value: NullableNumber) => void;
   disabled?: boolean;
   min: number;
   max: number;
@@ -15,19 +16,28 @@ export type NumberSliderProps = {
 const LIMIT_ROUNDING_ERROR = 0.0005;
 
 export function NumberSlider(props: NumberSliderProps) {
-  const sliderValue = !Number.isNaN(props.value) ? props.value : 0;
-  const textValue = !Number.isNaN(props.value) ? props.value.toString() : "None";
+  const sliderValue = props.value !== null && !Number.isNaN(props.value) ? props.value : 0;
+  const textValue = props.value !== null ? props.value.toString() : "None";
   const displayValue =
-    !Number.isNaN(props.value) && props.step >= 1 ? (Math.round(props.value * 10) / 10).toString() : textValue;
+    props.value !== null && !Number.isNaN(props.value) && props.step >= 1
+      ? (Math.round(props.value * 10) / 10).toString()
+      : textValue;
   const limitDistance = Math.abs(props.max - props.min);
   const limitMin = props.min - LIMIT_ROUNDING_ERROR * limitDistance;
   const limitMax = props.max + LIMIT_ROUNDING_ERROR * limitDistance;
   const className =
-    props.value < limitMin || props.value > limitMax ? "slider-container out-of-range" : "slider-container";
+    props.value !== null && (props.value < limitMin || props.value > limitMax)
+      ? "slider-container out-of-range"
+      : "slider-container";
 
   function handleChange(event: ChangeEvent<HTMLInputElement>) {
-    let value = parseFloat(event.target.value);
-    if (Number.isNaN(value) && !props.allowNone) {
+    let value = null;
+
+    if (event.target.value.length > 0) {
+      value = parseFloat(event.target.value);
+    }
+
+    if ((value === null || Number.isNaN(value)) && !props.allowNone) {
       value = 0;
     }
 

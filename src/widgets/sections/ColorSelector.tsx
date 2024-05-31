@@ -9,6 +9,7 @@ import { ColorspaceRgb } from "../../model/color/ColorspaceRgb";
 import { PageTab } from "../common/PageTab";
 import { DropdownChoiceButton } from "../common/DropdownButton";
 import { PopupMenuChoiceData } from "../common/PopupMenu";
+import { NullableNumber } from "../../util/math";
 
 enum ColorSelectorPage {
   Oklch = "OkLCH",
@@ -60,8 +61,8 @@ const colorSelectorDropdownItems: PopupMenuChoiceData[] = [
 ];
 
 type ChannelSliderProps = {
-  value: number;
-  onChange: (value: number) => void;
+  value: NullableNumber;
+  onChange: (value: NullableNumber) => void;
   disabled: boolean;
   label: string;
   min: number;
@@ -127,7 +128,7 @@ function ColorspaceSliders(props: ColorspaceSlidersProps) {
   const sliderStyles = sliderInfoToCss(sliderInfo);
   const transformed = converted.transformed();
 
-  function handleChannelChange(channel: number, value: number) {
+  function handleChannelChange(channel: number, value: NullableNumber) {
     if (value === transformed[channel]) {
       return;
     }

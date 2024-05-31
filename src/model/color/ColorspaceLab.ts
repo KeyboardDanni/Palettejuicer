@@ -1,7 +1,7 @@
 import { immerable, produce } from "immer";
 
 import { ChannelInfo, Colorspace, ChannelType } from "./Colorspace";
-import { fixArraySize } from "../../util/math";
+import { NullableNumber, fixArraySize } from "../../util/math";
 
 const CHANNEL_INFO: ChannelInfo[] = [
   {
@@ -47,7 +47,7 @@ export class ColorspaceLab extends Colorspace {
     return "lab";
   }
 
-  constructor(values?: number[]) {
+  constructor(values?: NullableNumber[]) {
     super(fixArraySize(values ?? [], 3));
   }
 
