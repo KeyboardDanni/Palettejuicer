@@ -112,7 +112,7 @@ function paletteCelClassName(props: PaletteCelProps, gamutDistance: number) {
   let className = "palette-cel";
 
   if (props.active || gamutDistance > GAMUT_ROUNDING_ERROR) {
-    if (props.color.lab.lightness ?? 0 > 50) {
+    if ((props.color.lab.lightness ?? 0) > 50) {
       className += " light-color";
     } else {
       className += " dark-color";
