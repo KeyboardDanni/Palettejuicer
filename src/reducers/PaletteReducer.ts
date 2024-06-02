@@ -171,7 +171,9 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
     case PaletteActionType.FloodFillBaseColor: {
       const args = action.args as FloodFillBaseColorArgs;
       const offset = draft.indexToOffset(args.index);
-      if (offset === null) return;
+      if (offset === null || draft.baseColors[offset].data.colorCloseTo(args.color.data, 0)) {
+        return;
+      }
 
       doFloodFill(draft, args);
       break;

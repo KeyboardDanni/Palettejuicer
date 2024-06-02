@@ -50,6 +50,10 @@ export class UndoHistory<T> {
   }
 
   autoConsolidate<A extends object>(state: T, action: A, consolidator: Consolidator<A>): UndoHistory<T> {
+    if (this.current() === state) {
+      return this;
+    }
+
     const sameType = this.lastAction?.constructor === action.constructor;
     const now = Date.now();
     const isRecent = now - this.lastChangeTime < CONSOLIDATE_MAX_TIME_MS;

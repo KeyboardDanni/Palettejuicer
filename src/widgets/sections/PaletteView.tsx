@@ -16,6 +16,7 @@ import { PaletteToolType, PaletteViewState } from "../../model/AppViewState";
 
 class PaletteViewRefState {
   scrubbing: boolean = false;
+  lastScrubIndex: CelIndex | null = null;
 }
 
 type PaletteTopRulerProps = {
@@ -249,6 +250,25 @@ const PaletteRow = memo(function (props: PaletteRowProps) {
   );
 });
 
+function indexForClickEvent(event: React.MouseEvent): CelIndex | null {
+  const elements = document.elementsFromPoint(event.clientX, event.clientY);
+
+  for (const element of elements) {
+    if (element.classList.contains("palette-cel")) {
+      const indexData = element
+        .getAttribute("data-cel-index")
+        ?.split(",")
+        ?.map((value) => parseInt(value));
+
+      if (indexData) {
+        return { x: indexData[0], y: indexData[1] };
+      }
+    }
+  }
+
+  return null;
+}
+
 export type PaletteViewProps = {
   palette: Palette;
   onPaletteChange: React.Dispatch<PaletteAction>;
@@ -354,27 +374,6 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
     ]
   );
 
-  const handleMouse = useCallback(
-    function (event: React.MouseEvent) {
-      const elements = document.elementsFromPoint(event.clientX, event.clientY);
-
-      for (const element of elements) {
-        if (element.classList.contains("palette-cel")) {
-          const indexData = element
-            .getAttribute("data-cel-index")
-            ?.split(",")
-            ?.map((value) => parseInt(value));
-
-          if (indexData) {
-            handleIndexClick({ x: indexData[0], y: indexData[1] });
-            return;
-          }
-        }
-      }
-    },
-    [handleIndexClick]
-  );
-
   const handleClick = useCallback(
     function (event: React.MouseEvent) {
       const elements = document.elementsFromPoint(event.clientX, event.clientY);
@@ -385,20 +384,31 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
         }
       }
 
-      refState.current.scrubbing = true;
+      const index = indexForClickEvent(event);
 
-      handleMouse(event);
+      if (index) {
+        refState.current.scrubbing = true;
+        refState.current.lastScrubIndex = { ...index };
+
+        handleIndexClick(index);
+      }
     },
-    [refState, handleMouse]
+    [refState, handleIndexClick]
   );
 
   const handleMouseMove = useCallback(
     function (event: React.MouseEvent) {
       if (!refState.current.scrubbing) return;
 
-      handleMouse(event);
+      const last = refState.current.lastScrubIndex;
+      const index = indexForClickEvent(event);
+
+      if (index && (!last || last.x !== index.x || last.y !== index.y)) {
+        refState.current.lastScrubIndex = { ...index };
+        handleIndexClick(index);
+      }
     },
-    [refState, handleMouse]
+    [refState, handleIndexClick]
   );
 
   useEffect(() => {

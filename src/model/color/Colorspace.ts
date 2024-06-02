@@ -100,7 +100,7 @@ export abstract class Colorspace {
       if (Number.isNaN(value)) {
         if (!Number.isNaN(otherValue)) return false;
       }
-      if (value !== otherValue && Math.abs(value! - otherValue!) > delta) {
+      if (value !== otherValue && (delta <= 0 || Math.abs(value! - otherValue!) > delta)) {
         return false;
       }
     }
