@@ -3,6 +3,7 @@ import { spaceToSpace, spaceToSpaceValues } from "../../util/colorjs";
 import { NullableNumber, steps } from "../../util/math";
 
 export const GAMUT_ROUNDING_ERROR = 0.0005;
+const CLOSE_TO_ROUNDING_ERROR = 0.0005;
 const SLIDER_INFO_RESOLUTION = 128;
 
 export enum ChannelType {
@@ -83,6 +84,28 @@ export abstract class Colorspace {
     const raw = this.transformedToRaw(transformed);
 
     return new (this as any)(raw);
+  }
+
+  colorCloseTo(other: Colorspace, delta: number = CLOSE_TO_ROUNDING_ERROR): boolean {
+    if (this.constructor !== other.constructor || this.values.length !== other.values.length) {
+      return false;
+    }
+
+    for (const [i, value] of this.values.entries()) {
+      const otherValue = other.values[i];
+
+      if (value === null) {
+        if (otherValue !== null) return false;
+      }
+      if (Number.isNaN(value)) {
+        if (!Number.isNaN(otherValue)) return false;
+      }
+      if (value !== otherValue && Math.abs(value! - otherValue!) > delta) {
+        return false;
+      }
+    }
+
+    return true;
   }
 
   transformed(): NullableNumber[] {

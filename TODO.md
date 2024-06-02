@@ -16,12 +16,11 @@
 
 ### UI papercuts
 
+- [ ] Inform user if start/end cels don't form a strip
 - [ ] Better tooltip prompt for picking cel
 - [ ] Dark mode
 - [ ] Show color preview of calculations in list to make them easy to find
 - [ ] Indicate which cels are affected by a calculation on selection
-- [ ] Inform user if start/end cels don't form a strip
-- [ ] Multi-selection in palette
 - [ ] Restore view selections on undo/redo
 
 ### Other
@@ -58,3 +57,4 @@
 - [x] Select export region
 - [x] Color preview on sliders
 - [x] Fix OkHSL/OkHSV incorrect hue fade
+- [x] Paint/fill palette cels

@@ -1,9 +1,8 @@
-import { immerable, produce } from "immer";
-import { useImmer } from "use-immer";
+import { produce } from "immer";
+import { DraftFunction, useImmer } from "use-immer";
 import { useCallback, useState } from "react";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 
-import { CelIndex } from "../util/cel";
 import { ProjectAction } from "../reducers/ProjectReducer";
 import { Project } from "../model/Project";
 import { CelPickerContext, CelPickerData, CelPickerSetterContext } from "../contexts/CelPickerContext";
@@ -11,13 +10,7 @@ import { AppColorSelector } from "./sections/AppColorSelector";
 import { AppCalculations } from "./sections/AppCalculations";
 import { AppProperties } from "./sections/AppProperties";
 import { AppPalette } from "./sections/AppPalette";
-
-class AppViewState {
-  [immerable] = true;
-
-  readonly activeColorIndex: CelIndex = { x: 0, y: 0 };
-  readonly activeCalcIndex: number = 0;
-}
+import { AppViewState, PaletteViewState } from "../model/AppViewState";
 
 export type AppBodyProps = {
   project: Project;
@@ -31,26 +24,30 @@ export function AppBody(props: AppBodyProps) {
   const [celPicker, setCelPicker] = useState<CelPickerData | null>(null);
   let currentViewState = viewState;
 
-  if (!props.project.palette.indexInBounds(viewState.activeColorIndex)) {
+  if (!props.project.palette.indexInBounds(viewState.palette.activeIndex)) {
     currentViewState = produce(currentViewState, (draft) => {
-      draft.activeColorIndex = props.project.palette.clampIndex(draft.activeColorIndex);
+      draft.palette.activeIndex = props.project.palette.clampIndex(draft.palette.activeIndex);
     });
     updateViewState(currentViewState);
   }
-
-  const setActiveColorIndex = useCallback(
-    function (index: CelIndex) {
-      updateViewState((draft) => {
-        draft.activeColorIndex = index;
-      });
-    },
-    [updateViewState]
-  );
 
   const setActiveCalcIndex = useCallback(
     function (index: number) {
       updateViewState((draft) => {
         draft.activeCalcIndex = index;
+      });
+    },
+    [updateViewState]
+  );
+
+  const setPaletteViewState = useCallback(
+    function (arg: PaletteViewState | DraftFunction<PaletteViewState>) {
+      updateViewState((draft) => {
+        if (arg instanceof PaletteViewState) {
+          draft.palette = arg;
+        } else {
+          arg(draft.palette);
+        }
       });
     },
     [updateViewState]
@@ -68,7 +65,7 @@ export function AppBody(props: AppBodyProps) {
                     <AppColorSelector
                       palette={props.project.palette}
                       onPaletteChange={props.onProjectChange}
-                      activeColorIndex={currentViewState.activeColorIndex}
+                      activeColorIndex={currentViewState.palette.activeIndex}
                     />
                     <AppCalculations
                       useCalculations={props.project.palette.useCalculations}
@@ -88,8 +85,8 @@ export function AppBody(props: AppBodyProps) {
               <AppPalette
                 palette={props.project.palette}
                 onPaletteChange={props.onProjectChange}
-                activeColorIndex={currentViewState.activeColorIndex}
-                onIndexChange={setActiveColorIndex}
+                viewState={currentViewState.palette}
+                onViewStateChange={setPaletteViewState}
               />
             </div>
           </div>

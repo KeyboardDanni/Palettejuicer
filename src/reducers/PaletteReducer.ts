@@ -10,6 +10,7 @@ export const enum PaletteActionType {
   ResizePalette,
   SetExportRange,
   SetBaseColor,
+  FloodFillBaseColor,
   EnableCalculations,
   AddCalculation,
   CloneCalculation,
@@ -49,6 +50,8 @@ export interface SetBaseColorArgs extends PaletteActionArgs {
   index: CelIndex;
   color: Color;
 }
+
+export interface FloodFillBaseColorArgs extends SetBaseColorArgs {}
 
 export interface EnableCalculationsArgs extends BooleanArgs {}
 
@@ -95,6 +98,49 @@ function checkCalcIndex(draft: Draft<Palette>, calcIndex: number, isAdd: boolean
   return true;
 }
 
+function doFloodFill(draft: Draft<Palette>, args: FloodFillBaseColorArgs) {
+  let walkers = [{ x: args.index.x, y: args.index.y }];
+  const covered = Array<boolean>(draft.width * draft.height).fill(false);
+  const colorToReplace = draft.color(args.index).data;
+  const target = args.color.data;
+
+  while (walkers.length > 0) {
+    const nextWalkers = [];
+
+    // Do a horizontal sweep with each walker
+    for (const walker of walkers) {
+      const y = walker.y;
+      let x = walker.x;
+      const firstIndex = { x, y };
+
+      if (!draft.indexInBounds(firstIndex)) continue;
+      if (draft.color(firstIndex).data.colorCloseTo(target)) continue;
+      if (covered[x + y * draft.width] === true) continue;
+
+      while (x > 0 && draft.color({ x: x - 1, y }).data.colorCloseTo(colorToReplace)) {
+        x--;
+      }
+      while (x < draft.width && draft.color({ x, y }).data.colorCloseTo(colorToReplace)) {
+        draft.baseColors[x + y * draft.width] = castDraft(args.color);
+
+        covered[x + y * draft.width] = true;
+
+        // Next walkers extend above/below
+        if (y > 0) {
+          nextWalkers.push({ x: x, y: y - 1 });
+        }
+        if (y < draft.height - 1) {
+          nextWalkers.push({ x: x, y: y + 1 });
+        }
+
+        x++;
+      }
+    }
+
+    walkers = nextWalkers;
+  }
+}
+
 export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
   let recompute = true;
 
@@ -119,6 +165,15 @@ export function PaletteReducer(draft: Draft<Palette>, action: PaletteAction) {
       if (offset === null) return;
 
       draft.baseColors[offset] = castDraft(args.color);
+      break;
+    }
+
+    case PaletteActionType.FloodFillBaseColor: {
+      const args = action.args as FloodFillBaseColorArgs;
+      const offset = draft.indexToOffset(args.index);
+      if (offset === null) return;
+
+      doFloodFill(draft, args);
       break;
     }
 

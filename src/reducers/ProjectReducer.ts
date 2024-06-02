@@ -89,10 +89,14 @@ export function ProjectConsolidator(previous: ProjectAction, action: ProjectActi
 
       switch (paletteAction.actionType) {
         case PaletteActionType.SetBaseColor: {
-          const indexPrev = (palettePrev.args as SetBaseColorArgs).index;
-          const indexNext = (paletteAction.args as SetBaseColorArgs).index;
+          const argsPrev = palettePrev.args as SetBaseColorArgs;
+          const argsNext = paletteAction.args as SetBaseColorArgs;
+          const indexPrev = argsPrev.index;
+          const indexNext = argsNext.index;
+          const colorPrev = argsPrev.color.data;
+          const colorNext = argsNext.color.data;
 
-          return indexNext.x === indexPrev.x && indexNext.y === indexPrev.y;
+          return (indexNext.x === indexPrev.x && indexNext.y === indexPrev.y) || colorPrev.colorCloseTo(colorNext);
         }
         case PaletteActionType.SetCalculation: {
           const indexPrev = (palettePrev.args as SetCalculationArgs).index;

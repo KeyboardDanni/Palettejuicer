@@ -1,4 +1,5 @@
 import { ChangeEvent, useCallback, useRef } from "react";
+import { Updater } from "use-immer";
 import { PopupActions } from "reactjs-popup/dist/types";
 
 import {
@@ -13,12 +14,61 @@ import { PaletteView } from "./PaletteView";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
 import { DropdownButton } from "../common/DropdownButton";
 import { CelSelector } from "../common/CelSelector";
+import { PaletteToolType, PaletteViewState } from "../../model/AppViewState";
+
+type PaletteToolbarButtonProps = {
+  tool: PaletteToolType;
+  title: string;
+  icon: string;
+  viewState: PaletteViewState;
+  onViewStateChange: Updater<PaletteViewState>;
+};
+
+function PaletteToolbarButton(props: PaletteToolbarButtonProps) {
+  const active = props.tool === props.viewState.tool;
+
+  function handleClick() {
+    props.onViewStateChange((draft) => {
+      draft.tool = props.tool;
+    });
+  }
+
+  return (
+    <>
+      <button onClick={handleClick} className={active ? "thin-button selected" : "thin-button"} title={props.title}>
+        <i className={props.icon}></i>
+      </button>
+    </>
+  );
+}
+
+type PaletteToolbarProps = {
+  viewState: PaletteViewState;
+  onViewStateChange: Updater<PaletteViewState>;
+};
+
+function PaletteToolbar(props: PaletteToolbarProps) {
+  return (
+    <>
+      <div className="palette-toolbar">
+        <PaletteToolbarButton tool={PaletteToolType.Select} title="Select cel" icon="icon-mouse" {...props} />
+        <PaletteToolbarButton tool={PaletteToolType.Paint} title="Paint color on cels" icon="icon-paint" {...props} />
+        <PaletteToolbarButton
+          tool={PaletteToolType.FloodFill}
+          title="Flood fill color over cels"
+          icon="icon-bucket"
+          {...props}
+        />
+      </div>
+    </>
+  );
+}
 
 type AppPaletteProps = {
   palette: Palette;
   onPaletteChange: React.Dispatch<PaletteAction>;
-  activeColorIndex: CelIndex;
-  onIndexChange: (index: CelIndex) => void;
+  viewState: PaletteViewState;
+  onViewStateChange: Updater<PaletteViewState>;
 };
 
 function PaletteResizer(props: AppPaletteProps) {
@@ -27,6 +77,8 @@ function PaletteResizer(props: AppPaletteProps) {
   const canShrinkY = oldHeight > PALETTE_MIN_HEIGHT;
   const canGrowX = oldWidth < PALETTE_MAX_WIDTH;
   const canGrowY = oldHeight < PALETTE_MAX_HEIGHT;
+  const activeIndex = props.viewState.activeIndex;
+  const cursorIndex = props.viewState.cursorIndex;
 
   function resize(widthDiff: number, heightDiff: number, offsetX: number, offsetY: number) {
     props.onPaletteChange(
@@ -40,7 +92,10 @@ function PaletteResizer(props: AppPaletteProps) {
         },
       })
     );
-    props.onIndexChange({ x: props.activeColorIndex.x + offsetX, y: props.activeColorIndex.y + offsetY });
+    props.onViewStateChange((draft) => {
+      draft.activeIndex = { x: activeIndex.x + offsetX, y: activeIndex.y + offsetY };
+      draft.cursorIndex = { x: cursorIndex.x + offsetX, y: cursorIndex.y + offsetY };
+    });
   }
 
   return (
@@ -157,15 +212,7 @@ function PaletteExportRange(props: AppPaletteProps) {
 
 export function AppPalette(props: AppPaletteProps) {
   const popupRef = useRef<PopupActions>(null);
-  const onIndexChange = props.onIndexChange;
   const onPaletteChange = props.onPaletteChange;
-
-  const handleClick = useCallback(
-    function (index: CelIndex) {
-      onIndexChange(index);
-    },
-    [onIndexChange]
-  );
 
   const handleNameChange = useCallback(
     function (event: ChangeEvent<HTMLInputElement>) {
@@ -183,6 +230,7 @@ export function AppPalette(props: AppPaletteProps) {
     <>
       <div id="document-palette" className="section">
         <div className="palette-header">
+          <PaletteToolbar viewState={props.viewState} onViewStateChange={props.onViewStateChange} />
           <DropdownButton label="Palette" className="thin-button" popupRef={popupRef}>
             <div className="palette-menu">
               <PaletteResizer {...props} />
@@ -201,8 +249,8 @@ export function AppPalette(props: AppPaletteProps) {
           <PaletteView
             palette={props.palette}
             onPaletteChange={props.onPaletteChange}
-            active={props.activeColorIndex}
-            onIndexChange={handleClick}
+            viewState={props.viewState}
+            onViewStateChange={props.onViewStateChange}
             autoFocus={true}
           />
         </div>

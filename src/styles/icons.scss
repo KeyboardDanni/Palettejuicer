@@ -78,6 +78,21 @@
   content: "\f05b";
 }
 
+.icon-mouse::before {
+  @include icon-solid;
+  content: "\f245";
+}
+
+.icon-paint::before {
+  @include icon-solid;
+  content: "\f55d";
+}
+
+.icon-bucket::before {
+  @include icon-solid;
+  content: "\f576";
+}
+
 .icon-check::before {
   @include icon-solid;
   content: "\f00c";
