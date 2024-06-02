@@ -354,10 +354,8 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
     ]
   );
 
-  const handleClick = useCallback(
+  const handleMouse = useCallback(
     function (event: React.MouseEvent) {
-      refState.current.scrubbing = true;
-
       const elements = document.elementsFromPoint(event.clientX, event.clientY);
 
       for (const element of elements) {
@@ -369,23 +367,38 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
 
           if (indexData) {
             handleIndexClick({ x: indexData[0], y: indexData[1] });
+            return;
           }
-        }
-        if (element.classList.contains("os-scrollbar-handle")) {
-          refState.current.scrubbing = false;
         }
       }
     },
-    [refState, handleIndexClick]
+    [handleIndexClick]
+  );
+
+  const handleClick = useCallback(
+    function (event: React.MouseEvent) {
+      const elements = document.elementsFromPoint(event.clientX, event.clientY);
+
+      for (const element of elements) {
+        if (element.classList.contains("os-scrollbar-handle")) {
+          return;
+        }
+      }
+
+      refState.current.scrubbing = true;
+
+      handleMouse(event);
+    },
+    [refState, handleMouse]
   );
 
   const handleMouseMove = useCallback(
     function (event: React.MouseEvent) {
       if (!refState.current.scrubbing) return;
 
-      handleClick(event);
+      handleMouse(event);
     },
-    [refState, handleClick]
+    [refState, handleMouse]
   );
 
   useEffect(() => {
