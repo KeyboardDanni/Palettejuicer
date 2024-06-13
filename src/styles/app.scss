@@ -31,6 +31,10 @@ $logo-height: 64px;
     min-height: -webkit-fill-available;
     min-height: 100svh;
   }
+
+  @media (max-height: $size-compact-max-height) {
+    padding: $size-section-padding 0 0 0;
+  }
 }
 
 .logo {
@@ -95,6 +99,10 @@ $logo-height: 64px;
       }
     }
   }
+
+  @media (max-height: $size-compact-max-height) {
+    padding: 0 $size-section-padding;
+  }
 }
 
 #app-body {
@@ -113,6 +121,11 @@ $logo-height: 64px;
       flex-direction: column;
       row-gap: $size-section-padding;
     }
+
+    @media (max-height: $size-compact-max-height) {
+      row-gap: 0;
+      column-gap: 0;
+    }
   }
 }
 
@@ -124,6 +137,10 @@ $logo-height: 64px;
   @media (max-width: $size-portrait-max) {
     flex-direction: row;
     margin: 0 (-$size-section-padding);
+
+    @media (max-height: $size-compact-max-height) {
+      margin: 0;
+    }
   }
 }
 
@@ -143,6 +160,28 @@ $logo-height: 64px;
 
     .section {
       width: auto;
+    }
+  }
+
+  @media (max-height: $size-compact-max-height) {
+    gap: 0;
+
+    @media not (max-width: $size-portrait-max) {
+      .section {
+        border-right: none;
+
+        &:not(:last-child) {
+          border-bottom: none;
+        }
+      }
+    }
+
+    @media (max-width: $size-portrait-max) {
+      padding: 0 0 calc($size-scrollbar-flat + ($size-section-padding / 2)) 0;
+
+      .section:not(:last-child) {
+        border-right: none;
+      }
     }
   }
 }
