@@ -2,9 +2,11 @@
 @use "./_mixins.scss" as *;
 @use "sass:color";
 
-$size-ruler-width: 2.1rem;
-$size-palette-color-min: 1.8rem;
-$size-palette-color-max: 8rem;
+$size-ruler-width: 2.2rem;
+$size-ruler-margin: 0.4rem;
+$size-palette-margin: 0.3rem;
+$size-scrollbar-offset: $size-palette-margin + $size-scrollbar-recess + $size-scrollbar-recess-spacing -
+  $size-widget-outline;
 $color-ruler-tick: color.mix($color-section-gray-border, $color-section-gray, 50%);
 
 @mixin box-corners($color, $thickness) {
@@ -43,29 +45,40 @@ input[type="text"].palette-rename {
   }
 }
 
+.palette-ruler-corner {
+  width: $size-ruler-width;
+  height: $size-ruler-width;
+}
+
 .palette-ruler-row {
   display: flex;
   flex-direction: row;
-  margin: -0.4rem ($size-scrollbar-recess + $size-scrollbar-recess-spacing) 0.2rem
-    (0.1rem + $size-ruler-width + $size-widget-outline);
+  height: $size-ruler-width;
+  margin-left: $size-ruler-margin;
+  margin-right: $size-scrollbar-offset + $size-widget-outline;
+
+  background-color: $color-section-gray;
   overflow: hidden;
 }
 
 .palette-ruler-column {
   display: flex;
-  flex-direction: row;
+  flex-direction: column;
+  width: $size-ruler-width;
+  margin-top: $size-ruler-margin;
+  margin-bottom: $size-scrollbar-offset + $size-widget-outline;
+
   background-color: $color-section-gray;
+  overflow: hidden;
 }
 
 .palette-ruler-cel {
   color: $color-text-gray;
-  font-size: 1.2rem;
+  font-size: 1.3rem;
   text-align: center;
   align-self: stretch;
   align-content: center;
-  overflow: hidden;
   border-radius: 0.3rem;
-  z-index: 2;
 
   &.palette-ruler-active {
     color: $color-text-selected;
@@ -81,14 +94,12 @@ input[type="text"].palette-rename {
 }
 
 .palette-ruler-row-cel {
-  min-width: $size-palette-color-min;
-  max-width: $size-palette-color-max;
-  padding: 0.4rem 0 0.3rem 0;
-  flex: 1;
+  width: var(--palette-cel-size);
+  flex: 0 0 auto;
   position: relative;
 
   &:not(.palette-ruler-active):not(.palette-ruler-cursor):after {
-    @include layered-pseudo-element(0.8rem, 0, 0.3rem, 0);
+    @include layered-pseudo-element(0.6rem, 0, 0.3rem, 0);
 
     border-left: 0.05rem solid $color-ruler-tick;
     border-right: 0.05rem solid $color-ruler-tick;
@@ -96,14 +107,12 @@ input[type="text"].palette-rename {
 }
 
 .palette-ruler-column-cel {
-  width: 0.3rem + $size-ruler-width;
-  min-width: 0.3rem + $size-ruler-width;
-  margin-right: 0.2rem + $size-widget-outline;
-
+  height: var(--palette-cel-size);
+  flex: 0 0 auto;
   position: relative;
 
   &:not(.palette-ruler-active):not(.palette-ruler-cursor):after {
-    @include layered-pseudo-element(0, 0.3rem, 0, -0.7rem + $size-ruler-width - $size-widget-outline);
+    @include layered-pseudo-element(0, 0.3rem, 0, 0.6rem);
 
     border-top: 0.05rem solid $color-ruler-tick;
     border-bottom: 0.05rem solid $color-ruler-tick;
@@ -111,46 +120,57 @@ input[type="text"].palette-rename {
 }
 
 .palette {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  grid-template-rows: minmax(0, 1fr);
+  align-content: start;
   flex: 1 1 0;
   margin: -0.4rem;
   overflow: hidden;
+  --palette-cel-size: 6rem;
 
-  @media (max-height: $size-portrait-scroll-min) {
+  @media (max-width: $size-portrait-max) and (max-height: $size-portrait-scroll-min) {
     flex: 1;
+  }
+
+  &.palette-ruler-active {
+    grid-template-columns: auto minmax(0, 1fr);
+    grid-template-rows: auto minmax(0, 1fr);
   }
 
   .palette-scroll {
     display: flex;
-    flex-direction: column;
-    overflow-x: visible;
-    overflow-y: hidden;
+    flex-direction: row;
+    overflow: hidden;
     position: relative;
-    padding: 0.5rem;
+    padding: $size-palette-margin + $size-widget-outline;
     outline: none;
+    max-width: fit-content;
+    max-height: 100%;
 
-    &.palette-scroll-ruler {
-      padding-left: 0;
-    }
-
-    $right-offset: 0.4rem + $size-scrollbar-recess + $size-scrollbar-recess-spacing - $size-widget-outline;
-
+    // Border overlay
     &:after {
-      @include layered-pseudo-element(0.4rem, $right-offset, 0.4rem, 0.4rem);
+      @include layered-pseudo-element(
+        $size-palette-margin,
+        $size-scrollbar-offset,
+        $size-scrollbar-offset,
+        $size-palette-margin
+      );
       pointer-events: none;
 
       border: $size-widget-outline solid $color-section-border;
       border-radius: $size-button-radius;
-      outline: $color-section-gray ($size-button-radius * 0.8 - ($size-widget-outline * 2)) solid;
+      outline: $color-section-gray ($size-button-radius * 0.8 - $size-widget-outline) solid;
     }
 
-    &.palette-scroll-ruler:after {
-      @include layered-pseudo-element(0.4rem, $right-offset, 0.4rem, 0.4rem + $size-ruler-width + $size-widget-outline);
-    }
-
+    // Focus rectangle overlay
     &:focus-visible:before {
-      @include layered-pseudo-element(0.4rem, 0.4rem, 0.4rem, 0.4rem);
+      @include layered-pseudo-element(
+        $size-palette-margin,
+        $size-palette-margin,
+        $size-palette-margin,
+        $size-palette-margin
+      );
       pointer-events: none;
       z-index: 2;
 
@@ -158,16 +178,6 @@ input[type="text"].palette-rename {
       outline: $color-widget-accent 0.2rem solid;
       outline-offset: 0.1rem;
     }
-
-    &.palette-scroll-ruler:focus-visible:before {
-      @include layered-pseudo-element(0.4rem, 0.4rem, 0.4rem, 0.4rem + $size-ruler-width + $size-widget-outline);
-    }
-
-    [data-overlayscrollbars-contents] {
-      background-color: $color-section-gray-border;
-    }
-
-    @include scrollbar-with-recess();
   }
 
   &.cel-picker-active {
@@ -178,21 +188,14 @@ input[type="text"].palette-rename {
 .palette-row {
   display: flex;
   flex-direction: row;
-  flex: 1;
-
-  .palette-cel {
-    flex: 1;
-  }
 }
 
 .palette-cel {
-  min-width: $size-palette-color-min;
-  min-height: $size-palette-color-min;
-  max-width: $size-palette-color-max;
-  max-height: $size-palette-color-max;
+  width: var(--palette-cel-size);
+  height: var(--palette-cel-size);
   margin: 0;
   padding: 0;
-  aspect-ratio: 1;
+  flex: 0 0 auto;
   touch-action: manipulation;
 
   &.active-cel {

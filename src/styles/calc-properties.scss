@@ -14,8 +14,6 @@
     overflow-x: clip;
     overflow-y: hidden;
 
-    @include scrollbar-with-recess();
-
     // Hack for scrollbar sometimes appearing when it doesn't need to
     [data-overlayscrollbars~="host"],
     [data-overlayscrollbars~="viewport"] {

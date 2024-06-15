@@ -9,9 +9,10 @@
 
 ### Calculations
 
+- [ ] Chroma boost for interpolate
 - [ ] Adjust Color calculation
 - [ ] Gradient Smoothing calculation
-- [ ] Additional interpolation settings
+- [ ] Adjust interpolate power curve for separate channels
 - [ ] Bake calculation
 
 ### UI papercuts
@@ -25,6 +26,7 @@
 
 ### Other
 
+- [ ] Example projects
 - [ ] Image preview
 
 # Done
@@ -58,3 +60,4 @@
 - [x] Color preview on sliders
 - [x] Fix OkHSL/OkHSV incorrect hue fade
 - [x] Paint/fill palette cels
+- [x] Better palette view scaling

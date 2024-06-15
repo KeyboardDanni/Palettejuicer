@@ -46,7 +46,7 @@ export function OutOfGamutPage() {
         </p>
         <ColorSelector color={IN_GAMUT_COLOR} computed={false} onColorChange={(_) => {}} />
         <p>Let's put this side by side with the clipped color:</p>
-        <div className="color-container">
+        <div className="color-container color-container-huge">
           <div className="palette-row">
             <PaletteCel color={CLIPPED_GAMUT_COLOR} />
             <PaletteCel color={IN_GAMUT_COLOR} />
@@ -61,7 +61,7 @@ export function OutOfGamutPage() {
           In addition to the color sliders, Palettejuicer will also helpfully mark any out-of-gamut colors in the
           palette itself:
         </p>
-        <div className="color-container">
+        <div className="color-container color-container-large">
           <div className="palette-row">
             <PaletteCel color={IN_GAMUT_COLOR} />
             <PaletteCel color={OUT_OF_GAMUT_COLOR} />

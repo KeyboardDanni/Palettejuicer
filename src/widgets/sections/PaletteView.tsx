@@ -1,4 +1,4 @@
-import { memo, useCallback, useContext, useEffect, useRef, useState } from "react";
+import { ForwardedRef, forwardRef, memo, useCallback, useContext, useEffect, useRef, useState } from "react";
 import { Updater } from "use-immer";
 import { OverlayScrollbarsComponent } from "overlayscrollbars-react";
 import { PopupActions } from "reactjs-popup/dist/types";
@@ -13,6 +13,11 @@ import { CelPickerContext, CelPickerSetterContext } from "../../contexts/CelPick
 import { AppOptionsContext } from "../../contexts/AppOptionsContext";
 import { GAMUT_ROUNDING_ERROR } from "../../model/color/Colorspace";
 import { PaletteToolType, PaletteViewState } from "../../model/AppViewState";
+import { OverlayScrollbars } from "overlayscrollbars";
+import { clamp, pxToRem } from "../../util/math";
+
+const PALETTE_CEL_SIZE_MIN = 2.2;
+const PALETTE_CEL_SIZE_MAX = 9.6;
 
 class PaletteViewRefState {
   scrubbing: boolean = false;
@@ -25,7 +30,7 @@ type PaletteTopRulerProps = {
   cursorX: number;
 };
 
-const PaletteTopRuler = memo(function (props: PaletteTopRulerProps) {
+const PaletteTopRuler = forwardRef(function (props: PaletteTopRulerProps, ref: ForwardedRef<HTMLDivElement>) {
   const row = [];
 
   for (let x = 0; x < props.columns; x++) {
@@ -46,7 +51,43 @@ const PaletteTopRuler = memo(function (props: PaletteTopRulerProps) {
 
   return (
     <>
-      <div className="palette-ruler-row">{row}</div>
+      <div ref={ref} className="palette-ruler-row">
+        {row}
+      </div>
+    </>
+  );
+});
+
+type PaletteLeftRulerProps = {
+  rows: number;
+  activeY: number;
+  cursorY: number;
+};
+
+const PaletteLeftRuler = forwardRef(function (props: PaletteLeftRulerProps, ref: ForwardedRef<HTMLDivElement>) {
+  const column = [];
+
+  for (let y = 0; y < props.rows; y++) {
+    let className = "palette-ruler-cel palette-ruler-column-cel";
+
+    if (y === props.activeY) {
+      className += " palette-ruler-active";
+    } else if (y === props.cursorY) {
+      className += " palette-ruler-cursor";
+    }
+
+    column.push(
+      <div key={y} className={className}>
+        {y}
+      </div>
+    );
+  }
+
+  return (
+    <>
+      <div ref={ref} className="palette-ruler-column">
+        {column}
+      </div>
     </>
   );
 });
@@ -148,6 +189,13 @@ function paletteCelClassName(props: PaletteCelProps, gamutDistance: number) {
 export function PaletteCel(props: PaletteCelProps) {
   const [popupOpen, setPopupOpen] = useState(false);
   const popupRef = useRef<PopupActions>(null);
+  const ref = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    if (props.cursor && navigator.userActivation.isActive) {
+      ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
+    }
+  }, [props.cursor]);
 
   const handleClick = useCallback(
     function (event: React.MouseEvent) {
@@ -181,6 +229,7 @@ export function PaletteCel(props: PaletteCelProps) {
       title={description}
       onMouseDown={handleClick}
       onContextMenu={handleContextMenu}
+      ref={ref}
     />
   );
 
@@ -196,34 +245,11 @@ type PaletteRowProps = {
   y: number;
   activeX: number | null;
   cursorX: number | null;
-  ruler: boolean;
   onColorChange?: (index: CelIndex, color: Color) => void;
 };
 
 const PaletteRow = memo(function (props: PaletteRowProps) {
-  useEffect(() => {
-    if (props.cursorX !== null && navigator.userActivation.isActive) {
-      ref.current?.scrollIntoView({ behavior: "smooth", block: "nearest" });
-    }
-  }, [props.cursorX]);
-
-  const ref = useRef<HTMLDivElement>(null);
   const row = [];
-  let className = "palette-ruler-cel palette-ruler-column-cel";
-
-  if (props.activeX !== null) {
-    className += " palette-ruler-active";
-  } else if (props.cursorX !== null) {
-    className += " palette-ruler-cursor";
-  }
-
-  if (props.ruler) {
-    row.push(
-      <div key={-1} className="palette-ruler-column">
-        <div className={className}>{props.y}</div>
-      </div>
-    );
-  }
 
   for (let x = 0; x < props.palette.width; x++) {
     const active = x === props.activeX;
@@ -243,9 +269,7 @@ const PaletteRow = memo(function (props: PaletteRowProps) {
 
   return (
     <>
-      <div className="palette-row" ref={ref}>
-        {row}
-      </div>
+      <div className="palette-row">{row}</div>
     </>
   );
 });
@@ -269,6 +293,34 @@ function indexForClickEvent(event: React.MouseEvent): CelIndex | null {
   return null;
 }
 
+function updatePaletteCelSize(columns: number, rows: number, mainDiv: HTMLDivElement | null) {
+  if (!mainDiv) return `${PALETTE_CEL_SIZE_MIN}rem`;
+
+  const container = mainDiv.querySelector(".palette-container");
+  const scroller = mainDiv.querySelector(".palette-scroll");
+  const contents = mainDiv.querySelector("[data-overlayscrollbars-contents]");
+
+  if (!container || !scroller || !contents) return "4rem";
+
+  const containerStyle = getComputedStyle(container);
+  const scrollerStyle = getComputedStyle(scroller);
+  const contentsStyle = getComputedStyle(contents);
+
+  const scrollbarWidth = pxToRem(contentsStyle.marginRight);
+  const padding = pxToRem(scrollerStyle.padding);
+  const containerWidth = pxToRem(containerStyle.width) - scrollbarWidth - padding * 2;
+  const containerHeight = pxToRem(containerStyle.height) - scrollbarWidth - padding * 2;
+
+  const maxWidth = Math.floor((containerWidth / columns) * 10) / 10;
+  const maxHeight = Math.floor((containerHeight / rows) * 10) / 10;
+
+  const size = clamp(Math.min(maxWidth, maxHeight), PALETTE_CEL_SIZE_MIN, PALETTE_CEL_SIZE_MAX);
+
+  mainDiv.setAttribute("style", `--palette-cel-size: ${size}rem`);
+
+  return `${size}rem`;
+}
+
 export type PaletteViewProps = {
   palette: Palette;
   onPaletteChange: React.Dispatch<PaletteAction>;
@@ -282,12 +334,31 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
   const clipboard = useContext(ClipboardContext);
   const celPicker = useContext(CelPickerContext);
   const setCelPicker = useContext(CelPickerSetterContext);
-  const ref = useRef<HTMLDivElement>(null);
+  const mainRef = useRef<HTMLDivElement>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+  const topRulerRef = useRef<HTMLDivElement>(null);
+  const leftRulerRef = useRef<HTMLDivElement>(null);
   const refState = useRef(new PaletteViewRefState());
 
   const activeIndex = props.viewState.activeIndex;
   const cursorIndex = props.viewState.cursorIndex;
   const { onViewStateChange, onPaletteChange } = props;
+
+  useEffect(() => {
+    if (!mainRef.current || !scrollRef.current) return;
+
+    const container = mainRef.current.querySelector(".palette-container");
+
+    if (!container) return;
+
+    const resizeObserver = new ResizeObserver(() => {
+      updatePaletteCelSize(props.palette.width, props.palette.height, mainRef.current);
+    });
+
+    resizeObserver.observe(scrollRef.current);
+    resizeObserver.observe(container);
+    return () => resizeObserver.disconnect();
+  }, [props.palette.width, props.palette.height]);
 
   const setCursorIndex = useCallback(
     function (index: CelIndex, active?: boolean) {
@@ -316,11 +387,11 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
   );
 
   useEffect(() => {
-    if (props.autoFocus && celPicker && ref) {
-      ref.current?.focus();
+    if (props.autoFocus && celPicker && scrollRef) {
+      scrollRef.current?.focus();
       setCursorIndex(celPicker.currentIndex);
     }
-  }, [props.autoFocus, celPicker, ref, setCursorIndex]);
+  }, [props.autoFocus, celPicker, scrollRef, setCursorIndex]);
 
   const handleColorChange = useCallback(
     function (index: CelIndex, color: Color) {
@@ -398,7 +469,7 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
 
   const handleMouseMove = useCallback(
     function (event: React.MouseEvent) {
-      if (!refState.current.scrubbing) return;
+      if (!refState.current.scrubbing || event.buttons !== 1) return;
 
       const last = refState.current.lastScrubIndex;
       const index = indexForClickEvent(event);
@@ -484,7 +555,6 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
       <PaletteRow
         key={y}
         y={y}
-        ruler={appOptions.paletteRuler}
         palette={props.palette}
         activeX={activeX}
         cursorX={cursorX}
@@ -493,26 +563,61 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
     );
   }
 
+  const onScroll = useCallback(
+    function (event: OverlayScrollbars) {
+      const target = event.elements().scrollOffsetElement;
+      if (topRulerRef.current) {
+        topRulerRef.current.scrollLeft = target.scrollLeft;
+      }
+      if (leftRulerRef.current) {
+        leftRulerRef.current.scrollTop = target.scrollTop;
+      }
+    },
+    [topRulerRef, leftRulerRef]
+  );
+
+  let className = "palette";
+
+  if (celPicker) className += " cel-picker-active";
+  if (appOptions.paletteRuler) className += " palette-ruler-active";
+
   return (
     <>
-      {appOptions.paletteRuler && (
-        <PaletteTopRuler columns={props.palette.width} activeX={activeIndex.x} cursorX={cursorIndex.x} />
-      )}
-      <div className={celPicker ? "palette cel-picker-active" : "palette"}>
-        <div
-          className={appOptions.paletteRuler ? "palette-scroll palette-scroll-ruler" : "palette-scroll"}
-          ref={ref}
-          tabIndex={0}
-          onKeyDown={handleKey}
-          onMouseDown={handleClick}
-          onMouseMove={handleMouseMove}
-        >
-          <OverlayScrollbarsComponent
-            options={{ overflow: { x: "hidden", y: "scroll" }, scrollbars: { theme: "raised-scrollbar" } }}
-            defer
+      <div ref={mainRef} className={className}>
+        {appOptions.paletteRuler && (
+          <>
+            <div className="palette-ruler-corner"></div>
+            <PaletteTopRuler
+              ref={topRulerRef}
+              columns={props.palette.width}
+              activeX={activeIndex.x}
+              cursorX={cursorIndex.x}
+            />
+            <PaletteLeftRuler
+              ref={leftRulerRef}
+              rows={props.palette.height}
+              activeY={activeIndex.y}
+              cursorY={cursorIndex.y}
+            />
+          </>
+        )}
+        <div className="palette-container">
+          <div
+            className="palette-scroll scroll-area-with-recess"
+            ref={scrollRef}
+            tabIndex={0}
+            onKeyDown={handleKey}
+            onMouseDown={handleClick}
+            onMouseMove={handleMouseMove}
           >
-            {rows}
-          </OverlayScrollbarsComponent>
+            <OverlayScrollbarsComponent
+              events={{ scroll: (e) => onScroll(e) }}
+              options={{ scrollbars: { visibility: "visible", theme: "raised-scrollbar" } }}
+              defer
+            >
+              {rows}
+            </OverlayScrollbarsComponent>
+          </div>
         </div>
       </div>
     </>

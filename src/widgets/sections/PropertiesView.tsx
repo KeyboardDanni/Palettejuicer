@@ -34,7 +34,7 @@ export function PropertiesView(props: PropertiesViewProps) {
   return (
     <>
       <div className="properties">
-        <div className="properties-scroll">
+        <div className="properties-scroll scroll-area-with-recess">
           <OverlayScrollbarsComponent options={{ scrollbars: { theme: "raised-scrollbar" } }} defer>
             <CalcPropertiesView calc={calc} onCalcChange={onCalcChange} />
           </OverlayScrollbarsComponent>

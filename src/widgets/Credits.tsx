@@ -23,7 +23,7 @@ export function Credits(props: CreditsProps) {
   return (
     <>
       <Popup open={props.popupOpen} onClose={closePopup} nested={true} className="modal-popup">
-        <div id="tutorial" className="section">
+        <div id="tutorial" className="section scroll-area-with-recess">
           <OverlayScrollbarsComponent options={{ scrollbars: { theme: "raised-scrollbar" } }}>
             <div className="tutorial-page">
               <div className="logo" title="Palettejuicer" />

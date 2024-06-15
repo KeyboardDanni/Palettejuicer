@@ -96,3 +96,7 @@ export function fixArraySize(values: NullableNumber[], length: number): Nullable
 
   return values.concat(new Array(length - values.length).fill(0));
 }
+
+export function pxToRem(px: string): number {
+  return parseFloat(px) / parseFloat(getComputedStyle(document.documentElement).fontSize);
+}

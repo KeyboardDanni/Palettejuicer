@@ -102,7 +102,7 @@ export function SelectingColorsPage() {
           Both HSL and HSV are useful for selecting colors, but they have one big problem: they don't model how our eyes
           "perceive" color. Take a look at these hues below:
         </p>
-        <div className="color-container color-container-large">
+        <div className="color-container">
           <div className="palette-row">{hslColors}</div>
         </div>
         <p>
@@ -133,7 +133,7 @@ export function SelectingColorsPage() {
           <b>C</b> stands for <b>chroma</b>, which is similar to, but not exactly like, saturation. With LCH, we can see
           that lightness is much more even across hues:
         </p>
-        <div className="color-container color-container-large">
+        <div className="color-container">
           <div className="palette-row">{lchColors}</div>
         </div>
         <h2>OkLAB/OkLCH</h2>
@@ -145,15 +145,15 @@ export function SelectingColorsPage() {
           to address some of the shortcomings of the LAB/LCH spaces. They work similarly, but often produce better
           results:
         </p>
-        <div className="color-container color-container-large">
+        <div className="color-container">
           <div className="palette-row">{oklchColors}</div>
         </div>
         <p>In particular, they fix an issue with fading from blue to white. With LCH, this happens:</p>
-        <div className="color-container color-container-large">
+        <div className="color-container">
           <div className="palette-row">{lchBlues}</div>
         </div>
         <p>With OkLCH, the colors stay blue instead of turning purple:</p>
-        <div className="color-container color-container-large">
+        <div className="color-container">
           <div className="palette-row">{oklchBlues}</div>
         </div>
         <h2>OkHSL/OkHSV</h2>
@@ -166,14 +166,14 @@ export function SelectingColorsPage() {
           A nice feature is that OkHSL/OkHSV produces colors that are within the sRGB gamut (a topic that is covered
           later).
         </p>
-        <div className="color-container color-container-large">
+        <div className="color-container">
           <div className="palette-row">{okhslColors}</div>
         </div>
         <p>
           However, you can't have both perfect perceptual lightness and full sRGB compatibility. Thus, OkHSL/OkHSV
           creates some irregularities, especially with high saturation and lightness:
         </p>
-        <div className="color-container color-container-large">
+        <div className="color-container">
           <div className="palette-row">{okhslBrightColors}</div>
         </div>
         <p>Still, its ease of use makes it very attractive.</p>

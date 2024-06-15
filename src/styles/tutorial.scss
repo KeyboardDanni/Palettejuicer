@@ -1,11 +1,11 @@
 @use "./_constants.scss" as *;
 @use "./_mixins.scss" as *;
 
-#tutorial {
-  @include scrollbar-with-recess();
+$size-super-narrow: (66rem * 0.625);
 
+#tutorial {
   width: 85rem;
-  height: 63rem;
+  height: 65rem;
   max-width: 95vw;
   max-height: 95vh;
   display: flex;
@@ -45,8 +45,7 @@
   }
 
   .color-container {
-    min-width: 30%;
-    max-width: 50rem;
+    --palette-cel-size: 4rem;
     display: flex;
     flex-direction: column;
     overflow: hidden;
@@ -55,12 +54,23 @@
     border-radius: $size-button-radius;
 
     &.color-container-large {
-      min-width: 60%;
+      --palette-cel-size: 5rem;
     }
 
-    .palette-cel {
-      max-width: none;
-      max-height: none;
+    &.color-container-huge {
+      --palette-cel-size: 10rem;
+    }
+
+    @media (max-width: $size-super-narrow) {
+      --palette-cel-size: 2rem;
+
+      &.color-container-large {
+        --palette-cel-size: 3rem;
+      }
+
+      &.color-container-huge {
+        --palette-cel-size: 6rem;
+      }
     }
   }
 }

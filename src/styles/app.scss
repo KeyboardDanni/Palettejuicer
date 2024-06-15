@@ -222,6 +222,7 @@ $logo-height: 64px;
 #document-palette {
   display: flex;
   flex-direction: column;
+  min-width: 0;
   min-height: 20rem;
   flex: 1;
   padding: calc($size-section-padding / 2);
