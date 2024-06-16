@@ -35,14 +35,16 @@ function ConfirmPopup(props: ConfirmPopupProps) {
   return (
     <>
       <Popup open={props.confirmOpen} onClose={closeConfirm} className="modal-popup">
-        <div className="section popup-message-content">
-          <div className="popup-header">Are you sure?</div>
+        <div className="modal-popup popup-message-content">
+          <div className="modal-popup-header danger">
+            <h1>Are you sure?</h1>
+          </div>
           <p>Do you really want to clear your project and start over?</p>
           <div className="button-bar">
             <button className="danger" onClick={acceptConfirm}>
-              Yes, I'm sure
+              Clear
             </button>
-            <button onClick={closeConfirm}>Nope, that was an accident</button>
+            <button onClick={closeConfirm}>Don't Clear</button>
           </div>
         </div>
       </Popup>

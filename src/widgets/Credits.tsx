@@ -17,14 +17,13 @@ export function Credits(props: CreditsProps) {
     [props]
   );
 
-  const licenseLines = licenseString.split("\n\n");
-  const licenseParagraphs = licenseLines.map((line, i) => <p key={i}>{line}</p>);
+  const unwrappedLicense = licenseString.replace(/(.)\n(?!\n)/g, " ");
 
   return (
     <>
       <Popup open={props.popupOpen} onClose={closePopup} nested={true} className="modal-popup">
-        <div id="tutorial" className="section scroll-area-with-recess">
-          <div className="tutorial-header tutorial-header-spaced">
+        <div id="tutorial" className="modal-popup scroll-area-with-recess">
+          <div className="modal-popup-header modal-popup-header-spaced">
             <div className="logo" title="Palettejuicer" />
           </div>
           <OverlayScrollbarsComponent options={{ scrollbars: { theme: "raised-scrollbar" } }}>
@@ -34,9 +33,9 @@ export function Credits(props: CreditsProps) {
                 <a target="_blank" rel="noopener noreferrer" href="https://github.com/KeyboardDanni">
                   Danni
                 </a>
-                .
+                , and is provided under the ISC License:
               </p>
-              {licenseParagraphs}
+              <code className="code-block">{unwrappedLicense}</code>
               <p>
                 This app was made possible by{" "}
                 <a target="_blank" rel="noopener noreferrer" href="https://react.dev/">

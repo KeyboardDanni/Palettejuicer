@@ -46,6 +46,7 @@ h5,
 h6,
 p,
 pre,
+code,
 textarea {
   line-height: 1.5;
   margin: 0;
@@ -131,6 +132,11 @@ pre {
   background-color: $color-field-background;
   border: 0.1rem solid $color-widget-group-border;
   border-radius: 0.3rem;
+
+  &.code-block {
+    white-space: pre-wrap;
+    padding: 0.8rem;
+  }
 }
 
 ::selection {

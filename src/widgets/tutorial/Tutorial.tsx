@@ -60,8 +60,8 @@ export function Tutorial(props: TutorialProps) {
   return (
     <>
       <Popup open={props.popupOpen} onClose={closePopup} nested={true} className="modal-popup">
-        <div id="tutorial" className="section scroll-area-with-recess">
-          <div className="tutorial-header">
+        <div id="tutorial" className="modal-popup scroll-area-with-recess">
+          <div className="modal-popup-header">
             <h1>Palettejuicer Tutorial</h1>
           </div>
           <div className="tabbar tabbar-spaced">
