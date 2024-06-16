@@ -24,9 +24,11 @@ export function Credits(props: CreditsProps) {
     <>
       <Popup open={props.popupOpen} onClose={closePopup} nested={true} className="modal-popup">
         <div id="tutorial" className="section scroll-area-with-recess">
+          <div className="tutorial-header tutorial-header-spaced">
+            <div className="logo" title="Palettejuicer" />
+          </div>
           <OverlayScrollbarsComponent options={{ scrollbars: { theme: "raised-scrollbar" } }}>
             <div className="tutorial-page">
-              <div className="logo" title="Palettejuicer" />
               <p>
                 Palettejuicer was created by{" "}
                 <a target="_blank" rel="noopener noreferrer" href="https://github.com/KeyboardDanni">

@@ -23,6 +23,59 @@ $size-super-narrow: (66rem * 0.625);
     }
   }
 
+  .tutorial-header {
+    display: flex;
+    flex-direction: column;
+    padding: $size-section-padding;
+    margin: (-$size-section-padding) (-$size-section-padding) 0 (-$size-section-padding);
+    align-items: center;
+    justify-content: center;
+
+    color: #fff;
+    -webkit-text-stroke: 0.3rem #262060;
+    paint-order: stroke;
+    background-image: linear-gradient(
+      110deg,
+      #4f42c9 6.25%,
+      #0267d9 6.25%,
+      #0267d9 12.5%,
+      #0087ca 12.5%,
+      #0087ca 18.75%,
+      #00a2bd 18.75%,
+      #00a2bd 25%,
+      #00bab2 25%,
+      #00bab2 31.25%,
+      #00cf9b 31.25%,
+      #00cf9b 37.5%,
+      #7bdb80 37.5%,
+      #7bdb80 43.75%,
+      #c1e26e 43.75%,
+      #c1e26e 50%,
+      #fae770 50%,
+      #fae770 56.25%,
+      #ffc146 56.25%,
+      #ffc146 62.5%,
+      #ff9a43 62.5%,
+      #ff9a43 68.75%,
+      #ff7156 68.75%,
+      #ff7156 75%,
+      #f24e76 75%,
+      #f24e76 81.25%,
+      #d4439a 81.25%,
+      #d4439a 87.5%,
+      #ae40b6 87.5%,
+      #ae40b6 93.75%,
+      #8240c7 93.75%,
+      #8240c7 100%
+    );
+    border-bottom: 0.1rem solid #4f42c9;
+
+    &.tutorial-header-spaced {
+      padding: ($size-section-padding * 2);
+      margin: (-$size-section-padding) (-$size-section-padding) ($size-section-padding * 2) (-$size-section-padding);
+    }
+  }
+
   .tutorial-scroll {
     display: flex;
     flex-direction: column;

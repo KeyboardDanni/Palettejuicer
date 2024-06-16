@@ -3,34 +3,29 @@
 @use "sass:color";
 
 .section {
-  @include raised-box-shadow(
-    $color-section-inset,
-    $color-section-border,
-    calc($size-section-outline / 2),
-    $size-button-height
-  );
+  @include raised-box-shadow($color-section-inset, $color-section-border, $size-widget-outline, $size-button-height);
 
   background-color: $color-section-background;
-  border: $size-section-outline solid $color-section-border;
+  border: $size-widget-outline solid $color-section-border;
   border-radius: $size-section-radius;
   margin-bottom: $size-button-height;
   padding: $size-section-padding;
 
   @media (max-height: $size-compact-max-height) {
     margin-bottom: 0;
-    border-width: $size-widget-outline;
     border-radius: 0;
     box-shadow: none;
   }
 }
 
-@mixin popup-shadow($float-height) {
+@mixin popup-shadow($float-height, $shadow-size) {
   $height-offset: calc($size-button-height * ($float-height + 1));
 
   box-shadow:
-    0 $size-button-height 0 0.1rem $color-section-shadow,
-    0 $height-offset 0 0.4rem color.adjust($color-section-shadow, $alpha: -0.8),
-    0 $height-offset 0 0.8rem color.adjust($color-section-shadow, $alpha: -0.9);
+    0 $size-button-height 0 0 $color-popup-border,
+    0 $size-button-height 0 0.1rem color.adjust($color-section-shadow, $alpha: -0.3),
+    0 $height-offset 0 (0.4rem * $shadow-size) color.adjust($color-section-shadow, $alpha: -0.8),
+    0 $height-offset 0 (1rem * $shadow-size) color.adjust($color-section-shadow, $alpha: -0.9);
 }
 
 @keyframes popup-fade-in {
@@ -47,26 +42,19 @@
 
 @keyframes popup-shadow-fade-in {
   from {
-    @include popup-shadow(0);
+    @include popup-shadow(0, 1);
 
     opacity: 0%;
   }
 
   to {
-    @include popup-shadow(1);
+    @include popup-shadow(1, 1);
 
     opacity: 100%;
   }
 }
 
 .popup {
-  @include raised-box-shadow(
-    $color-section-inset,
-    $color-popup-border,
-    calc($size-widget-outline / 2),
-    $size-button-height
-  );
-
   background-color: $color-popup-background;
   border: $size-widget-outline solid $color-popup-border;
   border-radius: $size-button-radius;
@@ -76,7 +64,7 @@
   animation: popup-fade-in 0.15s;
 
   &:before {
-    @include popup-shadow(1);
+    @include popup-shadow(1, 1);
     @include layered-pseudo-element(0, 0, 0, 0);
 
     pointer-events: none;
@@ -150,15 +138,10 @@
   touch-action: manipulation;
 
   .section {
-    @include raised-box-shadow(
-      $color-section-inset,
-      $color-section-border,
-      calc($size-section-outline / 2),
-      $size-button-height
-    );
+    @include popup-shadow(1, 2);
 
     background-color: $color-section-background;
-    border: $size-section-outline solid $color-section-border;
+    border: $size-widget-outline solid $color-section-border;
     border-radius: $size-section-radius;
     margin-bottom: $size-button-height;
     padding: $size-section-padding;
@@ -186,7 +169,7 @@
   background-color: $color-section-gray;
   padding: $size-section-padding;
   border: $size-widget-outline solid $color-section-gray-border;
-  border-radius: ($size-section-radius - $size-section-outline);
+  border-radius: ($size-section-radius - $size-widget-outline);
 }
 
 button {
@@ -538,7 +521,7 @@ input[type="text"] {
 @mixin range-thumb-normal {
   @include raised-widget(
     $color-slider,
-    $color-widget-accent-inset,
+    $color-widget-inset,
     $color-slider-border,
     $size-button-radius,
     $size-button-height,
@@ -550,7 +533,7 @@ input[type="text"] {
 @mixin range-thumb-hover {
   @include raised-widget(
     $color-slider-hover,
-    $color-widget-accent-inset,
+    $color-widget-inset,
     $color-slider-border-hover,
     $size-button-radius,
     $size-button-height,
@@ -561,7 +544,7 @@ input[type="text"] {
 @mixin range-thumb-disabled {
   @include raised-widget(
     $color-widget-disabled,
-    $color-widget-accent-inset,
+    $color-widget-inset,
     $color-widget-disabled-border,
     $size-button-radius,
     $size-button-height,
@@ -800,20 +783,10 @@ input[type="range"] {
   .os-scrollbar-handle {
     transition: none;
 
-    @include raised-box-shadow(
-      $color-widget-accent-inset,
-      $color-slider-border,
-      $size-widget-outline,
-      $size-button-height
-    );
+    @include raised-box-shadow($color-widget-inset, $color-slider-border, $size-widget-outline, $size-button-height);
 
     &:hover {
-      @include raised-box-shadow(
-        $color-widget-accent-inset,
-        $color-slider-border,
-        $size-widget-outline,
-        $size-button-height
-      );
+      @include raised-box-shadow($color-widget-inset, $color-slider-border, $size-widget-outline, $size-button-height);
     }
   }
 
@@ -840,7 +813,7 @@ input[type="range"] {
     transition: none;
 
     @include raised-box-shadow(
-      $color-widget-accent-inset,
+      $color-widget-inset,
       $color-slider-border,
       $size-widget-outline,
       calc($size-button-height / 2)
@@ -848,7 +821,7 @@ input[type="range"] {
 
     &:hover {
       @include raised-box-shadow(
-        $color-widget-accent-inset,
+        $color-widget-inset,
         $color-slider-border,
         $size-widget-outline,
         calc($size-button-height / 2)

@@ -61,7 +61,9 @@ export function Tutorial(props: TutorialProps) {
     <>
       <Popup open={props.popupOpen} onClose={closePopup} nested={true} className="modal-popup">
         <div id="tutorial" className="section scroll-area-with-recess">
-          <h1>Palettejuicer Tutorial</h1>
+          <div className="tutorial-header">
+            <h1>Palettejuicer Tutorial</h1>
+          </div>
           <div className="tabbar tabbar-spaced">
             <PageTab pageName={TutorialPage.WhyPalettejuicer} onPageChange={setPage} activePage={page} />
             <PageTab pageName={TutorialPage.SelectingColors} onPageChange={setPage} activePage={page} />
