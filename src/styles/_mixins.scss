@@ -38,7 +38,7 @@
 @mixin raised-button($color, $color-border, $pressed) {
   @include raised-widget(
     $color,
-    $color-widget-inset,
+    var(--color-widget-inset),
     $color-border,
     $size-button-radius,
     $size-button-height,
@@ -48,7 +48,14 @@
 }
 
 @mixin raised-button-thin($color, $color-border, $pressed) {
-  @include raised-widget($color, $color-widget-inset, $color-border, $size-button-radius, $size-chip-height, $pressed);
+  @include raised-widget(
+    $color,
+    var(--color-widget-inset),
+    $color-border,
+    $size-button-radius,
+    $size-chip-height,
+    $pressed
+  );
   @include raised-button-bounds($size-chip-height, $pressed);
 }
 

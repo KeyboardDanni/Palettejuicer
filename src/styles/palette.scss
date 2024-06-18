@@ -7,7 +7,6 @@ $size-ruler-margin: 0.4rem;
 $size-palette-margin: 0.3rem;
 $size-scrollbar-offset: $size-palette-margin + $size-scrollbar-recess + $size-scrollbar-recess-spacing -
   $size-widget-outline;
-$color-ruler-tick: color.mix($color-section-gray-border, $color-section-gray, 50%);
 
 @mixin box-corners($color, $thickness) {
   background-position:
@@ -29,7 +28,6 @@ $color-ruler-tick: color.mix($color-section-gray-border, $color-section-gray, 50
 }
 
 input[type="text"].palette-rename {
-  font-size: 1.8rem;
   max-width: 32rem;
   width: 100%;
 }
@@ -37,10 +35,13 @@ input[type="text"].palette-rename {
 .palette-header {
   display: flex;
   flex-direction: row;
+  gap: 0.2rem;
   margin-bottom: calc($size-section-padding / 2);
+  font-size: 1.7rem;
 
   button {
     margin: 0.1rem 0.4rem;
+    height: 3rem;
     vertical-align: top;
   }
 }
@@ -57,7 +58,7 @@ input[type="text"].palette-rename {
   margin-left: $size-ruler-margin;
   margin-right: $size-scrollbar-offset + $size-widget-outline;
 
-  background-color: $color-section-gray;
+  background-color: var(--color-section-gray);
   overflow: hidden;
 }
 
@@ -68,12 +69,12 @@ input[type="text"].palette-rename {
   margin-top: $size-ruler-margin;
   margin-bottom: $size-scrollbar-offset + $size-widget-outline;
 
-  background-color: $color-section-gray;
+  background-color: var(--color-section-gray);
   overflow: hidden;
 }
 
 .palette-ruler-cel {
-  color: $color-text-gray;
+  color: var(--color-text-gray);
   font-size: 1.3rem;
   text-align: center;
   align-self: stretch;
@@ -81,13 +82,13 @@ input[type="text"].palette-rename {
   border-radius: 0.3rem;
 
   &.palette-ruler-active {
-    color: $color-text-selected;
-    background-color: $color-section-gray-selected;
+    color: var(--color-text-selected-gray);
+    background-color: var(--color-section-gray-selected);
     font-weight: bold;
   }
 
   &.palette-ruler-cursor {
-    outline: solid 0.2rem $color-section-gray-selected;
+    outline: solid 0.2rem var(--color-section-gray-selected);
     outline-offset: -0.2rem;
     font-weight: bold;
   }
@@ -101,8 +102,8 @@ input[type="text"].palette-rename {
   &:not(.palette-ruler-active):not(.palette-ruler-cursor):after {
     @include layered-pseudo-element(0.6rem, 0, 0.3rem, 0);
 
-    border-left: 0.05rem solid $color-ruler-tick;
-    border-right: 0.05rem solid $color-ruler-tick;
+    border-left: 0.05rem solid var(--color-section-gray-tick);
+    border-right: 0.05rem solid var(--color-section-gray-tick);
   }
 }
 
@@ -114,8 +115,8 @@ input[type="text"].palette-rename {
   &:not(.palette-ruler-active):not(.palette-ruler-cursor):after {
     @include layered-pseudo-element(0, 0.3rem, 0, 0.6rem);
 
-    border-top: 0.05rem solid $color-ruler-tick;
-    border-bottom: 0.05rem solid $color-ruler-tick;
+    border-top: 0.05rem solid var(--color-section-gray-tick);
+    border-bottom: 0.05rem solid var(--color-section-gray-tick);
   }
 }
 
@@ -158,9 +159,9 @@ input[type="text"].palette-rename {
       );
       pointer-events: none;
 
-      border: $size-widget-outline solid $color-section-border;
+      border: $size-widget-outline solid var(--color-section-border);
       border-radius: $size-button-radius;
-      outline: $color-section-gray ($size-button-radius * 0.8 - $size-widget-outline) solid;
+      outline: var(--color-section-gray) ($size-button-radius * 0.8 - $size-widget-outline) solid;
     }
 
     // Focus rectangle overlay
@@ -175,7 +176,7 @@ input[type="text"].palette-rename {
       z-index: 2;
 
       border-radius: $size-button-radius;
-      outline: $color-widget-accent 0.2rem solid;
+      outline: var(--color-widget-accent) 0.2rem solid;
       outline-offset: 0.1rem;
     }
   }
@@ -209,22 +210,22 @@ input[type="text"].palette-rename {
     }
 
     &.light-color:after {
-      @include box-corners($color-palette-active-light, 0.2rem);
+      @include box-corners(var(--color-palette-active-light), 0.2rem);
     }
 
     &.dark-color:after {
-      @include box-corners($color-palette-active-dark, 0.2rem);
+      @include box-corners(var(--color-palette-active-dark), 0.2rem);
     }
   }
 
   &.cursor-cel {
     &.light-color {
-      outline: $color-palette-active-light dashed 0.1rem;
+      outline: var(--color-palette-active-light) dashed 0.1rem;
       outline-offset: -0.4rem;
     }
 
     &.dark-color {
-      outline: $color-palette-active-dark dashed 0.1rem;
+      outline: var(--color-palette-active-dark) dashed 0.1rem;
       outline-offset: -0.4rem;
     }
   }
@@ -233,11 +234,11 @@ input[type="text"].palette-rename {
     position: relative;
 
     &.light-color {
-      color: $color-palette-active-light;
+      color: var(--color-palette-active-light);
     }
 
     &.dark-color {
-      color: $color-palette-active-dark;
+      color: var(--color-palette-active-dark);
     }
 
     &:before {
@@ -264,11 +265,15 @@ input[type="text"].palette-rename {
   gap: 0.2rem;
 
   button {
-    width: 3.2rem;
+    width: 3.6rem;
     margin-left: 0;
     margin-right: 0;
     padding-left: 0.3rem;
     padding-right: 0.3rem;
+    font-size: 1.8rem;
+
+    -webkit-text-stroke: 0.2rem var(--color-icon-outline);
+    paint-order: stroke;
   }
 }
 
@@ -311,8 +316,8 @@ input[type="text"].palette-rename {
     justify-items: stretch;
     grid-template-rows: 1fr 2fr 1fr;
     grid-template-columns: 1fr 2fr 1fr;
-    background-color: $color-widget-group;
-    border: 0.1rem solid $color-widget-group-border;
+    background-color: var(--color-widget-group);
+    border: 0.1rem solid var(--color-widget-group-border);
     border-radius: $size-button-radius;
 
     .palette-resizer-inside-label {
@@ -337,7 +342,7 @@ input[type="text"].palette-rename {
   gap: 0.8rem;
   align-items: baseline;
   padding: 0.4rem;
-  background-color: $color-widget-group;
-  border: 0.1rem solid $color-widget-group-border;
+  background-color: var(--color-widget-group);
+  border: 0.1rem solid var(--color-widget-group-border);
   border-radius: $size-button-radius;
 }

@@ -19,7 +19,6 @@
 
 - [ ] Inform user if start/end cels don't form a strip
 - [ ] Better tooltip prompt for picking cel
-- [ ] Dark mode
 - [ ] Show color preview of calculations in list to make them easy to find
 - [ ] Indicate which cels are affected by a calculation on selection
 - [ ] Restore view selections on undo/redo
@@ -61,3 +60,4 @@
 - [x] Fix OkHSL/OkHSV incorrect hue fade
 - [x] Paint/fill palette cels
 - [x] Better palette view scaling
+- [x] Dark mode

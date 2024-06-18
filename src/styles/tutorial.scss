@@ -54,7 +54,7 @@ $size-super-narrow: (66rem * 0.625);
     flex-direction: column;
     overflow: hidden;
 
-    border: $size-widget-outline solid $color-section-border;
+    border: $size-widget-outline solid var(--color-section-border);
     border-radius: $size-button-radius;
 
     &.color-container-large {

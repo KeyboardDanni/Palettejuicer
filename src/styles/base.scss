@@ -34,8 +34,8 @@ html {
 
 body {
   font-size: $size-base-font;
-  color: $color-text;
-  background-color: $color-background;
+  color: var(--color-text);
+  background-color: var(--color-background);
 }
 
 h1,
@@ -59,7 +59,7 @@ a:visited,
 a:active,
 a:focus,
 a:hover {
-  color: $color-text-link;
+  color: var(--color-text-link);
 }
 
 ol,
@@ -129,8 +129,8 @@ pre {
   font-size: 1.4rem;
   padding: 0 0.4rem;
   margin: 0 0.2rem;
-  background-color: $color-field-background;
-  border: 0.1rem solid $color-widget-group-border;
+  background-color: var(--color-field-background);
+  border: 0.1rem solid var(--color-widget-group-border);
   border-radius: 0.3rem;
 
   &.code-block {
@@ -140,6 +140,6 @@ pre {
 }
 
 ::selection {
-  color: $color-text-selected;
-  background: $color-selected;
+  color: var(--color-text-selected);
+  background: var(--color-selected);
 }

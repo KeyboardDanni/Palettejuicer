@@ -1,5 +1,4 @@
 @use "./_constants.scss" as *;
-@use "sass:color";
 
 .calculations-list {
   min-height: 12.8rem;
@@ -10,8 +9,8 @@
   overflow: hidden;
 
   .calculations-scroll {
-    background-color: $color-field-background;
-    border: $size-widget-outline solid $color-section-border;
+    background-color: var(--color-field-background);
+    border: $size-widget-outline solid var(--color-section-border);
     border-radius: $size-button-radius;
     display: flex;
     flex: 1;
@@ -20,7 +19,7 @@
     overflow-y: hidden;
 
     .os-scrollbar {
-      background-color: color.adjust($color-field-background, $alpha: -0.5);
+      background-color: var(--color-field-background-disabled);
     }
 
     li {
@@ -30,8 +29,8 @@
       touch-action: manipulation;
 
       &.active-calc {
-        background-color: $color-selected;
-        color: $color-text-selected;
+        background-color: var(--color-selected);
+        color: var(--color-text-selected);
       }
 
       .calc-label {
@@ -43,7 +42,7 @@
     }
 
     &:focus-visible {
-      outline: $size-widget-focus-outline solid $color-selected;
+      outline: $size-widget-focus-outline solid var(--color-selected);
       outline-offset: (-$size-widget-outline - $size-widget-focus-outline);
     }
   }

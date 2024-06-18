@@ -2,10 +2,15 @@
 @use "./_mixins.scss" as *;
 
 .section {
-  @include raised-box-shadow($color-section-inset, $color-section-border, $size-widget-outline, $size-button-height);
+  @include raised-box-shadow(
+    var(--color-section-inset),
+    var(--color-section-border),
+    $size-widget-outline,
+    $size-button-height
+  );
 
-  background-color: $color-section-background;
-  border: $size-widget-outline solid $color-section-border;
+  background-color: var(--color-section-background);
+  border: $size-widget-outline solid var(--color-section-border);
   border-radius: $size-section-radius;
   margin-bottom: $size-button-height;
   padding: $size-section-padding;
@@ -18,43 +23,44 @@
 }
 
 .section-gray-background {
-  background-color: $color-section-gray;
+  background-color: var(--color-section-gray);
   padding: $size-section-padding;
-  border: $size-widget-outline solid $color-section-gray-border;
+  border: $size-widget-outline solid var(--color-section-gray-border);
   border-radius: ($size-section-radius - $size-widget-outline);
 }
 
 button {
-  @include raised-button($color-widget, $color-widget-border, 0);
+  @include raised-button(var(--color-widget), var(--color-widget-border), 0);
 
+  color: var(--color-text);
   margin: $size-widget-outline $size-widget-outline ($size-button-height + $size-widget-outline) $size-widget-outline;
   padding: $size-button-padding;
   text-wrap: nowrap;
   touch-action: manipulation;
 
   &:disabled {
-    color: $color-text-disabled;
-    @include raised-button-thin($color-widget-disabled, $color-widget-disabled-border, 0);
+    color: var(--color-text-disabled);
+    @include raised-button-thin(var(--color-widget-disabled), var(--color-widget-disabled-border), 0);
   }
 
   &:not(:disabled) {
     &:hover,
     &:focus-visible {
-      @include raised-button($color-widget-hover, $color-widget-border-hover, 0);
+      @include raised-button(var(--color-widget-hover), var(--color-widget-border-hover), 0);
     }
 
     &:active,
     &.selected {
-      @include raised-button($color-widget-accent-hover, $color-widget-accent-border, 1);
+      @include raised-button(var(--color-widget-accent-hover), var(--color-widget-accent-border), 1);
     }
   }
 
   &:focus-visible {
-    @include widget-focus($color-widget-accent);
+    @include widget-focus(var(--color-widget-accent));
 
     &:active,
     &.selected {
-      @include widget-focus($color-text-selected);
+      @include widget-focus(var(--color-text-selected));
     }
   }
 
@@ -73,53 +79,53 @@ button {
   }
 
   &.danger {
-    @include striped-background($color-widget-danger, $color-widget-danger-alt);
+    @include striped-background(var(--color-widget-danger), var(--color-widget-danger-alt));
 
-    border-color: $color-widget-danger-border;
-    color: $color-text-selected;
+    border-color: var(--color-widget-danger-border);
+    color: var(--color-text-selected);
     font-weight: 600;
-    -webkit-text-stroke: 0.2rem $color-widget-danger-border;
+    -webkit-text-stroke: 0.2rem var(--color-widget-danger-border);
     paint-order: stroke;
 
     &:hover,
     &:focus-visible {
-      @include striped-background($color-widget-danger-hover, $color-widget-danger-alt-hover);
+      @include striped-background(var(--color-widget-danger-hover), var(--color-widget-danger-alt-hover));
 
-      border-color: $color-widget-danger-border;
-      color: $color-text-selected;
-      outline-color: $color-text-selected;
+      border-color: var(--color-widget-danger-border);
+      color: var(--color-text-selected);
+      outline-color: var(--color-text-selected);
     }
 
     &:active,
     &.selected {
-      @include striped-background($color-widget-danger-active, $color-widget-danger-alt-active);
+      @include striped-background(var(--color-widget-danger-active), var(--color-widget-danger-alt-active));
 
-      border-color: $color-widget-danger-border;
-      color: $color-text-selected;
-      outline-color: $color-text-selected;
+      border-color: var(--color-widget-danger-border);
+      color: var(--color-text-selected);
+      outline-color: var(--color-text-selected);
     }
   }
 
   &.thin-button {
-    @include raised-button-thin($color-widget, $color-widget-border, 0);
+    @include raised-button-thin(var(--color-widget), var(--color-widget-border), 0);
 
     padding: 0.2em $size-button-padding;
     height: 1.6em;
     margin: 0 0.4rem;
 
     &:disabled {
-      @include raised-button-thin($color-widget-disabled, $color-widget-disabled-border, 0);
+      @include raised-button-thin(var(--color-widget-disabled), var(--color-widget-disabled-border), 0);
     }
 
     &:not(:disabled) {
       &:hover,
       &:focus-visible {
-        @include raised-button-thin($color-widget-hover, $color-widget-border-hover, 0);
+        @include raised-button-thin(var(--color-widget-hover), var(--color-widget-border-hover), 0);
       }
 
       &:active,
       &.selected {
-        @include raised-button-thin($color-widget-accent-hover, $color-widget-accent-border, 1);
+        @include raised-button-thin(var(--color-widget-accent-hover), var(--color-widget-accent-border), 1);
       }
     }
   }
@@ -145,9 +151,9 @@ button {
 @mixin header-tab-button($color, $checked) {
   display: inline-block;
   background-color: $color;
-  border: 0.1rem solid $color-tab-border;
+  border: 0.1rem solid var(--color-tab-border);
   border-bottom: none;
-  color: $color-text;
+  color: var(--color-text);
   text-align: center;
   text-wrap: nowrap;
   min-width: 4.8rem;
@@ -165,7 +171,7 @@ button {
       left: 0;
       width: 100%;
       height: 0.2rem;
-      background-color: $color-widget-accent;
+      background-color: var(--color-widget-accent);
       z-index: 2;
     }
   }
@@ -177,7 +183,7 @@ button {
   align-items: baseline;
   margin: $size-button-padding 0.1rem $size-button-padding 0.1rem;
   padding: 0 0.1rem 0 0;
-  border-bottom: 0.1rem solid $color-tab-border;
+  border-bottom: 0.1rem solid var(--color-tab-border);
   overflow-x: auto;
   overflow-y: clip;
 
@@ -203,19 +209,19 @@ label.tabbar-tab {
     border: 0;
 
     &:not(:checked) + span {
-      @include header-tab-button($color-tab, 0);
+      @include header-tab-button(var(--color-tab), 0);
     }
 
     &:hover:not(:checked) + span {
-      @include header-tab-button($color-tab-hover, 0);
+      @include header-tab-button(var(--color-tab-hover), 0);
     }
 
     &:checked + span {
-      @include header-tab-button($color-tab-active, 1);
+      @include header-tab-button(var(--color-tab-active), 1);
     }
 
     &:focus-visible + span {
-      box-shadow: inset 0 0 0 0.2rem $color-widget-accent;
+      box-shadow: inset 0 0 0 0.2rem var(--color-widget-accent);
     }
   }
 
@@ -244,38 +250,38 @@ label:not(.flat-checkbox) {
     vertical-align: middle;
 
     &:not(:checked) {
-      @include raised-button($color-widget, $color-widget-border, 0);
+      @include raised-button(var(--color-widget), var(--color-widget-border), 0);
 
       &:hover,
       &:focus-visible {
-        @include raised-button($color-widget-hover, $color-widget-border-hover, 0);
+        @include raised-button(var(--color-widget-hover), var(--color-widget-border-hover), 0);
       }
 
       &:active {
-        @include raised-button($color-widget-hover, $color-widget-border-hover, 1);
+        @include raised-button(var(--color-widget-hover), var(--color-widget-border-hover), 1);
       }
 
       &:focus-visible {
-        @include widget-focus($color-widget-accent);
+        @include widget-focus(var(--color-widget-accent));
       }
     }
 
     &:checked {
-      @include raised-button($color-widget-accent, $color-widget-accent-border, 0);
+      @include raised-button(var(--color-widget-accent), var(--color-widget-accent-border), 0);
 
       background-image: url("/assets/checkmark.svg");
 
       &:hover,
       &:focus-visible {
-        @include raised-button($color-widget-accent-hover, $color-widget-accent-border-hover, 0);
+        @include raised-button(var(--color-widget-accent-hover), var(--color-widget-accent-border-hover), 0);
       }
 
       &:active {
-        @include raised-button($color-widget-accent-hover, $color-widget-accent-border-hover, 1);
+        @include raised-button(var(--color-widget-accent-hover), var(--color-widget-accent-border-hover), 1);
       }
 
       &:focus-visible {
-        @include widget-focus($color-text-selected);
+        @include widget-focus(var(--color-text-selected));
       }
     }
   }
@@ -294,38 +300,38 @@ label.flat-checkbox {
     margin-right: 0.4rem;
     vertical-align: middle;
 
-    background-color: $color-widget-hover;
-    border: $size-widget-outline solid $color-widget-border;
+    background-color: var(--color-widget-hover);
+    border: $size-widget-outline solid var(--color-widget-border);
     border-radius: $size-button-radius;
 
     &:not(:checked) {
       &:hover,
       &:focus-visible,
       &:active {
-        background-color: $color-field-background;
-        border-color: $color-widget-border-hover;
+        background-color: var(--color-field-background);
+        border-color: var(--color-widget-border-hover);
       }
 
       &:focus-visible {
-        @include widget-focus($color-widget-accent);
+        @include widget-focus(var(--color-widget-accent));
       }
     }
 
     &:checked {
-      background-color: $color-widget-accent;
-      border-color: $color-widget-accent-border;
+      background-color: var(--color-widget-accent);
+      border-color: var(--color-widget-accent-border);
 
       background-image: url("/assets/checkmark.svg");
 
       &:hover,
       &:focus-visible,
       &:active {
-        background-color: $color-widget-accent-hover;
-        border-color: $color-widget-accent-border-hover;
+        background-color: var(--color-widget-accent-hover);
+        border-color: var(--color-widget-accent-border-hover);
       }
 
       &:focus-visible {
-        @include widget-focus($color-text-selected);
+        @include widget-focus(var(--color-text-selected));
       }
     }
   }
@@ -334,6 +340,7 @@ label.flat-checkbox {
 input[type="text"] {
   margin: 0.1rem 0.1rem 0.1rem 0.1rem;
   padding: 0.3rem 0.3rem 0rem 0.3rem;
+  color: var(--color-text);
   background-color: transparent;
   border: $size-widget-outline solid transparent;
   border-radius: $size-button-radius;
@@ -342,25 +349,25 @@ input[type="text"] {
 
   &:focus,
   &:not(.flat-text) {
-    background-color: $color-field-background;
-    border-color: $color-section-border;
-    box-shadow: inset 0 0.2rem $color-section-border;
+    background-color: var(--color-field-background);
+    border-color: var(--color-section-border);
+    box-shadow: inset 0 0.2rem var(--color-section-border);
 
     &:disabled,
     &:read-only {
-      background-color: $color-field-background-disabled;
+      background-color: var(--color-field-background-disabled);
     }
   }
 
   &.flat-text:hover:not(:focus) {
-    background-color: $color-field-background;
-    border-color: $color-section-gray-border;
-    box-shadow: inset 0 0.2rem $color-section-gray-border;
+    background-color: var(--color-field-background);
+    border-color: var(--color-section-gray-border);
+    box-shadow: inset 0 0.2rem var(--color-section-gray-border);
   }
 
   &:disabled,
   &:read-only {
-    color: $color-text-disabled;
+    color: var(--color-text-disabled);
   }
 }
 
@@ -372,9 +379,9 @@ input[type="text"] {
 
 @mixin range-thumb-normal {
   @include raised-widget(
-    $color-slider,
-    $color-widget-inset,
-    $color-slider-border,
+    var(--color-slider),
+    var(--color-widget-inset),
+    var(--color-slider-border),
     $size-button-radius,
     $size-button-height,
     0
@@ -384,9 +391,9 @@ input[type="text"] {
 
 @mixin range-thumb-hover {
   @include raised-widget(
-    $color-slider-hover,
-    $color-widget-inset,
-    $color-slider-border-hover,
+    var(--color-slider-hover),
+    var(--color-widget-inset),
+    var(--color-slider-border-hover),
     $size-button-radius,
     $size-button-height,
     0
@@ -395,9 +402,9 @@ input[type="text"] {
 
 @mixin range-thumb-disabled {
   @include raised-widget(
-    $color-widget-disabled,
-    $color-widget-inset,
-    $color-widget-disabled-border,
+    var(--color-widget-disabled),
+    var(--color-widget-inset),
+    var(--color-widget-disabled-border),
     $size-button-radius,
     $size-button-height,
     0
@@ -411,8 +418,8 @@ input[type="text"] {
   margin: 0.6rem 0.1rem 0.6rem 0.1rem;
 
   background: var(--slider-track-background);
-  border: $size-widget-outline solid $color-section-border;
-  box-shadow: inset 0 0.2rem $color-section-border;
+  border: $size-widget-outline solid var(--color-section-border);
+  box-shadow: inset 0 0.2rem var(--color-section-border);
   border-radius: $size-button-radius;
 }
 
@@ -422,12 +429,12 @@ input[type="text"] {
 
 @mixin range-track-disabled {
   background: var(--slider-track-background);
-  border: $size-widget-outline solid $color-widget-disabled-border;
-  box-shadow: inset 0 0.2rem $color-widget-disabled-border;
+  border: $size-widget-outline solid var(--color-widget-disabled-border);
+  box-shadow: inset 0 0.2rem var(--color-widget-disabled-border);
 }
 
 input[type="range"] {
-  --slider-track-background: #{$color-slider-recess};
+  --slider-track-background: var(--color-slider-recess);
   -webkit-appearance: none;
   width: 100%;
   height: 2.4rem;
@@ -503,7 +510,7 @@ input[type="range"] {
   }
 
   &:disabled {
-    --slider-track-background: #{$color-widget-disabled};
+    --slider-track-background: var(--color-widget-disabled);
 
     &::-webkit-slider-runnable-track {
       @include range-track-disabled;
@@ -532,15 +539,15 @@ input[type="range"] {
 
   &:focus-visible {
     &::-webkit-slider-thumb {
-      @include widget-focus($color-text-selected);
+      @include widget-focus(var(--color-text-selected));
     }
 
     &::-moz-range-thumb {
-      @include widget-focus($color-text-selected);
+      @include widget-focus(var(--color-text-selected));
     }
 
     &::-ms-thumb {
-      @include widget-focus($color-text-selected);
+      @include widget-focus(var(--color-text-selected));
     }
   }
 
@@ -582,14 +589,14 @@ input[type="range"] {
     flex: 1;
 
     &.out-of-range {
-      @include striped-background($color-section-warning, $color-section-warning-alt);
+      @include striped-background(var(--color-section-warning), var(--color-section-warning-alt));
 
       &:after {
         @include layered-pseudo-element(0, 0, 0, 0);
 
         z-index: 100;
         border-radius: $size-button-radius;
-        outline: $color-section-warning-outline solid 0;
+        outline: var(--color-section-warning-outline) solid 0;
         animation: out-of-range-pulse 0.25s;
         pointer-events: none;
       }
@@ -623,22 +630,32 @@ input[type="range"] {
   padding: 0.2rem;
   pointer-events: auto;
   --os-size: #{$size-scrollbar-width};
-  --os-handle-bg: #{$color-slider};
-  --os-handle-bg-hover: #{$color-slider-hover};
-  --os-handle-bg-active: #{$color-slider-hover};
+  --os-handle-bg: var(--color-slider);
+  --os-handle-bg-hover: var(--color-slider-hover);
+  --os-handle-bg-active: var(--color-slider-hover);
   --os-handle-border-radius: #{$size-button-radius};
-  --os-handle-border: #{$size-widget-outline} solid #{$color-slider-border};
-  --os-handle-border-hover: #{$size-widget-outline} solid #{$color-slider-border-hover};
-  --os-handle-border-active: #{$size-widget-outline} solid #{$color-slider-border-hover};
+  --os-handle-border: #{$size-widget-outline} solid var(--color-slider-border);
+  --os-handle-border-hover: #{$size-widget-outline} solid var(--color-slider-border-hover);
+  --os-handle-border-active: #{$size-widget-outline} solid var(--color-slider-border-hover);
   --os-handle-interactive-area-offset: 0;
 
   .os-scrollbar-handle {
     transition: none;
 
-    @include raised-box-shadow($color-widget-inset, $color-slider-border, $size-widget-outline, $size-button-height);
+    @include raised-box-shadow(
+      var(--color-widget-inset),
+      var(--color-slider-border),
+      $size-widget-outline,
+      $size-button-height
+    );
 
     &:hover {
-      @include raised-box-shadow($color-widget-inset, $color-slider-border, $size-widget-outline, $size-button-height);
+      @include raised-box-shadow(
+        var(--color-widget-inset),
+        var(--color-slider-border),
+        $size-widget-outline,
+        $size-button-height
+      );
     }
   }
 
@@ -651,13 +668,13 @@ input[type="range"] {
   padding: 0.2rem $size-section-padding;
   pointer-events: auto;
   --os-size: #{$size-scrollbar-flat};
-  --os-handle-bg: #{$color-background-widget};
-  --os-handle-bg-hover: #{$color-background-widget};
-  --os-handle-bg-active: #{$color-background-widget};
+  --os-handle-bg: var(--color-background-widget);
+  --os-handle-bg-hover: var(--color-background-widget);
+  --os-handle-bg-active: var(--color-background-widget);
   --os-handle-border-radius: #{$size-section-radius};
-  --os-handle-border: #{$size-widget-outline} solid #{$color-widget-border};
-  --os-handle-border-hover: #{$size-widget-outline} solid #{$color-widget-border};
-  --os-handle-border-active: #{$size-widget-outline} solid #{$color-widget-border};
+  --os-handle-border: #{$size-widget-outline} solid var(--color-widget-border);
+  --os-handle-border-hover: #{$size-widget-outline} solid var(--color-widget-border);
+  --os-handle-border-active: #{$size-widget-outline} solid var(--color-widget-border);
   --os-handle-interactive-area-offset: 0;
 
   .os-scrollbar-handle {
@@ -665,16 +682,16 @@ input[type="range"] {
     transition: none;
 
     @include raised-box-shadow(
-      $color-widget-inset,
-      $color-slider-border,
+      var(--color-widget-inset),
+      var(--color-slider-border),
       $size-widget-outline,
       calc($size-button-height / 2)
     );
 
     &:hover {
       @include raised-box-shadow(
-        $color-widget-inset,
-        $color-slider-border,
+        var(--color-widget-inset),
+        var(--color-slider-border),
         $size-widget-outline,
         calc($size-button-height / 2)
       );
@@ -701,10 +718,10 @@ input[type="range"] {
       overflow: hidden;
       transition: none;
 
-      background-color: $color-slider-recess;
+      background-color: var(--color-slider-recess);
       box-shadow:
-        inset 0 0 0 $size-widget-outline $color-section-border,
-        inset 0 ($size-button-height + 0.1rem) $color-section-border;
+        inset 0 0 0 $size-widget-outline var(--color-section-border),
+        inset 0 ($size-button-height + 0.1rem) var(--color-section-border);
       border-radius: $size-button-radius;
     }
   }

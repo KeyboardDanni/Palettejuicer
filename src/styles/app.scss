@@ -45,6 +45,10 @@ $logo-height: 64px;
   width: $logo-width;
   height: $logo-height;
   max-width: 100%;
+
+  @media (prefers-color-scheme: dark) {
+    background-image: url("/assets/logo-dark.png");
+  }
 }
 
 #app-header {
@@ -68,33 +72,37 @@ $logo-height: 64px;
     text-wrap: nowrap;
 
     button {
-      @include raised-button($color-background-widget, $color-widget-border, 0);
+      @include raised-button(var(--color-background-widget), var(--color-widget-border), 0);
 
       font-size: 1.8rem;
       padding: 1rem;
 
       &:disabled {
-        @include raised-button($color-background-widget-disabled, $color-background-widget-disabled-border, 0);
+        @include raised-button(
+          var(--color-background-widget-disabled),
+          var(--color-background-widget-disabled-border),
+          0
+        );
       }
 
       &:not(:disabled) {
         &:hover,
         &:focus-visible {
-          @include raised-button($color-background-widget-hover, $color-widget-border-hover, 0);
+          @include raised-button(var(--color-background-widget-hover), var(--color-widget-border-hover), 0);
         }
 
         &:active,
         &.selected {
-          @include raised-button($color-widget-accent-hover, $color-widget-accent-border, 1);
+          @include raised-button(var(--color-widget-accent-hover), var(--color-widget-accent-border), 1);
         }
       }
 
       &:focus-visible {
-        @include widget-focus($color-widget-accent);
+        @include widget-focus(var(--color-widget-accent));
 
         &:active,
         &.selected {
-          @include widget-focus($color-text-selected);
+          @include widget-focus(var(--color-text-selected));
         }
       }
     }
@@ -266,7 +274,7 @@ input[type="text"].section-header-rename {
 }
 
 .placeholder {
-  color: $color-text-disabled;
+  color: var(--color-text-disabled);
   line-height: 1.25;
   text-align: center;
   width: 0;

@@ -1,15 +1,14 @@
 @use "./_constants.scss" as *;
 @use "./_mixins.scss" as *;
-@use "sass:color";
 
 @mixin popup-shadow($float-height, $shadow-size) {
   $height-offset: calc($size-button-height * ($float-height + 1));
 
   box-shadow:
-    0 $size-button-height 0 0 $color-popup-border,
-    0 $size-button-height 0 0.1rem color.adjust($color-section-shadow, $alpha: -0.3),
-    0 $height-offset 0 (0.4rem * $shadow-size) color.adjust($color-section-shadow, $alpha: -0.8),
-    0 $height-offset 0 (1rem * $shadow-size) color.adjust($color-section-shadow, $alpha: -0.9);
+    0 $size-button-height 0 0 var(--color-section-border),
+    0 $size-button-height 0 0.1rem var(--color-popup-shadow-1),
+    0 $height-offset 0 (0.4rem * $shadow-size) var(--color-popup-shadow-2),
+    0 $height-offset 0 (1rem * $shadow-size) var(--color-popup-shadow-3);
 }
 
 @keyframes popup-fade-in {
@@ -53,8 +52,8 @@
 }
 
 .popup {
-  background-color: $color-popup-background;
-  border: $size-widget-outline solid $color-popup-border;
+  background-color: var(--color-popup-background);
+  border: $size-widget-outline solid var(--color-section-border);
   border-radius: $size-button-radius;
   margin: $size-popup-margin $size-popup-margin ($size-button-height + $size-popup-margin) $size-popup-margin;
   padding: $size-button-padding;
@@ -88,13 +87,13 @@
 
       &:hover:not(:focus-visible),
       &.menu-item-open {
-        background-color: color.adjust($color-selected, $alpha: -0.7);
-        color: color.adjust($color-text, $lightness: -100%);
+        background-color: var(--color-selected-faded);
+        color: var(--color-text-selected-menu);
       }
 
       &:focus-visible {
-        background-color: $color-selected;
-        color: $color-text-selected;
+        background-color: var(--color-selected);
+        color: var(--color-text-selected);
       }
 
       &.menu-item-submenu {
@@ -131,8 +130,8 @@
 }
 
 .modal-popup {
-  background-color: $color-popup-background;
-  border: $size-widget-outline solid $color-popup-border;
+  background-color: var(--color-section-background);
+  border: $size-widget-outline solid var(--color-section-border);
   border-radius: $size-button-radius;
   margin: $size-popup-margin $size-popup-margin ($size-button-height + $size-popup-margin) $size-popup-margin;
   padding: $size-button-padding;
@@ -163,39 +162,39 @@
     paint-order: stroke;
     background: linear-gradient(
       110deg,
-      #4f42c9 6.25%,
-      #0267d9 6.25%,
-      #0267d9 12.5%,
-      #0087ca 12.5%,
-      #0087ca 18.75%,
-      #00a2bd 18.75%,
-      #00a2bd 25%,
-      #00bab2 25%,
-      #00bab2 31.25%,
-      #00cf9b 31.25%,
-      #00cf9b 37.5%,
-      #7bdb80 37.5%,
-      #7bdb80 43.75%,
-      #c1e26e 43.75%,
-      #c1e26e 50%,
+      #4f48bf 6.25%,
+      #266bc8 6.25%,
+      #266bc8 12.5%,
+      #0088c9 12.5%,
+      #0088c9 18.75%,
+      #00a1bd 18.75%,
+      #00a1bd 25%,
+      #00b9b2 25%,
+      #00b9b2 31.25%,
+      #40cb9e 31.25%,
+      #40cb9e 37.5%,
+      #7eda82 37.5%,
+      #7eda82 43.75%,
+      #c2e270 43.75%,
+      #c2e270 50%,
       #fae770 50%,
       #fae770 56.25%,
-      #ffc146 56.25%,
-      #ffc146 62.5%,
-      #ff9a43 62.5%,
-      #ff9a43 68.75%,
-      #ff7156 68.75%,
-      #ff7156 75%,
-      #f24e76 75%,
-      #f24e76 81.25%,
-      #d4439a 81.25%,
-      #d4439a 87.5%,
-      #ae40b6 87.5%,
-      #ae40b6 93.75%,
-      #8240c7 93.75%,
-      #8240c7 100%
+      #ffc24d 56.25%,
+      #ffc24d 62.5%,
+      #ff9c49 62.5%,
+      #ff9c49 68.75%,
+      #fe775d 68.75%,
+      #fe775d 75%,
+      #e95979 75%,
+      #e95979 81.25%,
+      #cd4d98 81.25%,
+      #cd4d98 87.5%,
+      #aa49b0 87.5%,
+      #aa49b0 93.75%,
+      #8047be 93.75%,
+      #8047be 100%
     );
-    border-bottom: 0.1rem solid #4f42c9;
+    border-bottom: 0.1rem solid #4f48bf;
 
     &.modal-popup-header-spaced {
       padding: ($size-section-padding * 2);
@@ -203,48 +202,49 @@
     }
 
     &.danger {
-      -webkit-text-stroke: 0.3rem $color-widget-danger-border;
+      -webkit-text-stroke: 0.3rem var(--color-widget-danger-border);
 
       background: linear-gradient(
         -45deg,
-        $color-header-danger 6.25%,
-        $color-header-danger-alt 6.25%,
-        $color-header-danger-alt 12.5%,
-        $color-header-danger 12.5%,
-        $color-header-danger 18.75%,
-        $color-header-danger-alt 18.75%,
-        $color-header-danger-alt 25%,
-        $color-header-danger 25%,
-        $color-header-danger 31.25%,
-        $color-header-danger-alt 31.25%,
-        $color-header-danger-alt 37.5%,
-        $color-header-danger 37.5%,
-        $color-header-danger 43.75%,
-        $color-header-danger-alt 43.75%,
-        $color-header-danger-alt 50%,
-        $color-header-danger 50%,
-        $color-header-danger 56.25%,
-        $color-header-danger-alt 56.25%,
-        $color-header-danger-alt 62.5%,
-        $color-header-danger 62.5%,
-        $color-header-danger 68.75%,
-        $color-header-danger-alt 68.75%,
-        $color-header-danger-alt 75%,
-        $color-header-danger 75%,
-        $color-header-danger 81.25%,
-        $color-header-danger-alt 81.25%,
-        $color-header-danger-alt 87.5%,
-        $color-header-danger 87.5%,
-        $color-header-danger 93.75%,
-        $color-header-danger-alt 93.75%,
-        $color-header-danger-alt 100%
+        var(--color-widget-danger) 6.25%,
+        var(--color-widget-danger-alt) 6.25%,
+        var(--color-widget-danger-alt) 12.5%,
+        var(--color-widget-danger) 12.5%,
+        var(--color-widget-danger) 18.75%,
+        var(--color-widget-danger-alt) 18.75%,
+        var(--color-widget-danger-alt) 25%,
+        var(--color-widget-danger) 25%,
+        var(--color-widget-danger) 31.25%,
+        var(--color-widget-danger-alt) 31.25%,
+        var(--color-widget-danger-alt) 37.5%,
+        var(--color-widget-danger) 37.5%,
+        var(--color-widget-danger) 43.75%,
+        var(--color-widget-danger-alt) 43.75%,
+        var(--color-widget-danger-alt) 50%,
+        var(--color-widget-danger) 50%,
+        var(--color-widget-danger) 56.25%,
+        var(--color-widget-danger-alt) 56.25%,
+        var(--color-widget-danger-alt) 62.5%,
+        var(--color-widget-danger) 62.5%,
+        var(--color-widget-danger) 68.75%,
+        var(--color-widget-danger-alt) 68.75%,
+        var(--color-widget-danger-alt) 75%,
+        var(--color-widget-danger) 75%,
+        var(--color-widget-danger) 81.25%,
+        var(--color-widget-danger-alt) 81.25%,
+        var(--color-widget-danger-alt) 87.5%,
+        var(--color-widget-danger) 87.5%,
+        var(--color-widget-danger) 93.75%,
+        var(--color-widget-danger-alt) 93.75%,
+        var(--color-widget-danger-alt) 100%
       );
+      border-bottom: 0.1rem solid var(--color-widget-danger-alt);
     }
   }
 }
 
 .modal-popup-overlay {
-  background-color: color.adjust($color-background, $alpha: -0.25);
+  background-color: var(--color-popup-overlay);
   animation: popup-fade-in 0.5s;
   touch-action: manipulation;
 }
