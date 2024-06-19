@@ -18,6 +18,8 @@
 ### UI papercuts
 
 - [ ] Inform user if start/end cels don't form a strip
+- [ ] Manual light/dark theme selection
+- [ ] High contrast theme
 - [ ] Better tooltip prompt for picking cel
 - [ ] Show color preview of calculations in list to make them easy to find
 - [ ] Indicate which cels are affected by a calculation on selection
@@ -25,6 +27,7 @@
 
 ### Other
 
+- [ ] Onboarding
 - [ ] Example projects
 - [ ] Image preview
 
