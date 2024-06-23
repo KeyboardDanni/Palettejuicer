@@ -15,7 +15,7 @@ export class PaletteViewState {
   readonly tool: PaletteToolType = PaletteToolType.Select;
 }
 
-export class AppViewState {
+export class ProjectViewState {
   [immerable] = true;
 
   readonly palette: PaletteViewState = new PaletteViewState();

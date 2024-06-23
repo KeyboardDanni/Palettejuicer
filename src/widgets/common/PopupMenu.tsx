@@ -44,6 +44,7 @@ export type PopupMenuItemProps = {
   index: number;
   name: string;
   description?: string;
+  disabled?: boolean;
   checked?: boolean;
   children?: React.ReactNode;
   popupRef?: React.RefObject<PopupActions>;
@@ -62,6 +63,8 @@ export function PopupMenuItem(props: PopupMenuItemProps) {
   }
 
   function handleSelect() {
+    if (props.disabled) return;
+
     if (props.onItemSelect) {
       props.onItemSelect(props.index);
     }
@@ -74,6 +77,7 @@ export function PopupMenuItem(props: PopupMenuItemProps) {
 
     if (isOpen) className += " menu-item-open";
     if (props.children) className += " menu-item-submenu";
+    if (props.disabled) className += " menu-item-disabled";
 
     return (
       <li
@@ -95,7 +99,7 @@ export function PopupMenuItem(props: PopupMenuItemProps) {
     );
   };
 
-  if (!props.children) {
+  if (!props.children || props.disabled) {
     return <>{menuItem(false)}</>;
   }
 

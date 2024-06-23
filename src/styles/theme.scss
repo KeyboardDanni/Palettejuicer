@@ -8,14 +8,14 @@
   --color-background: hsl(var(--hue-background), 20%, 75%);
   --color-text: hsl(var(--hue-section), 10%, 2%);
   --color-text-link: hsl(var(--hue-accent), 75%, 40%);
-  --color-text-disabled: hsl(var(--hue-section), 2%, 40%);
+  --color-text-disabled: hsl(var(--hue-section), 2%, 55%);
   --color-text-gray: color-mix(in hsl, var(--color-text) 80%, var(--color-section-gray));
   --color-text-selected: #fff;
   --color-text-selected-menu: #000;
   --color-text-selected-gray: #fff;
   --color-icon-outline: hsl(var(--hue-section), 2%, 98%);
-  --color-selected: hsl(var(--hue-accent), 75%, 45%);
-  --color-selected-faded: hsl(var(--hue-accent), 50%, 80%);
+  --color-selected: hsl(var(--hue-accent), 75%, 40%);
+  --color-selected-faded: hsl(var(--hue-accent), 40%, 80%);
   --color-section-background: hsl(var(--hue-section), 10%, 92%);
   --color-section-inset: rgba(255, 255, 255, 90%);
   --color-section-border: hsl(var(--hue-background), 10%, 40%);

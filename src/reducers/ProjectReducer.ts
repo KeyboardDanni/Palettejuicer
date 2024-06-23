@@ -64,6 +64,10 @@ export function ProjectReducer(draft: Draft<Project>, action: ProjectAction) {
       return ProjectFileReducer(draft, action as ProjectFileAction);
 
     case PaletteAction: {
+      if (!draft.palette) {
+        throw new Error("Can't perform action on missing Palette.");
+      }
+
       const newPalette = PaletteReducer(draft.palette, action as PaletteAction);
 
       if (newPalette) {

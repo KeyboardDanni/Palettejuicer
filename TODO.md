@@ -27,8 +27,8 @@
 
 ### Other
 
-- [ ] Onboarding
-- [ ] Example projects
+- [ ] Onboarding video
+- [ ] More example projects
 - [ ] Image preview
 
 # Done
@@ -64,3 +64,5 @@
 - [x] Paint/fill palette cels
 - [x] Better palette view scaling
 - [x] Dark mode
+- [x] Onboarding
+- [x] Example project

@@ -117,6 +117,7 @@ $logo-height: 64px;
   display: flex;
   flex-direction: row;
   flex: 1;
+  justify-content: center;
 
   #app-columns {
     max-width: 100%;

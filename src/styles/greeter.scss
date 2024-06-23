@@ -1,0 +1,30 @@
+#greeter {
+  width: fit-content;
+  max-width: 80rem;
+  height: min-content;
+  align-self: center;
+
+  #greeter-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.8rem 2rem;
+    align-items: center;
+    justify-content: center;
+
+    button {
+      min-width: 24rem;
+      padding: 1rem;
+      font-size: 1.8rem;
+    }
+
+    #greeter-project-buttons {
+      display: flex;
+      flex-direction: row;
+      flex-wrap: wrap;
+      gap: 0.4rem;
+      align-items: center;
+      justify-content: center;
+    }
+  }
+}

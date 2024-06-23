@@ -6,6 +6,8 @@ import { Type } from "class-transformer";
 const PROJECT_VERSION = 3;
 
 function migrateVersion1(data: any) {
+  if (!data.palette) return;
+
   const TRANSFORM_COLORSPACE: { [key: string]: string } = {
     OkLch: "Lch",
     OkLab: "Lab",
@@ -18,18 +20,16 @@ function migrateVersion1(data: any) {
       calculation.colorspace = TRANSFORM_COLORSPACE[calculation.colorspace];
     }
   }
-
-  data.version = 2;
 }
 
 function migrateVersion2(data: any) {
+  if (!data.palette) return;
+
   for (const calculation of data.palette.calculations) {
     if (calculation.calcType === "CalcGamutMap") {
       calculation.fullRange = false;
     }
   }
-
-  data.version = 3;
 }
 
 export class Project {
@@ -37,21 +37,25 @@ export class Project {
 
   readonly version: number;
   @Type(() => Palette)
-  readonly palette: Palette;
+  readonly palette: Palette | null;
 
   constructor() {
     this.version = PROJECT_VERSION;
-    this.palette = new Palette();
+    this.palette = null;
   }
 
   static _migrate(data: any) {
-    switch (data.version) {
-      case 1:
-        migrateVersion1(data);
-        break;
-      case 2:
-        migrateVersion2(data);
-        break;
+    while (data.version < PROJECT_VERSION) {
+      switch (data.version) {
+        case 1:
+          migrateVersion1(data);
+          break;
+        case 2:
+          migrateVersion2(data);
+          break;
+      }
+
+      data.version++;
     }
   }
 }

@@ -10,9 +10,9 @@ import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer"
 import { Color } from "../../model/color/Color";
 import { PopupMenu, PopupMenuItem } from "../common/PopupMenu";
 import { CelPickerContext, CelPickerSetterContext } from "../../contexts/CelPickerContext";
-import { AppOptionsContext } from "../../contexts/AppOptionsContext";
+import { AppStateContext } from "../../contexts/AppStateContext";
 import { GAMUT_ROUNDING_ERROR } from "../../model/color/Colorspace";
-import { PaletteToolType, PaletteViewState } from "../../model/AppViewState";
+import { PaletteToolType, PaletteViewState } from "../../model/ProjectViewState";
 import { OverlayScrollbars } from "overlayscrollbars";
 import { clamp, pxToRem } from "../../util/math";
 
@@ -330,7 +330,7 @@ export type PaletteViewProps = {
 };
 
 export const PaletteView = memo(function (props: PaletteViewProps) {
-  const appOptions = useContext(AppOptionsContext);
+  const appState = useContext(AppStateContext);
   const clipboard = useContext(ClipboardContext);
   const celPicker = useContext(CelPickerContext);
   const setCelPicker = useContext(CelPickerSetterContext);
@@ -579,12 +579,12 @@ export const PaletteView = memo(function (props: PaletteViewProps) {
   let className = "palette";
 
   if (celPicker) className += " cel-picker-active";
-  if (appOptions.paletteRuler) className += " palette-ruler-active";
+  if (appState.options.paletteRuler) className += " palette-ruler-active";
 
   return (
     <>
       <div ref={mainRef} className={className}>
-        {appOptions.paletteRuler && (
+        {appState.options.paletteRuler && (
           <>
             <div className="palette-ruler-corner"></div>
             <PaletteTopRuler

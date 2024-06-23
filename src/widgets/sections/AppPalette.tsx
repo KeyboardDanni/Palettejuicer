@@ -14,7 +14,7 @@ import { PaletteView } from "./PaletteView";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
 import { DropdownButton } from "../common/DropdownButton";
 import { CelSelector } from "../common/CelSelector";
-import { PaletteToolType, PaletteViewState } from "../../model/AppViewState";
+import { PaletteToolType, PaletteViewState } from "../../model/ProjectViewState";
 
 type PaletteToolbarButtonProps = {
   tool: PaletteToolType;

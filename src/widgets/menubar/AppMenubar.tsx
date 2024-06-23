@@ -1,14 +1,14 @@
-import { useCallback, useState } from "react";
+import { useCallback, useContext } from "react";
 
 import { ProjectAction } from "../../reducers/ProjectReducer";
 import { Project } from "../../model/Project";
 import { HistoryAction, HistoryActionType } from "../../reducers/HistoryReducer";
 import { UndoHistory } from "../../model/UndoHistory";
-import { Tutorial } from "../tutorial/Tutorial";
 
 import { FileMenu } from "./FileMenu";
 import { AboutMenu } from "./AboutMenu";
 import { OptionsMenu } from "./OptionsMenu";
+import { AppStateSetterContext } from "../../contexts/AppStateContext";
 
 export type AppMenubarProps = {
   history: UndoHistory<Project>;
@@ -16,7 +16,7 @@ export type AppMenubarProps = {
 };
 
 export function AppMenubar(props: AppMenubarProps) {
-  const [tutorialOpen, setTutorialOpen] = useState(false);
+  const setAppState = useContext(AppStateSetterContext);
   const onHistoryChange = props.onHistoryChange;
 
   const handleUndo = useCallback(
@@ -35,9 +35,11 @@ export function AppMenubar(props: AppMenubarProps) {
 
   const handleTutorial = useCallback(
     function () {
-      setTutorialOpen(true);
+      setAppState((draft) => {
+        draft.tutorialOpen = true;
+      });
     },
-    [setTutorialOpen]
+    [setAppState]
   );
 
   return (
@@ -56,7 +58,6 @@ export function AppMenubar(props: AppMenubarProps) {
         <button onClick={handleTutorial}>Tutorial</button>
         <AboutMenu />
       </div>
-      <Tutorial popupOpen={tutorialOpen} setPopupOpen={setTutorialOpen} />
     </>
   );
 }

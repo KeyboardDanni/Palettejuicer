@@ -12,8 +12,11 @@ import { ClipboardContext } from "../contexts/ClipboardContext";
 import { Clipboard } from "../model/Clipboard";
 import { HistoryAction, HistoryActionType, createHistoryReducer } from "../reducers/HistoryReducer";
 import { UndoHistory } from "../model/UndoHistory";
-import { AppOptionsContext, AppOptionsSetterContext } from "../contexts/AppOptionsContext";
 import { AppOptions } from "../model/AppOptions";
+import { AppGreeter } from "./AppGreeter";
+import { Tutorial } from "./tutorial/Tutorial";
+import { AppState } from "../model/AppState";
+import { AppStateContext, AppStateSetterContext } from "../contexts/AppStateContext";
 
 const AUTOSAVE_DELAY_MS = 3000;
 
@@ -37,6 +40,7 @@ class Autosaver {
 
 const initialProject = LocalStorage.load("Project", Project);
 const initialOptions = LocalStorage.load("Options", AppOptions);
+const initialAppState = new AppState(initialOptions);
 const initialHistory = new UndoHistory(initialProject);
 const historyReducer = createHistoryReducer(Project, ProjectReducer, ProjectConsolidator);
 const initialClipboard = new Clipboard();
@@ -53,7 +57,7 @@ updateViewport();
 export function AppBoundary() {
   const [history, dispatchHistory] = useImmerReducer(historyReducer, initialHistory);
   const [clipboard] = useState(initialClipboard);
-  const [appOptions, setAppOptions] = useImmer(initialOptions);
+  const [appState, setAppState] = useImmer(initialAppState);
 
   useEffect(() => {
     Autosaver.waitAndAutosave(history.current());
@@ -62,7 +66,7 @@ export function AppBoundary() {
   useEffect(() => {
     function handleBeforeUnload() {
       Autosaver.autosaveNow(history.current());
-      LocalStorage.save("Options", appOptions);
+      LocalStorage.save("Options", appState.options);
     }
 
     window.addEventListener("beforeunload", handleBeforeUnload);
@@ -70,7 +74,7 @@ export function AppBoundary() {
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
     };
-  }, [history, appOptions]);
+  }, [history, appState.options]);
 
   useEffect(() => {
     window.screen.orientation.addEventListener("change", updateViewport);
@@ -108,21 +112,37 @@ export function AppBoundary() {
     };
   }, [handleKey, dispatchHistory]);
 
+  const setTutorialOpen = useCallback(
+    function (open: boolean) {
+      setAppState((draft) => {
+        draft.tutorialOpen = open;
+      });
+    },
+    [setAppState]
+  );
+
+  const project = history.current();
+
   return (
     <>
-      <AppOptionsContext.Provider value={appOptions}>
-        <AppOptionsSetterContext.Provider value={setAppOptions}>
+      <AppStateContext.Provider value={appState}>
+        <AppStateSetterContext.Provider value={setAppState}>
           <ClipboardContext.Provider value={clipboard}>
             <div id="app-wrapper">
               <div id="app-header">
                 <div className="logo" />
                 <AppMenubar history={history} onHistoryChange={dispatchHistory} />
               </div>
-              <AppBody project={history.current()} onProjectChange={dispatchHistory} />
+              {project.palette ? (
+                <AppBody palette={project.palette} onProjectChange={dispatchHistory} />
+              ) : (
+                <AppGreeter project={project} onProjectChange={dispatchHistory} />
+              )}
             </div>
+            <Tutorial popupOpen={appState.tutorialOpen} setPopupOpen={setTutorialOpen} />
           </ClipboardContext.Provider>
-        </AppOptionsSetterContext.Provider>
-      </AppOptionsContext.Provider>
+        </AppStateSetterContext.Provider>
+      </AppStateContext.Provider>
     </>
   );
 }

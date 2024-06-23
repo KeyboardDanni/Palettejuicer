@@ -5,7 +5,7 @@ import { Palette } from "../../model/Palette";
 import { CelIndex } from "../../util/cel";
 import { ColorSelector } from "./ColorSelector";
 import { PaletteAction, PaletteActionType } from "../../reducers/PaletteReducer";
-import { AppOptionsContext } from "../../contexts/AppOptionsContext";
+import { AppStateContext } from "../../contexts/AppStateContext";
 
 type AppColorSelectorProps = {
   palette: Palette;
@@ -14,18 +14,18 @@ type AppColorSelectorProps = {
 };
 export function AppColorSelector(props: AppColorSelectorProps) {
   const [showBase, setShowBase] = useState(false);
-  const appOptions = useContext(AppOptionsContext);
+  const appState = useContext(AppStateContext);
 
   const hasComputed = props.palette.isComputed(props.activeColorIndex);
 
   useEffect(
     function () {
-      if (appOptions.autoDeselectEditBase && !hasComputed && showBase) {
+      if (appState.options.autoDeselectEditBase && !hasComputed && showBase) {
         setShowBase(false);
       }
     },
     // eslint-disable-next-line react-hooks/exhaustive-deps -- Intentionally avoiding updates on showBase change
-    [appOptions, setShowBase, props.activeColorIndex]
+    [appState.options, setShowBase, props.activeColorIndex]
   );
 
   function handleColorChange(color: Color) {

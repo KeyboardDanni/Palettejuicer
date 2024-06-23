@@ -89,11 +89,23 @@
       &.menu-item-open {
         background-color: var(--color-selected-faded);
         color: var(--color-text-selected-menu);
+
+        &.menu-item-disabled {
+          color: var(--color-text-disabled);
+        }
       }
 
       &:focus-visible {
         background-color: var(--color-selected);
         color: var(--color-text-selected);
+
+        &.menu-item-disabled {
+          color: var(--color-text-disabled);
+        }
+      }
+
+      &.menu-item-disabled {
+        color: var(--color-text-disabled);
       }
 
       &.menu-item-submenu {
@@ -153,8 +165,10 @@
     flex-direction: column;
     padding: $size-section-padding;
     margin: (-$size-section-padding) (-$size-section-padding) 0 (-$size-section-padding);
+    gap: 1rem;
     align-self: stretch;
     align-items: center;
+    text-align: center;
     justify-content: center;
 
     color: #fff;
@@ -196,8 +210,47 @@
     );
     border-bottom: 0.1rem solid #4f48bf;
 
+    @media (prefers-color-scheme: dark) {
+      color: var(--color-text);
+      background: linear-gradient(
+        110deg,
+        #3d26ae 6.25%,
+        #1952af 6.25%,
+        #1952af 12.5%,
+        #006fa6 12.5%,
+        #006fa6 18.75%,
+        #00879f 18.75%,
+        #00879f 25%,
+        #009d97 25%,
+        #009d97 31.25%,
+        #40b187 31.25%,
+        #40b187 37.5%,
+        #61c167 37.5%,
+        #61c167 43.75%,
+        #a8c853 43.75%,
+        #a8c853 50%,
+        #e0cc55 50%,
+        #e0cc55 56.25%,
+        #eca71f 56.25%,
+        #eca71f 62.5%,
+        #ef7f16 62.5%,
+        #ef7f16 68.75%,
+        #e8573c 68.75%,
+        #e8573c 75%,
+        #d5305f 75%,
+        #d5305f 81.25%,
+        #b82582 81.25%,
+        #b82582 87.5%,
+        #94239d 87.5%,
+        #94239d 93.75%,
+        #6b24ac 93.75%,
+        #6b24ac 100%
+      );
+      border-bottom: 0.1rem solid #3d26ae;
+    }
+
     &.modal-popup-header-spaced {
-      padding: ($size-section-padding * 2);
+      padding: ($size-section-padding * 2) ($size-section-padding * 4);
       margin: (-$size-section-padding) (-$size-section-padding) ($size-section-padding * 2) (-$size-section-padding);
     }
 

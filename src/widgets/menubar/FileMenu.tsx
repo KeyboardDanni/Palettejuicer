@@ -61,7 +61,7 @@ export function FileMenu(props: FileMenuProps) {
   const popupRef = useRef<PopupActions>(null);
   const [confirmOpen, setConfirmOpen] = useState(false);
 
-  const handleClear = useCallback(
+  const handleNew = useCallback(
     function () {
       popupRef?.current?.close();
       setConfirmOpen(true);
@@ -69,7 +69,7 @@ export function FileMenu(props: FileMenuProps) {
     [popupRef, setConfirmOpen]
   );
 
-  const handleReallyClear = useCallback(
+  const handleReallyNew = useCallback(
     function () {
       props.onProjectChange(new ProjectFileAction({ actionType: ProjectFileActionType.Clear }));
       setConfirmOpen(false);
@@ -110,6 +110,10 @@ export function FileMenu(props: FileMenuProps) {
   const handleExport = useCallback(
     async function (index: number) {
       popupRef?.current?.close();
+
+      if (!props.project.palette) {
+        throw new Error("Can't export project without Palette.");
+      }
 
       const exporter = availableExporters[index];
 
@@ -155,9 +159,10 @@ export function FileMenu(props: FileMenuProps) {
         <PopupMenuItem
           key={0}
           index={0}
-          name="Clear"
+          name="New"
+          disabled={props.project.palette === null}
           description="Start over with a new project."
-          onItemSelect={handleClear}
+          onItemSelect={handleNew}
         />
         <PopupMenuSeparatorItem key="separator 1" />
         <PopupMenuItem
@@ -171,6 +176,7 @@ export function FileMenu(props: FileMenuProps) {
           key={2}
           index={2}
           name="Save Project File"
+          disabled={props.project.palette === null}
           description="Save a Palettejuicer project to JSON stored on your local drive."
           onItemSelect={handleSave}
         />
@@ -178,11 +184,11 @@ export function FileMenu(props: FileMenuProps) {
         <PopupMenuItem key={3} index={3} name="Import">
           {importers}
         </PopupMenuItem>
-        <PopupMenuItem key={4} index={4} name="Export">
+        <PopupMenuItem disabled={props.project.palette === null} key={4} index={4} name="Export">
           {exporters}
         </PopupMenuItem>
       </DropdownMenuButton>
-      <ConfirmPopup confirmOpen={confirmOpen} setConfirmOpen={setConfirmOpen} onConfirm={handleReallyClear} />
+      <ConfirmPopup confirmOpen={confirmOpen} setConfirmOpen={setConfirmOpen} onConfirm={handleReallyNew} />
     </>
   );
 }

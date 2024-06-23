@@ -41,7 +41,10 @@ export class ProjectFile {
 
   static async saveWithPicker(item: Project) {
     const info = { ...projectFiletypeInfo };
-    info.suggestedName = `${item.palette.paletteName}.palettejuice`;
+
+    if (item.palette) {
+      info.suggestedName = `${item.palette.paletteName}.palettejuice`;
+    }
 
     const handle = await FilePicker.savePicker(info);
 
