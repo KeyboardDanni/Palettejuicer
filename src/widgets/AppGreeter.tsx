@@ -30,7 +30,7 @@ export function AppGreeter(props: AppGreeterProps) {
   }
 
   async function onSample() {
-    const project = await fetchProject("/assets/examples/ExamplePalette.json");
+    const project = await fetchProject(import.meta.env.BASE_URL + "assets/examples/ExamplePalette.json");
 
     props.onProjectChange(new ProjectFileAction({ actionType: ProjectFileActionType.SetProject, args: { project } }));
   }
