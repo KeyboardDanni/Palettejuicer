@@ -72,7 +72,7 @@ $logo-height: 64px;
     text-wrap: nowrap;
 
     button {
-      @include raised-button(var(--color-background-widget), var(--color-widget-border), 0);
+      @include raised-button(var(--color-background-widget), var(--color-section-border), 0);
 
       font-size: 1.8rem;
       padding: 1rem;
@@ -88,7 +88,7 @@ $logo-height: 64px;
       &:not(:disabled) {
         &:hover,
         &:focus-visible {
-          @include raised-button(var(--color-background-widget-hover), var(--color-widget-border-hover), 0);
+          @include raised-button(var(--color-background-widget-hover), var(--color-section-border), 0);
         }
 
         &:active,

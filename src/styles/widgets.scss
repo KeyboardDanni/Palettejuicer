@@ -652,7 +652,7 @@ input[type="range"] {
     &:hover {
       @include raised-box-shadow(
         var(--color-widget-inset),
-        var(--color-slider-border),
+        var(--color-slider-border-hover),
         $size-widget-outline,
         $size-button-height
       );
@@ -669,12 +669,12 @@ input[type="range"] {
   pointer-events: auto;
   --os-size: #{$size-scrollbar-flat};
   --os-handle-bg: var(--color-background-widget);
-  --os-handle-bg-hover: var(--color-background-widget);
-  --os-handle-bg-active: var(--color-background-widget);
+  --os-handle-bg-hover: var(--color-background-widget-hover);
+  --os-handle-bg-active: var(--color-background-widget-hover);
   --os-handle-border-radius: #{$size-section-radius};
   --os-handle-border: #{$size-widget-outline} solid var(--color-widget-border);
-  --os-handle-border-hover: #{$size-widget-outline} solid var(--color-widget-border);
-  --os-handle-border-active: #{$size-widget-outline} solid var(--color-widget-border);
+  --os-handle-border-hover: #{$size-widget-outline} solid var(--color-widget-accent-border-hover);
+  --os-handle-border-active: #{$size-widget-outline} solid var(--color-widget-accent-border-hover);
   --os-handle-interactive-area-offset: 0;
 
   .os-scrollbar-handle {
